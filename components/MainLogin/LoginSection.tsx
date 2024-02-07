@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import { 
   Card, 
   CardContent, 
@@ -11,12 +11,14 @@ import {
   IconButton 
 } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { ILoginSectionProps } from '@/Interfaces'
 
-const LoginSection = () => {
-  const [showPassword, setShowPassword] = useState(false);
+const LoginSection = ({ formData, handleLogin, handleInputChange }: ILoginSectionProps) => {
+  const [showPassword, setShowPassword] = useState(false)
 
+  // Handle password visibility
   const handlePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setShowPassword(!showPassword)
   }
 
   return (
@@ -53,12 +55,14 @@ const LoginSection = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
+              id="username"
+              label="Username"
+              name="username"
               autoComplete=""
               autoFocus
               focused
+              onChange={handleInputChange}
+              value={formData.username}
             />
             <TextField
               variant="outlined"
@@ -82,6 +86,8 @@ const LoginSection = () => {
                   </InputAdornment>
                 ),
               }}
+              onChange={handleInputChange}
+              value={formData.password}
             />
             <Button
               type="submit"
@@ -96,6 +102,7 @@ const LoginSection = () => {
                 mb: 6,
                 width: '80%',
               })}
+              onClick={formData.username && formData.password ? handleLogin : undefined}
             >
               Sign In
             </Button>

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { ThemeProvider } from "@mui/material/styles"
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
 import { globalTheme } from "@/styles/theme/globalThemeOptions"
+import { Toaster } from "react-hot-toast"
 import "@/styles/globals.css"
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider options={{ key: 'css' }}>
           <ThemeProvider theme={globalTheme}>
+            <Toaster position="top-right" />
             {children}
           </ThemeProvider>
         </AppRouterCacheProvider>
