@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Stack } from '@mui/material'
 import TitleSection from './TitleSection'
 import LoginSection from './LoginSection'
@@ -9,14 +9,32 @@ import API from '@/utilities/API'
 import { ILoginProps } from '@/Interfaces/index'
 import { toast } from 'react-hot-toast'
 import useAccessToken from '@/hooks/useAccessToken'
+import useUserInfo from '@/hooks/useUserInfo'
 
 const MainLogin = () => {
-  const { saveAccessToken } = useAccessToken()
+  const { accessToken, saveAccessToken } = useAccessToken()
+  const { isAuthenticated, userLoading } = useUserInfo(accessToken ?? '')
   const [loading, setLoading] = useState(false)
+  const [loginLoading, setLoginLoading] = useState(false)
   const [formData, setFormData] = useState<ILoginProps>({
     username: '',
     password: '',
   })
+
+  // Handle global loading
+  useEffect(() => {
+    if (userLoading || loginLoading) {
+      setLoading(true)
+    } else {
+      setLoading(false)
+    }
+  }, [userLoading, loginLoading])
+
+  // Check if user is already logged in
+  useEffect(() => {
+    if (loading) return
+    if (!userLoading && isAuthenticated) window.location.href = '/official-receipt'
+  }, [loading, userLoading, isAuthenticated])
 
   // Handle textfield changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,28 +42,26 @@ const MainLogin = () => {
   }
   
   // Handle login form submission using API utilities
-  const handleLogin = async () => {
-    setLoading(true)
+  const handleLogin = () => {
+    setLoginLoading(true)
 
     // Call login API
-    const response = await API.login(formData.username, formData.password)
+    API.login(formData.username, formData.password)
+      .then((response) => {
+        const res = response?.data.data
+        
+        if (res?.error) {
+          toast.error(res?.message)
+          setLoginLoading(false)
+          handleClearFields()
+          return
+        }
 
-    if (response?.error) {
-      toast.error(response?.message)
-      setLoading(false)
-      handleClearFields()
-      return
-    }
-    
-    // Save access token to local storage
-    saveAccessToken(response?.access_token)
-
-    // Show success toast
-    toast.success('Login successful!')
-    
-    // Redirect to official receipt
-    window.location.href = '/official-receipt'
-    handleClearFields()
+        saveAccessToken(res?.access_token)
+        toast.success(res?.message)
+        handleClearFields()
+        window.location.href = '/official-receipt'
+      })
   }
     
   // Handle clear fields

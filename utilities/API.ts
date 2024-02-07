@@ -19,10 +19,25 @@ export default class API {
 			password,
 		})
 		.catch((error) => {
-			return error.response?.data
+			return error.response
 		})
 		.then((response) => {
-			return response?.data
+			return response
+		})
+	}
+
+	// Logout user
+	static async logout(accessToken: string) {
+		return axios.post(`${API.API_BASE_URL}/api/v1/logout`, null, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		})
+		.catch((error) => {
+			return error.response
+		})
+		.then((response) => {
+			return response
 		})
 	}
 }

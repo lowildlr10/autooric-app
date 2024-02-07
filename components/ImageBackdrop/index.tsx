@@ -15,8 +15,8 @@ const ImageBackdrop = () => {
       <Image
         src="/images/temp-bg.png"
         alt="Temp Background Image"
-        layout='fill'
-        objectFit='cover'
+        fill
+        style={{objectFit:"cover"}}
       />
     </Box>
   )

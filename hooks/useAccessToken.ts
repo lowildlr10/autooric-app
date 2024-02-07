@@ -1,10 +1,14 @@
-import { useCallback, useState } from "react"
-import Router from "next/router"
+import { useCallback, useEffect, useState } from "react"
 
 const KEY = 'access_token'
 
 const useAccessToken = () => {
 	const [accessToken, setAccessToken] = useState<string | null>()
+
+  // get access tojen from local storage
+  useEffect(() => {
+    setAccessTokenFromLocalStorage()
+  }, [])
 	
 	const flushToken = useCallback(() => {
 		localStorage.removeItem(KEY)
@@ -24,12 +28,9 @@ const useAccessToken = () => {
 		}
 	}, [])
 
-	const forceRelogin = useCallback((redirect?: string) => {
+	const forceRelogin = useCallback(() => {
 		flushToken()
-		Router.push({
-			pathname: '/',
-			query: !!redirect ? { redirect } : undefined,
-		})
+		window.location.href = '/'
 	}, [flushToken])
 
 	const saveAccessToken = useCallback((token: string) => {
