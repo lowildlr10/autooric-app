@@ -64,6 +64,15 @@ const globalThemeOptions: ThemeOptions = {
       'sans-serif',
     ].join(','),
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+        },
+      },
+    }
+  },
 };
 
 export const globalTheme: Theme = createTheme(globalThemeOptions)

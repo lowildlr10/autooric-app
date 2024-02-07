@@ -1,12 +1,9 @@
 import React from 'react'
-import { Stack } from '@mui/material'
 import OfficialReceipt from '@/components/OfficialReceipt'
 
-const OfficialReceiptPage = async () => {
+const OfficialReceiptPage = () => {
   return (
-    <Stack>
-      <OfficialReceipt />
-    </Stack>
+    <OfficialReceipt />
   )
 }
 
