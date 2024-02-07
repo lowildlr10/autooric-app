@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Autocomplete, Button, Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Stack, TextField } from '@mui/material'
+import { Autocomplete, Button, Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Stack, TextField, Typography } from '@mui/material'
 import { DateField, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { ICreateOrActionButtonsProps, ICreateOrFieldsProps, ICreateOrProps } from '@/Interfaces'
@@ -208,33 +208,56 @@ const CreateOrFields = ({
       </Stack>
       
       <Stack direction='row'>
-        <FormControl>
-          <FormLabel id="payment_mode">Mode of Payment*</FormLabel>
-          <RadioGroup
-            aria-labelledby="payment_mode"
-            defaultValue="cash"
-            name="paymemt_mode"
-            id='payment_mode'
-            value={formData?.payment_mode}
-            onChange={(e) => handleInputChange('payment_mode', e.target.value)}
+        <Stack flex={1}>
+          <FormControl>
+            <FormLabel id="payment_mode">Mode of Payment*</FormLabel>
+            <RadioGroup
+              aria-labelledby="payment_mode"
+              defaultValue="cash"
+              name="paymemt_mode"
+              id='payment_mode'
+              value={formData?.payment_mode}
+              onChange={(e) => handleInputChange('payment_mode', e.target.value)}
+            >
+              <FormControlLabel 
+                value="cash" 
+                control={<Radio size='small' />} 
+                label="Cash" 
+              />
+              <FormControlLabel 
+                value="check" 
+                control={<Radio size='small' />} 
+                label="Check" 
+              />
+              <FormControlLabel 
+                value="money_order" 
+                control={<Radio size='small' />} 
+                label="Money Order" 
+              />
+            </RadioGroup>
+          </FormControl>
+        </Stack>
+        <Stack flex={1}>
+          <Typography 
+            color='text.secondary'
+            variant='body1' 
+            textAlign='left'
           >
-            <FormControlLabel 
-              value="cash" 
-              control={<Radio size='small' />} 
-              label="Cash" 
-            />
-            <FormControlLabel 
-              value="check" 
-              control={<Radio size='small' />} 
-              label="Check" 
-            />
-            <FormControlLabel 
-              value="money_order" 
-              control={<Radio size='small' />} 
-              label="Money Order" 
-            />
-          </RadioGroup>
-        </FormControl>
+            Accountable Personel:
+          </Typography>
+          <Typography 
+            color='text.primary'
+            fontWeight={600}
+            variant='body1' 
+            textAlign='center' 
+            sx={{ textDecoration: 'underline' }}
+          >System Administrator</Typography>
+          <Typography 
+            color='text.secondary'
+            variant='body1' 
+            textAlign='center'
+          >Collecting Officer</Typography>
+        </Stack>
       </Stack>
     </Stack>    
   )
