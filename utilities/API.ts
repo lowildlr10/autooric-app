@@ -41,6 +41,15 @@ export default class API {
 		})
 	}
 
+	// Fetch all categories
+	static async getCategories(accessToken: string) {
+		return axios.get(`${API.API_BASE_URL}/api/v1/categories`, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		})
+	}
+
 	// Fetch all payors
 	static async getPayors(accessToken: string) {
 		return axios.get(`${API.API_BASE_URL}/api/v1/payors`, {
@@ -89,9 +98,10 @@ export default class API {
 	// Fetch printable OR
 	static async getPrintableOR(accessToken: string, orId: string, paperSizeId: string) {
 		return axios.get(
-			`${API.API_BASE_URL}/api/v1/print/official-receipt?or_id${orId}&paper_size_id=${paperSizeId}`, {
+			`${API.API_BASE_URL}/api/v1/print/official-receipt?or_id=${orId}&paper_size_id=${paperSizeId}`, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
+				'Access-Control-Allow-Origin': '*',
 			},
 		})
 	}
@@ -99,6 +109,24 @@ export default class API {
 	// Create official receipt
 	static async createOfficialReceipt(accessToken: string, formData: any) {
 		return axios.post(`${API.API_BASE_URL}/api/v1/official-receipts`, formData, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		})
+	}
+
+	// create particulars
+	static async createParticulars(accessToken: string, formData: any) {
+		return axios.post(`${API.API_BASE_URL}/api/v1/particulars`, formData, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		})
+	}
+
+	// Create discounts
+	static async createDiscount(accessToken: string, formData: any) {
+		return axios.post(`${API.API_BASE_URL}/api/v1/discounts`, formData, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
 			},

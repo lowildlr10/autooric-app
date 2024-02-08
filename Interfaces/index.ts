@@ -1,4 +1,5 @@
 import { SvgIconComponent } from "@mui/icons-material"
+import { SelectChangeEvent } from "@mui/material"
 import { ReactElement } from "react"
 
 export interface ILoginProps {
@@ -7,6 +8,7 @@ export interface ILoginProps {
 }
 
 export interface ILoginSectionProps {
+  loading?: boolean
   formData: ILoginProps
   handleLogin: () => void
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -26,23 +28,50 @@ export interface IDrawerMenu {
   onClick?: () => void
 }
 
+export type DialogContent = 'particulars' | 'discounts' | 'signatories' | 'paper_sizes' | 'print_official_receipt' 
+
 export interface ISystemDialogProps {
   open: boolean
   title: string
-  dialogType: 'logout' | 'create' | 'update' | 'delete'
-  formData?: ILoginProps
+  dialogType: 'logout' | 'create' | 'update' | 'delete' | 'print'
+  content?:DialogContent
+  formData?: ILoginProps | IParticular | IDiscount | IPaperSize
+  printUrl?: string
   handleClose: () => void
   handleLogout?: () => void
   handleCreate?: (formData: any) => void
   handleUpdate?: (formData: any) => void
   handleDelete?: (id: string) => void
+  handleClear?: () => void
+  handleInputChange?: any
 }
 
+export interface ICreateContentProps {
+  content: DialogContent
+  formData: any
+  handleInputChange: any
+}
+
+export interface IPrintContentProps {
+  printUrl: string
+}
+
+export interface IParticularsSubContentProps {
+  formData: IParticular
+  handleInputChange: (input_name: string, value: string | number | null) => void
+}
+
+export interface IDiscountsSubContentProps {
+  formData: IDiscount
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export type OpenDialogType = 'logout' | 'create_particulars' | 'create_discounts' | 'print'
 export interface IOpenDialog {
   logout?: boolean
-  create?: boolean
-  update?: boolean
-  delete?: boolean
+  create_particulars?: boolean
+  create_discounts?: boolean
+  print?: boolean
 }
 
 export interface ICardContainerProps {
@@ -57,32 +86,37 @@ export interface IPayor {
 
 export interface IDiscount {
   id?: string
-  discount_name: string
-  percent: number
+  discount_name?: string
+  percent?: number
+}
+
+export interface ICategories {
+  id?: string
+  category_name?: string
 }
 
 export interface IParticular {
   id?: string
-  particular_name: string
-  category_id: string
+  particular_name?: string
+  category_id?: string
 }
 
 export interface IOfficialReceipt {
   id?: string
-  accountable_personnel_id: string
-  receipt_date: string
+  accountable_personnel_id?: string
+  receipt_date?: string
   deposited_date?: string
   cancelled_date?: string
-  or_no: string
-  payor_id: string
-  nature_collection_id: string
-  amount: number
+  or_no?: string
+  payor_id?: string
+  nature_collection_id?: string
+  amount?: number
   discount_id?: string
-  deposit: number
-  amount_words: string
+  deposit?: number
+  amount_words?: string
   card_no?: string
-  payment_mode: string
-  is_cancelled: boolean
+  payment_mode?: 'cash' | 'check' | 'money_order'
+  is_cancelled?: boolean
 }
 
 export interface IPaperSize {
@@ -101,7 +135,6 @@ export interface IOfficialReceiptProps {
 export interface ITabContents {
   label: string
   index: number
-  component?: React.ReactNode
 }
 
 export interface ITabContainerProps {
@@ -118,31 +151,32 @@ export interface ITabPanelProps {
 }
 
 export interface ICreateOrProps {
+  personelName: string
   payors: IPayor[]
   particulars: IParticular[]
   discounts: IDiscount[]
-  paperSizes: IPaperSize[]
   formData: IOfficialReceipt
   handleCreate: (formData: IOfficialReceipt, print: boolean) => void
   handleInputChange: (input_name: string, value: string | number | null) => void
   handlePrint: (orId: string, paperSizeId: string) => void
   handleClear: () => void
-  handlePaperSizeChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleResync: () => void
+  handleDialogOpen: (dialogType: OpenDialogType) => void
 }
 
 export interface ICreateOrActionButtonsProps {
   formData: IOfficialReceipt
-  paperSizes: IPaperSize[]
   handleCreate: (formData: IOfficialReceipt, print: boolean) => void
   handlePrint: (orId: string, paperSizeId: string) => void
   handleClear: () => void
-  handlePaperSizeChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export interface ICreateOrFieldsProps {
+  personelName: string
   payors: IPayor[]
   particulars: IParticular[]
   discounts: IDiscount[]
   formData: IOfficialReceipt
   handleInputChange: (input_name: string, value: string | number | null) => void
+  handleDialogOpen: (dialogType: OpenDialogType) => void
 }

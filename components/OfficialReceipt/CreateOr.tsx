@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { Autocomplete, Button, Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Stack, TextField, Typography } from '@mui/material'
-import { DateField, LocalizationProvider } from '@mui/x-date-pickers'
+import { Autocomplete, Button, Divider, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, Stack, TextField, Typography, createFilterOptions } from '@mui/material'
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { ICreateOrActionButtonsProps, ICreateOrFieldsProps, ICreateOrProps } from '@/Interfaces'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
+
+const filter = createFilterOptions<any>()
 
 const CreateOrFields = ({
   handleInputChange,
+  personelName,
   payors,
   particulars,
   discounts,
-  formData
+  formData,
+  handleDialogOpen
 }: ICreateOrFieldsProps) => {
   const [formattedPayors, setFormattedPayors] = useState<any>([])
   const [formattedParticulars, setFormattedParticulars] = useState<any>([])
   const [formattedDiscounts, setFormattedDiscounts] = useState<any>([])
-  const [defaultDate, setDefaultDate] = useState<Dayjs | null>(dayjs())
 
   useEffect(() => {
     if (payors) {
@@ -44,6 +48,12 @@ const CreateOrFields = ({
     }
   }, [discounts])
 
+  useEffect(() => {
+    if (formData?.receipt_date === undefined || formData?.receipt_date === '') {
+      handleInputChange('receipt_date', dayjs().format('YYYY-MM-DD'))
+    }
+  }, [formData])
+
   return (
     <Stack 
       spacing={4}
@@ -56,16 +66,20 @@ const CreateOrFields = ({
       <Stack direction={{ xs: 'column', sm: 'row' }} gap={4}>
         <Stack flex={1}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateField 
-              id='receipt_date'
+            <DatePicker  
               name='receipt_date'
-              label="OR Date" 
-              size='small'
-              fullWidth
-              required
-              focused
-              value={formData?.receipt_date ?? defaultDate}
-              onChange={(newValue) => handleInputChange('receipt_date', newValue)}
+              label="OR Date *"
+              value={dayjs(formData?.receipt_date) ?? dayjs()}
+              autoFocus
+              slotProps={{ 
+                textField: {
+                  size: 'small',
+                  focused: true
+                }
+               }}
+              onChange={
+                (newValue) => 
+                  handleInputChange('receipt_date', newValue ? newValue.format('YYYY-MM-DD') : '')}
               sx={{ m: 0 }}
             />
           </LocalizationProvider>
@@ -83,8 +97,8 @@ const CreateOrFields = ({
             size='small'
             focused
             autoFocus
-            value={formData?.or_no}
-            onChange={(e) => handleInputChange('or_no', e.target.value)}
+            value={formData?.or_no ?? ''}
+            onChange={e => handleInputChange(e.target.name, e.target.value)}
             sx={{ m: 0 }}
           />
         </Stack>
@@ -98,6 +112,7 @@ const CreateOrFields = ({
           id="sel-payor"
           options={formattedPayors}
           fullWidth
+          clearOnBlur={false}
           renderInput={(params) => (
             <TextField 
               {...params} 
@@ -110,13 +125,49 @@ const CreateOrFields = ({
               fullWidth
             />
           )}
-          value={formData?.payor_id}
-          onChange={(e: any, newValue: string | null) => handleInputChange('payor_id', newValue)}
+          value={formData?.payor_id ? 
+            payors.find(payor => payor.id === formData?.payor_id)?.payor_name ?? formData?.payor_id : 
+            null
+          }
+          getOptionLabel={(option: any) => {
+            // Value selected with enter, right from the input
+            if (typeof option === 'string') {
+              return option;
+            }
+            // Add "xxx" option created dynamically
+            if (option.inputValue) {
+              return option.inputValue;
+            }
+            // Regular option
+            return option.label;
+          }}
+          renderOption={(props: any, option: any) => {
+            delete props['key']
+            return <li key={option.label} {...props}>{option.label}</li>
+          }}
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+
+            const { inputValue } = params;
+            // Suggest the creation of a new value
+            const isExisting = options.some((option) => inputValue === option.label);
+            if (inputValue !== '' && !isExisting) {
+              filtered.push({
+                inputValue,
+                label: `Add "${inputValue}"`,
+              });
+            }
+
+            return filtered;
+          }}
+          onChange={(e: any, newValue: any) => {
+            handleInputChange('payor_id', newValue?.id ?? newValue?.inputValue ?? '')
+          }}
         />
       </Stack>
 
-      <Stack>
-        <Stack>
+      <Stack direction='row' gap={2}>
+        <Stack flex={1}>
           <Autocomplete
             disablePortal
             id="sel-particulars"
@@ -134,38 +185,53 @@ const CreateOrFields = ({
                 fullWidth
               />
             )}
-            value={formData?.nature_collection_id}
-            onChange={(e: any, newValue: string | null) => handleInputChange('nature_collection_id', newValue)}
+            value={formData?.nature_collection_id ?
+              particulars.find(
+                particular => 
+                  particular.id === formData?.nature_collection_id
+                )?.particular_name :
+                null
+            }
+            onChange={(e: any, newValue: any) => {
+              handleInputChange('nature_collection_id', newValue?.id ?? '')
+            }}
           />
+        </Stack>
+        <Stack>
+          <Button
+            onClick={() => handleDialogOpen('create_particulars')}
+            variant='contained'
+            color='primary'
+            size='small'
+            sx={{ 
+              py: '0.7em', 
+              minWidth: 'auto',
+              borderRadius: 5,
+            }}
+          ><LibraryAddIcon fontSize='small' /></Button>
         </Stack>
       </Stack>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} gap={4}>
-        <Stack flex={1}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="amount"
-            label="Amount"
-            name="amount"
-            autoComplete=""
-            size='small'
-            focused
-            sx={{ m: 0 }}
-            value={formData?.amount}
-            onChange={
-              (e) => 
-                handleInputChange(
-                  'amount', isNaN(parseFloat(
-                    !!e.target.value ? e.target.value : '0'
-                  )) ? 0.00 : parseFloat(!!e.target.value ? e.target.value : '0').toFixed(2)
-                )
-            }
-          />
-        </Stack>
+      <Stack direction='row' gap={4}>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="amount"
+          label="Amount"
+          name="amount"
+          autoComplete=""
+          size='small'
+          focused
+          sx={{ m: 0 }}
+          value={formData?.amount ?? ''}
+          inputProps={{ type: 'number'}}
+          onChange={e => handleInputChange(e.target.name, e.target.value)}
+        />
+      </Stack>
 
+      <Stack direction='row' gap={2}>
         <Stack flex={1}>
           <Autocomplete
             disablePortal
@@ -183,9 +249,30 @@ const CreateOrFields = ({
                 fullWidth
               />
             )}
-            value={formData?.discount_id}
-            onChange={(e: any, newValue: string | null) => handleInputChange('discount_id', newValue)}
+            value={formData?.discount_id ? 
+              discounts.find(
+                discount => 
+                  discount.id === formData?.discount_id
+                )?.discount_name : 
+                null
+            }
+            onChange={(e: any, newValue: any) => {
+              handleInputChange('discount_id', newValue.id ?? '')
+            }}
           />
+        </Stack>
+        <Stack>
+          <Button
+            onClick={() => handleDialogOpen('create_discounts')}
+            variant='contained'
+            color='primary'
+            size='small'
+            sx={{ 
+              py: '0.7em', 
+              minWidth: 'auto',
+              borderRadius: 5,
+            }}
+          ><LibraryAddIcon fontSize='small' /></Button>
         </Stack>
       </Stack>
 
@@ -202,37 +289,51 @@ const CreateOrFields = ({
           size='small'
           focused
           sx={{ m: 0 }}
-          value={formData?.amount_words}
-          onChange={(e) => handleInputChange('amount_words', e.target.value)}
+          value={formData?.amount_words ?? ''}
+          onChange={e => handleInputChange(e.target.name, e.target.value)}
         />
       </Stack>
       
-      <Stack direction='row'>
+      <Stack direction={{ xs: 'column', sm: 'row' }} gap={3}>
         <Stack flex={1}>
           <FormControl>
-            <FormLabel id="payment_mode">Mode of Payment*</FormLabel>
+            <FormLabel 
+              id="payment_mode" 
+              sx={{ fontSize: '0.9rem' }}
+            >Mode of Payment*</FormLabel>
             <RadioGroup
               aria-labelledby="payment_mode"
-              defaultValue="cash"
-              name="paymemt_mode"
+              name="payment_mode"
               id='payment_mode'
-              value={formData?.payment_mode}
-              onChange={(e) => handleInputChange('payment_mode', e.target.value)}
+              onChange={e => handleInputChange(e.target.name, e.target.value)}
+              value={formData?.payment_mode ?? ''}
             >
               <FormControlLabel 
                 value="cash" 
-                control={<Radio size='small' />} 
+                control={<Radio size='small' onChange={e => handleInputChange(e.target.name, e.target.value)} />} 
                 label="Cash" 
+                sx={{  
+                  '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
+                  '& .MuiSvgIcon-root': { fontSize: '1rem' }
+                }}
               />
               <FormControlLabel 
                 value="check" 
                 control={<Radio size='small' />} 
                 label="Check" 
+                sx={{  
+                  '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
+                  '& .MuiSvgIcon-root': { fontSize: '1rem' }
+                }}
               />
               <FormControlLabel 
                 value="money_order" 
                 control={<Radio size='small' />} 
-                label="Money Order" 
+                label="Money Order"
+                sx={{  
+                  '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
+                  '& .MuiSvgIcon-root': { fontSize: '1rem' }
+                }} 
               />
             </RadioGroup>
           </FormControl>
@@ -242,6 +343,9 @@ const CreateOrFields = ({
             color='text.secondary'
             variant='body1' 
             textAlign='left'
+            sx={{  
+              fontSize: '0.9rem'
+            }}
           >
             Accountable Personel:
           </Typography>
@@ -250,12 +354,18 @@ const CreateOrFields = ({
             fontWeight={600}
             variant='body1' 
             textAlign='center' 
-            sx={{ textDecoration: 'underline' }}
-          >System Administrator</Typography>
+            sx={{ 
+              textDecoration: 'underline', 
+              fontSize: '0.9rem'
+            }}
+          >{personelName}</Typography>
           <Typography 
             color='text.secondary'
             variant='body1' 
             textAlign='center'
+            sx={{  
+              fontSize: '0.9rem'
+            }}
           >Collecting Officer</Typography>
         </Stack>
       </Stack>
@@ -267,7 +377,7 @@ const ActionButtons = ({
   formData,
   handleCreate,
   handlePrint,
-  handleClear
+  handleClear,
 }: ICreateOrActionButtonsProps) => {
   return (
     <Stack 
@@ -313,47 +423,54 @@ const ActionButtons = ({
 }
 
 const CreateOr = ({
+  personelName,
   payors,
   particulars,
   discounts,
-  paperSizes,
   formData,
   handleCreate,
   handleInputChange,
   handlePrint,
   handleClear,
-  handlePaperSizeChange
+  handleResync,
+  handleDialogOpen
 }: ICreateOrProps) => {
+
+  useEffect(() => {
+    handleClear()
+    handleResync()
+  }, [])
+
   return (
     <form autoComplete="off" onSubmit={e => e.preventDefault()}>
       <Stack 
         direction={{ xs: 'column', lg:'row'  }}
         width='100%'
+        gap={4}
+        justifyContent='center'
       >
         <Stack 
-          flex={1}
           alignItems={{ xs: 'center', lg: 'end' }}
         >
           <CreateOrFields 
-            handleInputChange={(input_name, value) => handleInputChange(input_name, value)}
+            handleInputChange={handleInputChange}
+            personelName={personelName}
             payors={payors}
             particulars={particulars}
             discounts={discounts}
             formData={formData}
+            handleDialogOpen={handleDialogOpen}
           />
         </Stack>
         <Stack 
-          flex={1} 
           justifyContent='end'
           alignItems={{ xs: 'center', lg: 'start' }}
         >
           <ActionButtons 
             formData={formData}
-            paperSizes={paperSizes}
             handleCreate={handleCreate}
             handlePrint={handlePrint}
             handleClear={handleClear}
-            handlePaperSizeChange={handlePaperSizeChange}
           />
         </Stack>
       </Stack>

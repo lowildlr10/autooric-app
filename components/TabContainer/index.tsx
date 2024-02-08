@@ -14,7 +14,7 @@ export function CustomTabPanel(props: ITabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Stack p={2} pt={4}>{children}</Stack>
+        <Stack pt={4}>{children}</Stack>
       )}
     </div>
   )

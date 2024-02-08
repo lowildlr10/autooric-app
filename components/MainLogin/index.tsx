@@ -14,7 +14,7 @@ import useUserInfo from '@/hooks/useUserInfo'
 const MainLogin = () => {
   const { accessToken, saveAccessToken } = useAccessToken()
   const { isAuthenticated, userLoading } = useUserInfo(accessToken ?? '')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [loginLoading, setLoginLoading] = useState(false)
   const [formData, setFormData] = useState<ILoginProps>({
     username: '',
@@ -33,7 +33,10 @@ const MainLogin = () => {
   // Check if user is already logged in
   useEffect(() => {
     if (loading) return
-    if (!userLoading && isAuthenticated) window.location.href = '/official-receipt'
+    if (!userLoading && isAuthenticated) {
+      toast.success('Logging in...')
+      window.location.href = '/official-receipt'
+    }
   }, [loading, userLoading, isAuthenticated])
 
   // Handle textfield changes
@@ -95,6 +98,7 @@ const MainLogin = () => {
           }}
       >
         <LoginSection 
+          loading={loading}
           formData={formData} 
           handleLogin={handleLogin} 
           handleInputChange={handleInputChange}

@@ -6,13 +6,14 @@ import Loader from '../Loader'
 import MiniVariantDrawer from '../Drawer/MiniVariantDrawer'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
-import { Stack } from '@mui/material'
+import { SelectChangeEvent, Stack } from '@mui/material'
 import SystemDialog from '../SystemDialog'
 import CardContainer from '../CardContainer'
-import { IDiscount, IOfficialReceipt, IOfficialReceiptProps, IOpenDialog, IPaperSize, IParticular, IPayor, ITabContents, ITabPanelProps } from '@/Interfaces'
+import { IDiscount, IOfficialReceipt, IOpenDialog, IPaperSize, IParticular, IPayor, ITabContents, ITabPanelProps, OpenDialogType } from '@/Interfaces'
 import TabContainer, { CustomTabPanel } from '../TabContainer'
 import CreateOr from './CreateOr'
 import OrList from './OrList'
+import { ToWords } from 'to-words'
 
 const OfficialReceipt = () => {
   const { accessToken, forceRelogin } = useAccessToken()
@@ -26,9 +27,7 @@ const OfficialReceipt = () => {
   const [paperSizeLoading, setPaperSizeLoading] = useState(false)
   const [formSaveLoading, setFormSaveLoading] = useState(false)
   const [tabValue, setTabValue] = useState(0)
-  const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({
-    logout: false
-  })
+  const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
   const [tabContents, setTabContents] = useState<ITabContents[]>([])
   const [payors, setPayors] = useState<IPayor[]>()
   const [discounts, setDiscounts] = useState<IDiscount[]>()
@@ -36,11 +35,14 @@ const OfficialReceipt = () => {
   const [orList, setOrList] = useState<IOfficialReceipt[]>()
   const [paperSizes, setPaperSizes] = useState<IPaperSize[]>()
   const [paperSize, setPaperSize] = useState('')
-  const [formData, setFormData] = useState<any>({})
+  const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>({})
+  const [particularFormData, setParticularFormData] = useState<IParticular>({})
+  const [discountFormData, setDiscountFormData] = useState<IDiscount>({})
+  const [printUrl, setPrintUrl] = useState('')
 
   useEffect(() => {
-    console.log('formData', formData)
-  }, [formData])
+    console.log(createOrFormData)
+  }, [createOrFormData])
 
   useEffect(() => {
     handleResync()
@@ -50,39 +52,37 @@ const OfficialReceipt = () => {
     setTabContents([
       {
         index: 0,
-        label: 'CREATE/ISSUE OR',
-        component: <CreateOr 
-          payors={payors ?? []} 
-          particulars={particulars ?? []} 
-          discounts={discounts ?? []} 
-          paperSizes={paperSizes ?? []}
-          formData={formData}
-          handleInputChange={(input_name, value) => handleInputChange(input_name, value)}
-          handleCreate={(data, print) => handleCreate(data, print)}
-          handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId)}
-          handleClear={handleClear}
-          handlePaperSizeChange={handlePaperSizeChange}
-        />
+        label: 'CREATE/ISSUE OR'
       },
       {
         index: 1,
-        label: 'OR LIST',
-        component: <OrList />
+        label: 'OR LIST'
       }
     ])
   }, [payors, particulars, discounts, orList])
+
+  // Set default paper size
+  useEffect(() => {
+    if (paperSizes) {
+      const defaultPaperSize = paperSizes.find(paper => paper.paper_name === 'Official Receipt')
+      setPaperSize(defaultPaperSize?.id ?? '')
+    }
+  }, [paperSizes])
 
   // Handle global loading
   useEffect(() => {
     if (
       userLoading || payorLoading || particularLoading || discountLoading || 
-      orListLoading || paperSizeLoading || logoutLoading
+      orListLoading || paperSizeLoading || logoutLoading || formSaveLoading
     ) {
       setLoading(true)
     } else {
       setLoading(false)
     }
-  }, [userLoading, payorLoading, particularLoading, discountLoading, orListLoading])
+  }, [
+    userLoading, payorLoading, particularLoading, discountLoading, 
+    orListLoading, paperSizeLoading, logoutLoading, formSaveLoading
+  ])
   
   // Check if user is already logged in
   useEffect(() => {
@@ -104,6 +104,28 @@ const OfficialReceipt = () => {
           setPayorLoading(false)
         })
     }
+  }
+
+  const dynamicTabContents = (index: number) => {
+    if (index === 0) return (
+      <CreateOr 
+        personelName={userInfo ? `${userInfo?.first_name} ${userInfo?.last_name}` : 'Loading...'}
+        payors={payors ?? []} 
+        particulars={particulars ?? []} 
+        discounts={discounts ?? []} 
+        formData={createOrFormData}
+        handleInputChange={(input_name, value) => handleInputChange(input_name, value)}
+        handleCreate={(data, print) => handleCreateOr(data, print)}
+        handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId)}
+        handleClear={handleClear}
+        handleResync={handleResync}
+        handleDialogOpen={(dialogType) => handleDialogOpen(dialogType)}
+      />
+    )
+
+    if (index === 1) return (
+      <OrList />
+    )
   }
 
   // Fetch discounts
@@ -200,12 +222,12 @@ const OfficialReceipt = () => {
   }
 
   // Handle dialog open
-  const handleDialogOpen = (dialogType: string) => {
+  const handleDialogOpen = (dialogType: OpenDialogType) => {
     setDialogOpen({ ...dialogOpen, [dialogType]: true })
   }
 
   // handle dialog close
-  const handleDialogClose = (dialogType: string) => {
+  const handleDialogClose = (dialogType: OpenDialogType) => {
     setDialogOpen({ ...dialogOpen, [dialogType]: false })
   }
 
@@ -213,18 +235,39 @@ const OfficialReceipt = () => {
     setTabValue(newValue)
   }
 
-  // Handle textfield changes
+  // // Handle input changes
   const handleInputChange = (input_name: string, value: string | number | null) => {
-    setFormData({ ...formData, [input_name]: value })
+    let amountWords = ''
+    if (input_name === 'amount') {
+      try {
+        amountWords = convertToWords(value as number)
+      } catch (error) {}
+    }
+
+    if (amountWords) {
+      setCreateOrFormData({ 
+        ...createOrFormData, 
+        [input_name]: value, 
+        amount_words: amountWords
+      })
+    } else {
+      setCreateOrFormData({ ...createOrFormData, [input_name]: value }) 
+    }
   }
 
-  const handlePaperSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPaperSize(e.target.value)
+  const handleInputChangeParticulars = (input_name: string, value: string | number | null) => {
+    setParticularFormData({ ...particularFormData, [input_name]: value })
+  }
+
+  const handleInputChangeDiscounts = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDiscountFormData({ ...discountFormData, [e.target.name]: e.target.value })
   }
 
   // Handle clear form
   const handleClear = () => {
-    setFormData({})
+    setCreateOrFormData({})
+    setParticularFormData({})
+    setDiscountFormData({})
   }
 
   // Handle resync all data
@@ -237,10 +280,42 @@ const OfficialReceipt = () => {
   }
 
   // Handle create official receipt
-  const handleCreate = (formData: IOfficialReceipt, print = false) => {
+  const handleCreateOr = (formData: IOfficialReceipt, print = false) => {
     setFormSaveLoading(true)
     if (accessToken) {
       API.createOfficialReceipt(accessToken, formData)
+        .then((response) => {
+          const res = response?.data.data
+
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          fetchOfficialReceipts()
+
+          if (print) {
+            handlePrint(res?.data?.id, paperSize)
+          }
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res?.message ?? 'Unknown error occurred.')
+          setFormSaveLoading(false)
+        })
+
+      //handleClear()  
+    }
+  }
+
+  // Handle create particulars
+  const handleCreateParticulars = (formData: IParticular) => {
+    setFormSaveLoading(true)
+    if (accessToken) {
+      API.createParticulars(accessToken, formData)
         .then((response) => {
           const res = response?.data.data
           if (res?.error) {
@@ -251,16 +326,42 @@ const OfficialReceipt = () => {
 
           toast.success(res?.message)
           setFormSaveLoading(false)
-          handleResync()
-
-          if (print) {
-            handlePrint(res?.or_id, paperSize)
-          }
+          fetchParticulars()
         })
         .catch((error) => {
-          toast.error('An error occurred while creating official receipt. Please try again.')
+          const res = error?.response?.data.data
+          toast.error(res.message)
           setFormSaveLoading(false)
         })
+
+      handleClear()
+    }
+  }
+
+  // Handle create discounts
+  const handleCreateDiscount = (formData: IDiscount) => {
+    setFormSaveLoading(true)
+    if (accessToken) {
+      API.createDiscount(accessToken, formData)
+        .then((response) => {
+          const res = response?.data.data
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          fetchDiscounts()
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res.message)
+          setFormSaveLoading(false)
+        })
+
+      handleClear()
     }
   }
 
@@ -269,12 +370,34 @@ const OfficialReceipt = () => {
     if (accessToken) {
       API.getPrintableOR(accessToken, orId, paperSizeId)
         .then((response) => {
-          console.log(response)
+          console.log(response.data.data.pdf)
+          setPrintUrl(`data:application/pdf;base64,${response.data.data.pdf}`)
+          handleDialogOpen('print')
+
+          // const res = response?.data.data
+          // if (res?.error) {
+          //   toast.error(res?.message)
+          //   return
+          // }
+
+          // toast.success(res?.message)
+          // const win = window.open(res?.url, '_blank')
+          // win?.focus()
         })
         .catch((error) => {
-          toast.error('An error occurred while printing official receipt. Please try again.')
+          console.log(error.message)
         })
     }
+  }
+
+  // Convert to to words
+  const convertToWords = (amount: number) => {
+    const toWords = new ToWords({
+      localeCode: 'en-PH'
+    })
+    return toWords.convert(amount, { 
+      currency: true,
+    })
   }
 
   return (
@@ -298,7 +421,7 @@ const OfficialReceipt = () => {
                   value={tabValue} 
                   index={content.index}
                 >
-                  {content.index === tabValue && content.component}
+                  {content.index === tabValue && dynamicTabContents(content.index)}
                 </CustomTabPanel>
               )
             })}
@@ -311,6 +434,35 @@ const OfficialReceipt = () => {
         dialogType="logout" 
         handleClose={() => handleDialogClose('logout')} 
         handleLogout={handleLogout} 
+      />
+      <SystemDialog 
+        open={dialogOpen.print ?? false} 
+        title="Print Official Receipt" 
+        dialogType="print" 
+        printUrl={printUrl}
+        handleClose={() => handleDialogClose('print')}
+      />
+      <SystemDialog 
+        open={dialogOpen.create_particulars ?? false} 
+        title="Create Particular" 
+        dialogType="create"
+        content="particulars"
+        formData={particularFormData} 
+        handleClose={() => handleDialogClose('create_particulars')} 
+        handleClear={handleClear}
+        handleCreate={handleCreateParticulars}
+        handleInputChange={handleInputChangeParticulars}
+      />
+      <SystemDialog 
+        open={dialogOpen.create_discounts ?? false} 
+        title="Create Discount" 
+        dialogType="create"
+        content="discounts" 
+        formData={discountFormData}
+        handleClose={() => handleDialogClose('create_discounts')} 
+        handleClear={handleClear}
+        handleCreate={handleCreateDiscount}
+        handleInputChange={handleInputChangeDiscounts}
       />
     </MiniVariantDrawer>
   )
