@@ -14,7 +14,10 @@ const Particulars = ({
 }: IParticularsSubContentProps) => {
   const { accessToken } = useAccessToken()
   const [categories, setCategories] = useState<ICategories[]>()
-  const [formattedCategories, setFormattedCategories] = useState<any>()
+  const [formattedCategories, setFormattedCategories] = useState<any>([{
+    id: '1',
+    label: 'loading...'
+  }])
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -22,12 +25,14 @@ const Particulars = ({
   }, [accessToken])
 
   useEffect(() => {
+    setLoading(true)
     if (categories) {
       setFormattedCategories(categories.map(category => ({
         id: category.id,
         label: category.category_name
       })))
     }
+    setLoading(false)
   }, [categories])
   
   const fetchCategories = () => {
@@ -51,13 +56,11 @@ const Particulars = ({
   return (
     <>
       <Autocomplete
-        disablePortal
-        disableClearable
         freeSolo
         id="sel-category"
         options={formattedCategories}
         fullWidth
-        clearOnBlur={false}
+        clearOnBlur
         renderInput={(params) => (
           <TextField 
             {...params} 
@@ -70,11 +73,10 @@ const Particulars = ({
             fullWidth
           />
         )}
-        value={formData?.category_id && categories ? 
-          categories.find((category: any) => 
-            category.id === formData?.category_id)?.category_name ?? formData?.category_id : 
-          null
-        }
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') event.defaultMuiPrevented = true
+        }}
+        isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
         getOptionLabel={(option: any) => {
           // Value selected with enter, right from the input
           if (typeof option === 'string') {

@@ -160,7 +160,9 @@ export interface ICreateOrProps {
   handleInputChange: (input_name: string, value: string | number | null) => void
   handlePrint: (orId: string, paperSizeId: string) => void
   handleClear: () => void
-  handleResync: () => void
+  fetchPayor: () => void
+  fetchParticular: () => void
+  fetchDiscount: () => void
   handleDialogOpen: (dialogType: OpenDialogType) => void
 }
 
@@ -179,4 +181,7 @@ export interface ICreateOrFieldsProps {
   formData: IOfficialReceipt
   handleInputChange: (input_name: string, value: string | number | null) => void
   handleDialogOpen: (dialogType: OpenDialogType) => void
+  fetchPayor: () => void
+  fetchParticular: () => void
+  fetchDiscount: () => void
 }

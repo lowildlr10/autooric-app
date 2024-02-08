@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import useAccessToken from '@/hooks/useAccessToken'
 import useUserInfo from '@/hooks/useUserInfo'
 import Loader from '../Loader'
@@ -14,6 +14,7 @@ import TabContainer, { CustomTabPanel } from '../TabContainer'
 import CreateOr from './CreateOr'
 import OrList from './OrList'
 import { ToWords } from 'to-words'
+import dayjs from 'dayjs'
 
 const OfficialReceipt = () => {
   const { accessToken, forceRelogin } = useAccessToken()
@@ -45,7 +46,26 @@ const OfficialReceipt = () => {
   }, [createOrFormData])
 
   useEffect(() => {
-    handleResync()
+    console.log(particularFormData)
+  }, [particularFormData])
+
+  useEffect(() => {
+    console.log(discountFormData)
+  }, [discountFormData])
+
+  useEffect(() => {
+    if (createOrFormData?.receipt_date === undefined || createOrFormData?.receipt_date === '') {
+      handleInputChange('receipt_date', dayjs().format('YYYY-MM-DD'))
+    }
+  }, [createOrFormData])
+
+  useEffect(() => {
+    if (discounts) console.log(discounts)
+  }, [discounts])
+
+  useEffect(() => {
+    if (!accessToken) return
+    fetchPaperSizes()
   }, [accessToken])
 
   useEffect(() => {
@@ -118,7 +138,9 @@ const OfficialReceipt = () => {
         handleCreate={(data, print) => handleCreateOr(data, print)}
         handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId)}
         handleClear={handleClear}
-        handleResync={handleResync}
+        fetchPayor={() => fetchPayors()}
+        fetchParticular={() => fetchParticulars()}
+        fetchDiscount={() => fetchDiscounts()}
         handleDialogOpen={(dialogType) => handleDialogOpen(dialogType)}
       />
     )
@@ -238,6 +260,7 @@ const OfficialReceipt = () => {
   // // Handle input changes
   const handleInputChange = (input_name: string, value: string | number | null) => {
     let amountWords = ''
+
     if (input_name === 'amount') {
       try {
         amountWords = convertToWords(value as number)
@@ -283,6 +306,16 @@ const OfficialReceipt = () => {
   const handleCreateOr = (formData: IOfficialReceipt, print = false) => {
     setFormSaveLoading(true)
     if (accessToken) {
+      const discount = handleComputeDiscountedAmount(
+        formData?.amount as number, formData?.discount_id as string
+      )
+
+      formData = {
+        ...formData,
+        amount: discount?.discountedAmount as number,
+        amount_words: discount?.discountedAmountWords as string
+      }
+
       API.createOfficialReceipt(accessToken, formData)
         .then((response) => {
           const res = response?.data.data
@@ -300,14 +333,31 @@ const OfficialReceipt = () => {
           if (print) {
             handlePrint(res?.data?.id, paperSize)
           }
+
+          handleClear() 
         })
         .catch((error) => {
           const res = error?.response?.data.data
           toast.error(res?.message ?? 'Unknown error occurred.')
           setFormSaveLoading(false)
         })
+    }
+  }
 
-      //handleClear()  
+  // Handle compute discounted amount from discounts with amount words
+  const handleComputeDiscountedAmount = (amount: number, discount_id: string) => {
+    // Find discount using discount id
+    const selectedDiscount = discounts?.find(discount => discount.id === discount_id)
+    
+    if (!selectedDiscount) return
+    
+    const totalDiscount = amount * ((selectedDiscount?.percent ?? 0) / 100)
+    const discountedAmount = amount - totalDiscount
+    const discountedAmountWords = convertToWords(discountedAmount)
+
+    return {
+      discountedAmount: parseFloat(discountedAmount.toFixed(2).toString()) ?? 0,
+      discountedAmountWords: discountedAmountWords ?? ''
     }
   }
 
@@ -327,14 +377,14 @@ const OfficialReceipt = () => {
           toast.success(res?.message)
           setFormSaveLoading(false)
           fetchParticulars()
+
+          handleClear() 
         })
         .catch((error) => {
           const res = error?.response?.data.data
           toast.error(res.message)
           setFormSaveLoading(false)
         })
-
-      handleClear()
     }
   }
 
@@ -354,14 +404,14 @@ const OfficialReceipt = () => {
           toast.success(res?.message)
           setFormSaveLoading(false)
           fetchDiscounts()
+
+          handleClear()
         })
         .catch((error) => {
           const res = error?.response?.data.data
           toast.error(res.message)
           setFormSaveLoading(false)
         })
-
-      handleClear()
     }
   }
 
@@ -370,19 +420,8 @@ const OfficialReceipt = () => {
     if (accessToken) {
       API.getPrintableOR(accessToken, orId, paperSizeId)
         .then((response) => {
-          console.log(response.data.data.pdf)
           setPrintUrl(`data:application/pdf;base64,${response.data.data.pdf}`)
           handleDialogOpen('print')
-
-          // const res = response?.data.data
-          // if (res?.error) {
-          //   toast.error(res?.message)
-          //   return
-          // }
-
-          // toast.success(res?.message)
-          // const win = window.open(res?.url, '_blank')
-          // win?.focus()
         })
         .catch((error) => {
           console.log(error.message)

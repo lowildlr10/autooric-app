@@ -15,7 +15,10 @@ const CreateOrFields = ({
   particulars,
   discounts,
   formData,
-  handleDialogOpen
+  handleDialogOpen,
+  fetchPayor,
+  fetchParticular,
+  fetchDiscount
 }: ICreateOrFieldsProps) => {
   const [formattedPayors, setFormattedPayors] = useState<any>([])
   const [formattedParticulars, setFormattedParticulars] = useState<any>([])
@@ -47,12 +50,6 @@ const CreateOrFields = ({
       })))
     }
   }, [discounts])
-
-  useEffect(() => {
-    if (formData?.receipt_date === undefined || formData?.receipt_date === '') {
-      handleInputChange('receipt_date', dayjs().format('YYYY-MM-DD'))
-    }
-  }, [formData])
 
   return (
     <Stack 
@@ -106,13 +103,12 @@ const CreateOrFields = ({
         
       <Stack direction='row'>
         <Autocomplete
-          disablePortal
-          disableClearable
+          onFocus={() => fetchPayor()}
           freeSolo
           id="sel-payor"
           options={formattedPayors}
           fullWidth
-          clearOnBlur={false}
+          clearOnBlur
           renderInput={(params) => (
             <TextField 
               {...params} 
@@ -125,10 +121,10 @@ const CreateOrFields = ({
               fullWidth
             />
           )}
-          value={formData?.payor_id ? 
-            payors.find(payor => payor.id === formData?.payor_id)?.payor_name ?? formData?.payor_id : 
-            null
-          }
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') event.defaultMuiPrevented = true
+          }}
+          isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
           getOptionLabel={(option: any) => {
             // Value selected with enter, right from the input
             if (typeof option === 'string') {
@@ -169,7 +165,9 @@ const CreateOrFields = ({
       <Stack direction='row' gap={2}>
         <Stack flex={1}>
           <Autocomplete
-            disablePortal
+            onFocus={() => fetchParticular()}
+            clearOnBlur
+            handleHomeEndKeys={false}
             id="sel-particulars"
             options={formattedParticulars}
             fullWidth
@@ -185,13 +183,10 @@ const CreateOrFields = ({
                 fullWidth
               />
             )}
-            value={formData?.nature_collection_id ?
-              particulars.find(
-                particular => 
-                  particular.id === formData?.nature_collection_id
-                )?.particular_name :
-                null
-            }
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') event.defaultMuiPrevented = true
+            }}
+            isOptionEqualToValue={(option: any, value: any) => option?.id === value?.id}
             onChange={(e: any, newValue: any) => {
               handleInputChange('nature_collection_id', newValue?.id ?? '')
             }}
@@ -234,7 +229,9 @@ const CreateOrFields = ({
       <Stack direction='row' gap={2}>
         <Stack flex={1}>
           <Autocomplete
-            disablePortal
+            onFocus={() => fetchDiscount()}
+            clearOnBlur
+            handleHomeEndKeys={false}
             id="sel-discounts"
             options={formattedDiscounts}
             fullWidth
@@ -249,15 +246,12 @@ const CreateOrFields = ({
                 fullWidth
               />
             )}
-            value={formData?.discount_id ? 
-              discounts.find(
-                discount => 
-                  discount.id === formData?.discount_id
-                )?.discount_name : 
-                null
-            }
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') event.defaultMuiPrevented = true
+            }}
+            isOptionEqualToValue={(option: any, value: any) => option?.id === value?.id}
             onChange={(e: any, newValue: any) => {
-              handleInputChange('discount_id', newValue.id ?? '')
+              handleInputChange('discount_id', newValue?.id ?? '')
             }}
           />
         </Stack>
@@ -432,13 +426,14 @@ const CreateOr = ({
   handleInputChange,
   handlePrint,
   handleClear,
-  handleResync,
+  fetchDiscount,
+  fetchParticular,
+  fetchPayor,
   handleDialogOpen
 }: ICreateOrProps) => {
 
   useEffect(() => {
     handleClear()
-    handleResync()
   }, [])
 
   return (
@@ -460,6 +455,9 @@ const CreateOr = ({
             discounts={discounts}
             formData={formData}
             handleDialogOpen={handleDialogOpen}
+            fetchDiscount={fetchDiscount}
+            fetchParticular={fetchParticular}
+            fetchPayor={fetchPayor}
           />
         </Stack>
         <Stack 
