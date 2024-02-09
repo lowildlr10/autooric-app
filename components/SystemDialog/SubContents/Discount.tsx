@@ -1,6 +1,6 @@
 import React from 'react'
 import { IDiscountsSubContentProps } from '@/Interfaces'
-import { TextField } from '@mui/material'
+import { InputAdornment, TextField } from '@mui/material'
 
 const Discount = ({
   formData,
@@ -31,12 +31,16 @@ const Discount = ({
         required
         fullWidth
         id="percent"
-        label="Percentage"
+        label="Percentage %"
         name="percent"
         autoComplete=""
         size='small'
         focused
-        autoFocus
+        inputProps={{ 
+          type: 'number',
+          max: 100,
+          endAdornment: <InputAdornment position="end">%</InputAdornment>
+        }}
         value={formData?.percent ?? ''}
         onChange={handleInputChange}
         sx={{ m: 0 }}

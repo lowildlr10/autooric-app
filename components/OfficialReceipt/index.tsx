@@ -325,7 +325,7 @@ const OfficialReceipt = () => {
   // Handle create official receipt
   const handleCreateOr = (formData: IOfficialReceipt, print = false) => {
     setFormSaveLoading(true)
-    if (accessToken) {
+    if (accessToken && changedAmountDiscount === false) {
       API.createOfficialReceipt(accessToken, formData)
         .then((response) => {
           const res = response?.data.data
@@ -350,6 +350,9 @@ const OfficialReceipt = () => {
           toast.error(res?.message ?? 'Unknown error occurred.')
           setFormSaveLoading(false)
         })
+    } else {
+      toast.error('Please wait for the discount computation to finish.')
+      setFormSaveLoading(false)
     }
   }
 
@@ -394,6 +397,9 @@ const OfficialReceipt = () => {
           toast.error(res.message)
           setFormSaveLoading(false)
         })
+    } else {
+      toast.error('An error occurred while creating particulars. Please try again.')
+      setFormSaveLoading(false)
     }
   }
 
@@ -421,6 +427,9 @@ const OfficialReceipt = () => {
           toast.error(res.message)
           setFormSaveLoading(false)
         })
+    } else {
+      toast.error('An error occurred while creating discounts. Please try again.')
+      setFormSaveLoading(false)
     }
   }
 
@@ -435,6 +444,8 @@ const OfficialReceipt = () => {
         .catch((error) => {
           console.log(error.message)
         })
+    } else {
+      toast.error('An error occurred while fetching printable official receipt. Please try again.')
     }
   }
 
@@ -497,7 +508,7 @@ const OfficialReceipt = () => {
         content="particulars"
         formData={particularFormData} 
         handleClose={() => handleDialogClose('create_particulars')} 
-        handleClear={handleClear}
+        handleClear={() => setParticularFormData(defaultParticularFormData)}
         handleCreate={handleCreateParticulars}
         handleInputChange={handleInputChangeParticulars}
       />
@@ -508,7 +519,7 @@ const OfficialReceipt = () => {
         content="discounts" 
         formData={discountFormData}
         handleClose={() => handleDialogClose('create_discounts')} 
-        handleClear={handleClear}
+        handleClear={() => setDiscountFormData(defaultDiscountFormData)}
         handleCreate={handleCreateDiscount}
         handleInputChange={handleInputChangeDiscounts}
       />

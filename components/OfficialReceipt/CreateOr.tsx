@@ -240,8 +240,8 @@ const CreateOrFields = ({
           focused
           sx={{ m: 0 }}
           value={formData?.amount ?? ''}
-          inputProps={{ type: 'number'}}
           InputProps={{
+            type: 'number',
             startAdornment: <InputAdornment position="start">₱</InputAdornment>,
           }}
           onChange={e => handleInputChange(e.target.name, e.target.value)}
