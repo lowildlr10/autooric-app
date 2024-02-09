@@ -22,7 +22,6 @@ const Discount = ({
         autoFocus
         value={formData?.discount_name ?? ''}
         onChange={handleInputChange}
-        sx={{ m: 0 }}
       />
 
       <TextField
@@ -36,14 +35,13 @@ const Discount = ({
         autoComplete=""
         size='small'
         focused
-        inputProps={{ 
+        sx={{ m: 0 }}
+        InputProps={{
           type: 'number',
-          max: 100,
           endAdornment: <InputAdornment position="end">%</InputAdornment>
         }}
         value={formData?.percent ?? ''}
         onChange={handleInputChange}
-        sx={{ m: 0 }}
       />
     </>
   )
