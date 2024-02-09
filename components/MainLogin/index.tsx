@@ -34,6 +34,7 @@ const MainLogin = () => {
   useEffect(() => {
     if (loading) return
     if (!userLoading && isAuthenticated) {
+      setLoginLoading(true)
       toast.success('Logging in...')
       window.location.href = '/official-receipt'
     }
