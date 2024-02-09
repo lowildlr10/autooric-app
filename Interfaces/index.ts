@@ -115,7 +115,7 @@ export interface IOfficialReceipt {
   deposit?: number
   amount_words?: string
   card_no?: string
-  payment_mode?: 'cash' | 'check' | 'money_order'
+  payment_mode?: '' | 'cash' | 'check' | 'money_order'
   is_cancelled?: boolean
 }
 
@@ -155,6 +155,7 @@ export interface ICreateOrProps {
   payors: IPayor[]
   particulars: IParticular[]
   discounts: IDiscount[]
+  computingDiscount?: boolean
   formData: IOfficialReceipt
   handleCreate: (formData: IOfficialReceipt, print: boolean) => void
   handleInputChange: (input_name: string, value: string | number | null) => void
@@ -178,6 +179,7 @@ export interface ICreateOrFieldsProps {
   payors: IPayor[]
   particulars: IParticular[]
   discounts: IDiscount[]
+  computingDiscount?: boolean
   formData: IOfficialReceipt
   handleInputChange: (input_name: string, value: string | number | null) => void
   handleDialogOpen: (dialogType: OpenDialogType) => void

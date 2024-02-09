@@ -16,6 +16,27 @@ import OrList from './OrList'
 import { ToWords } from 'to-words'
 import dayjs from 'dayjs'
 
+const defaultCreateOrFormData: IOfficialReceipt = {
+  receipt_date: dayjs().format('YYYY-MM-DD'),
+  or_no: '',
+  payor_id: '',
+  nature_collection_id: '',
+  discount_id: '',
+  amount: 0,
+  amount_words: '',
+  payment_mode: '',
+}
+
+const defaultParticularFormData: IParticular = {
+  particular_name: '',
+  category_id: ''
+}
+
+const defaultDiscountFormData: IDiscount = {
+  discount_name: '',
+  percent: 0
+}
+
 const OfficialReceipt = () => {
   const { accessToken, forceRelogin } = useAccessToken()
   const { userInfo, isAuthenticated, userLoading } = useUserInfo(accessToken ?? '')
@@ -36,32 +57,35 @@ const OfficialReceipt = () => {
   const [orList, setOrList] = useState<IOfficialReceipt[]>()
   const [paperSizes, setPaperSizes] = useState<IPaperSize[]>()
   const [paperSize, setPaperSize] = useState('')
-  const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>({})
-  const [particularFormData, setParticularFormData] = useState<IParticular>({})
-  const [discountFormData, setDiscountFormData] = useState<IDiscount>({})
+  const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>(defaultCreateOrFormData)
+  const [particularFormData, setParticularFormData] = useState<IParticular>(defaultParticularFormData)
+  const [discountFormData, setDiscountFormData] = useState<IDiscount>(defaultDiscountFormData)
   const [printUrl, setPrintUrl] = useState('')
+  const [changedAmountDiscount, setChangedAmountDiscount] = useState(false)
 
+  // Discount computation with timeOut
   useEffect(() => {
-    console.log(createOrFormData)
-  }, [createOrFormData])
+    if (changedAmountDiscount && createOrFormData?.amount && createOrFormData?.discount_id) {
+      const timer = setTimeout(() => {
+        const discount = handleComputeDiscountedAmount(
+          createOrFormData?.amount as number, createOrFormData?.discount_id as string
+        )
 
-  useEffect(() => {
-    console.log(particularFormData)
-  }, [particularFormData])
+        setCreateOrFormData({
+          ...createOrFormData,
+          amount: discount?.discountedAmount as number,
+          amount_words: discount?.discountedAmountWords as string
+        })
 
-  useEffect(() => {
-    console.log(discountFormData)
-  }, [discountFormData])
+        setChangedAmountDiscount(false)
+      }, 2000)
 
-  useEffect(() => {
-    if (createOrFormData?.receipt_date === undefined || createOrFormData?.receipt_date === '') {
-      handleInputChange('receipt_date', dayjs().format('YYYY-MM-DD'))
+      return () => clearTimeout(timer)
+    } else {
+      setChangedAmountDiscount(false)
     }
-  }, [createOrFormData])
+  }, [changedAmountDiscount, createOrFormData])
 
-  useEffect(() => {
-    if (discounts) console.log(discounts)
-  }, [discounts])
 
   useEffect(() => {
     if (!accessToken) return
@@ -134,6 +158,7 @@ const OfficialReceipt = () => {
         particulars={particulars ?? []} 
         discounts={discounts ?? []} 
         formData={createOrFormData}
+        computingDiscount={changedAmountDiscount}
         handleInputChange={(input_name, value) => handleInputChange(input_name, value)}
         handleCreate={(data, print) => handleCreateOr(data, print)}
         handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId)}
@@ -261,16 +286,20 @@ const OfficialReceipt = () => {
   const handleInputChange = (input_name: string, value: string | number | null) => {
     let amountWords = ''
 
+    if (input_name === 'discount_id') setChangedAmountDiscount(true)
     if (input_name === 'amount') {
+      setChangedAmountDiscount(true)
       try {
-        amountWords = convertToWords(value as number)
-      } catch (error) {}
-    }
+        amountWords = convertToWords(value as number ?? 0)
 
-    if (amountWords) {
+        if (!!value === false) amountWords = ''
+      } catch (error) {
+        amountWords = ''
+      }
+    
       setCreateOrFormData({ 
         ...createOrFormData, 
-        [input_name]: value, 
+        amount: value as number, 
         amount_words: amountWords
       })
     } else {
@@ -288,34 +317,15 @@ const OfficialReceipt = () => {
 
   // Handle clear form
   const handleClear = () => {
-    setCreateOrFormData({})
-    setParticularFormData({})
-    setDiscountFormData({})
-  }
-
-  // Handle resync all data
-  const handleResync = () => {
-    fetchPayors()
-    fetchDiscounts()
-    fetchParticulars()
-    fetchOfficialReceipts()
-    fetchPaperSizes()
+    setCreateOrFormData(defaultCreateOrFormData)
+    setParticularFormData(defaultParticularFormData)
+    setDiscountFormData(defaultDiscountFormData)
   }
 
   // Handle create official receipt
   const handleCreateOr = (formData: IOfficialReceipt, print = false) => {
     setFormSaveLoading(true)
     if (accessToken) {
-      const discount = handleComputeDiscountedAmount(
-        formData?.amount as number, formData?.discount_id as string
-      )
-
-      formData = {
-        ...formData,
-        amount: discount?.discountedAmount as number,
-        amount_words: discount?.discountedAmountWords as string
-      }
-
       API.createOfficialReceipt(accessToken, formData)
         .then((response) => {
           const res = response?.data.data
@@ -328,13 +338,12 @@ const OfficialReceipt = () => {
 
           toast.success(res?.message)
           setFormSaveLoading(false)
-          fetchOfficialReceipts()
 
           if (print) {
             handlePrint(res?.data?.id, paperSize)
           }
 
-          handleClear() 
+          setCreateOrFormData(defaultCreateOrFormData)
         })
         .catch((error) => {
           const res = error?.response?.data.data
@@ -356,7 +365,7 @@ const OfficialReceipt = () => {
     const discountedAmountWords = convertToWords(discountedAmount)
 
     return {
-      discountedAmount: parseFloat(discountedAmount.toFixed(2).toString()) ?? 0,
+      discountedAmount: discountedAmount ?? 0,
       discountedAmountWords: discountedAmountWords ?? ''
     }
   }
@@ -378,7 +387,7 @@ const OfficialReceipt = () => {
           setFormSaveLoading(false)
           fetchParticulars()
 
-          handleClear() 
+          setParticularFormData(defaultParticularFormData)
         })
         .catch((error) => {
           const res = error?.response?.data.data
@@ -405,7 +414,7 @@ const OfficialReceipt = () => {
           setFormSaveLoading(false)
           fetchDiscounts()
 
-          handleClear()
+          setDiscountFormData(defaultDiscountFormData)
         })
         .catch((error) => {
           const res = error?.response?.data.data

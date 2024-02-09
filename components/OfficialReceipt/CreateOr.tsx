@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Autocomplete, Button, Divider, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, Stack, TextField, Typography, createFilterOptions } from '@mui/material'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Autocomplete, Button, CircularProgress, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, Stack, TextField, Typography, createFilterOptions } from '@mui/material'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -14,6 +14,7 @@ const CreateOrFields = ({
   payors,
   particulars,
   discounts,
+  computingDiscount,
   formData,
   handleDialogOpen,
   fetchPayor,
@@ -23,6 +24,21 @@ const CreateOrFields = ({
   const [formattedPayors, setFormattedPayors] = useState<any>([])
   const [formattedParticulars, setFormattedParticulars] = useState<any>([])
   const [formattedDiscounts, setFormattedDiscounts] = useState<any>([])
+  const payorValue = useMemo(
+    () => formattedPayors.find(
+      (payor: any) => payor.id === formData?.payor_id) ?? formData?.payor_id, 
+      [formattedPayors, formData?.payor_id]
+  )
+  const particularValue = useMemo(
+    () => formattedParticulars.find(
+      (particular: any) => particular.id === formData?.nature_collection_id) ?? '', 
+      [formattedParticulars, formData?.nature_collection_id]
+  )
+  const discountValue = useMemo(
+    () => formattedDiscounts.find(
+      (discount: any) => discount.id === formData?.discount_id) ?? '', 
+      [formattedDiscounts, formData?.discount_id]
+  )
 
   useEffect(() => {
     if (payors) {
@@ -156,6 +172,7 @@ const CreateOrFields = ({
 
             return filtered;
           }}
+          value={payorValue}
           onChange={(e: any, newValue: any) => {
             handleInputChange('payor_id', newValue?.id ?? newValue?.inputValue ?? '')
           }}
@@ -166,6 +183,7 @@ const CreateOrFields = ({
         <Stack flex={1}>
           <Autocomplete
             onFocus={() => fetchParticular()}
+            freeSolo
             clearOnBlur
             handleHomeEndKeys={false}
             id="sel-particulars"
@@ -190,6 +208,7 @@ const CreateOrFields = ({
             onChange={(e: any, newValue: any) => {
               handleInputChange('nature_collection_id', newValue?.id ?? '')
             }}
+            value={particularValue}
           />
         </Stack>
         <Stack>
@@ -207,7 +226,7 @@ const CreateOrFields = ({
         </Stack>
       </Stack>
 
-      <Stack direction='row' gap={4}>
+      <Stack>
         <TextField
           variant="outlined"
           margin="normal"
@@ -222,14 +241,30 @@ const CreateOrFields = ({
           sx={{ m: 0 }}
           value={formData?.amount ?? ''}
           inputProps={{ type: 'number'}}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">₱</InputAdornment>,
+          }}
           onChange={e => handleInputChange(e.target.name, e.target.value)}
         />
+        {computingDiscount && (
+          <FormHelperText 
+            sx={{ 
+              color: 'secondary.light', 
+              '& svg': { color: 'secondary.light' }
+            }}
+          >
+            <em>
+              <CircularProgress size='0.7rem' /> Computing discount...
+            </em>
+          </FormHelperText>
+        )}
       </Stack>
 
       <Stack direction='row' gap={2}>
         <Stack flex={1}>
           <Autocomplete
             onFocus={() => fetchDiscount()}
+            freeSolo
             clearOnBlur
             handleHomeEndKeys={false}
             id="sel-discounts"
@@ -253,6 +288,7 @@ const CreateOrFields = ({
             onChange={(e: any, newValue: any) => {
               handleInputChange('discount_id', newValue?.id ?? '')
             }}
+            value={discountValue}
           />
         </Stack>
         <Stack>
@@ -421,6 +457,7 @@ const CreateOr = ({
   payors,
   particulars,
   discounts,
+  computingDiscount,
   formData,
   handleCreate,
   handleInputChange,
@@ -453,6 +490,7 @@ const CreateOr = ({
             payors={payors}
             particulars={particulars}
             discounts={discounts}
+            computingDiscount={computingDiscount}
             formData={formData}
             handleDialogOpen={handleDialogOpen}
             fetchDiscount={fetchDiscount}
