@@ -215,7 +215,7 @@ const OfficialReceipt = () => {
     if (index === 0)
       return (
         <CreateOr
-          personelName={
+          personnelName={
             userInfo
               ? `${userInfo?.first_name} ${userInfo?.last_name}`
               : 'Loading...'
@@ -242,6 +242,7 @@ const OfficialReceipt = () => {
       const rows = orListData?.data?.map((or: any) => {
         return {
           id: or.id,
+          accountable_personnel: `${or.accountable_personnel.first_name} ${or.accountable_personnel.last_name}`,
           receipt_date: dayjs(or.receipt_date).format('MM/DD/YYYY'),
           cancelled_date:
             !!or.cancelled_date === true
@@ -288,11 +289,6 @@ const OfficialReceipt = () => {
 
       return (
         <OrList
-          personelName={
-            userInfo
-              ? `${userInfo?.first_name} ${userInfo?.last_name}`
-              : 'Loading...'
-          }
           rows={rows ?? []}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}

@@ -135,6 +135,7 @@ export interface IParticular {
 export interface IOfficialReceipt {
   id?: string
   accountable_personnel_id?: string
+  accountable_personnel?: string
   receipt_date?: string
   deposited_date?: string
   cancelled_date?: string
@@ -189,7 +190,7 @@ export interface ITabPanelProps {
 }
 
 export interface ICreateOrProps {
-  personelName: string
+  personnelName: string
   payors?: IPayor[]
   particulars?: IParticular[]
   discounts?: IDiscount[]
@@ -224,7 +225,7 @@ export interface ICreateOrActionButtonsProps {
 }
 
 export interface ICreateOrFieldsProps {
-  personelName: string
+  personnelName: string
   payors?: IPayor[]
   particulars?: IParticular[]
   discounts?: IDiscount[]
@@ -262,7 +263,6 @@ export interface ITableListLinks {
 }
 
 export interface IOrListProps {
-  personelName: string
   rows: IOfficialReceipt[]
   currentPage: number
   nextPageUrl: string

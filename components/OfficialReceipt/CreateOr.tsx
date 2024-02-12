@@ -33,7 +33,7 @@ const filter = createFilterOptions<any>()
 
 const CreateOrFields = ({
   handleInputChange,
-  personelName,
+  personnelName,
   payors,
   particulars,
   discounts,
@@ -571,7 +571,7 @@ const CreateOrFields = ({
               fontSize: '0.9rem',
             }}
           >
-            Accountable Personel:
+            Accountable Personnel:
           </Typography>
           <Typography
             color='text.primary'
@@ -583,7 +583,7 @@ const CreateOrFields = ({
               fontSize: '0.9rem',
             }}
           >
-            {personelName}
+            {personnelName}
           </Typography>
           <Typography
             color='text.secondary'
@@ -729,7 +729,7 @@ const ActionButtons = ({
 }
 
 const CreateOr = ({
-  personelName,
+  personnelName,
   payors,
   particulars,
   discounts,
@@ -763,7 +763,7 @@ const CreateOr = ({
         <Stack alignItems={{ xs: 'center', lg: 'end' }}>
           <CreateOrFields
             handleInputChange={handleInputChange}
-            personelName={personelName}
+            personnelName={personnelName}
             payors={payors}
             particulars={particulars}
             discounts={discounts}

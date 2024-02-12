@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import TableList from '../TableList'
 import { IOfficialReceipt, IOrColumn, IOrListProps } from '@/Interfaces'
 import CreateOr from './CreateOr'
@@ -14,7 +14,6 @@ const columns: readonly IOrColumn[] = [
 ]
 
 const OrList = ({
-  personelName,
   rows,
   currentPage,
   nextPageUrl,
@@ -62,7 +61,7 @@ const OrList = ({
   if (showDetails) {
     return (
       <CreateOr
-        personelName={personelName}
+        personnelName={details?.accountable_personnel ?? ''}
         formData={details ?? {}}
         readOnly={showDetails}
         handleClose={handleCloseDetails}
