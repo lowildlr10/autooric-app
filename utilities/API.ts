@@ -77,6 +77,15 @@ export default class API {
 		})
 	}
 
+	// Fetch all official receipts with URL
+	static async getOfficialReceiptsByUrl(accessToken: string, url: string) {
+		return axios.get(url, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		})
+	}
+
 	// Fetch all discounts
 	static async getDiscounts(accessToken: string) {
 		return axios.get(`${API.API_BASE_URL}/api/v1/discounts`, {

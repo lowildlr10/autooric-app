@@ -6,10 +6,10 @@ import Loader from '../Loader'
 import MiniVariantDrawer from '../Drawer/MiniVariantDrawer'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
-import { SelectChangeEvent, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import SystemDialog from '../SystemDialog'
 import CardContainer from '../CardContainer'
-import { IDiscount, IOfficialReceipt, IOpenDialog, IPaperSize, IParticular, IPayor, ITabContents, ITabPanelProps, OpenDialogType } from '@/Interfaces'
+import { IDiscount, IOfficialReceipt, IOpenDialog, IPaperSize, IParticular, IPayor, ITabContents, OpenDialogType } from '@/Interfaces'
 import TabContainer, { CustomTabPanel } from '../TabContainer'
 import CreateOr from './CreateOr'
 import OrList from './OrList'
@@ -54,7 +54,7 @@ const OfficialReceipt = () => {
   const [payors, setPayors] = useState<IPayor[]>()
   const [discounts, setDiscounts] = useState<IDiscount[]>()
   const [particulars, setParticulars] = useState<IParticular[]>()
-  const [orList, setOrList] = useState<IOfficialReceipt[]>()
+  const [orListData, setOrListData] = useState<any>()
   const [paperSizes, setPaperSizes] = useState<IPaperSize[]>()
   const [paperSize, setPaperSize] = useState('')
   const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>(defaultCreateOrFormData)
@@ -86,11 +86,15 @@ const OfficialReceipt = () => {
     }
   }, [changedAmountDiscount, createOrFormData])
 
-
   useEffect(() => {
     if (!accessToken) return
     fetchPaperSizes()
   }, [accessToken])
+
+  useEffect(() => {
+    if (!accessToken || tabValue !== 1) return
+    fetchOfficialReceipts()
+  }, [accessToken, tabValue])
 
   useEffect(() => {
     setTabContents([
@@ -103,7 +107,7 @@ const OfficialReceipt = () => {
         label: 'OR LIST'
       }
     ])
-  }, [payors, particulars, discounts, orList])
+  }, [])
 
   // Set default paper size
   useEffect(() => {
@@ -150,6 +154,10 @@ const OfficialReceipt = () => {
     }
   }
 
+  const handlePageChange = (url: string) => {
+    fetchOfficialReceipts(url)
+  }
+
   const dynamicTabContents = (index: number) => {
     if (index === 0) return (
       <CreateOr 
@@ -170,9 +178,39 @@ const OfficialReceipt = () => {
       />
     )
 
-    if (index === 1) return (
-      <OrList />
-    )
+    if (index === 1) {
+      const rows = orListData?.data?.map((or: any) => {
+        return {
+          id: or.id,
+          receipt_date: dayjs(or.receipt_date).format('MM/DD/YYYY'),
+          or_no: or.or_no,
+          payor: or.payor.payor_name,
+          nature_collection: or.nature_collection.particular_name,
+          amount: or.amount.toFixed(2)
+        }
+      })
+      const currentPage = orListData?.current_page
+      const nextPageUrl = orListData?.next_page_url
+      const prevPageUrl = orListData?.prev_page_url
+      const from = orListData?.from
+      const to = orListData?.to
+      const total = orListData?.total
+      const links = orListData?.links
+
+      return (
+        <OrList 
+          rows={rows ?? []}
+          currentPage={currentPage}
+          nextPageUrl={nextPageUrl}
+          prevPageUrl={prevPageUrl} 
+          from={from}
+          to={to}
+          total={total}
+          links={links}
+          handlePageChange={handlePageChange}
+        />
+      )
+    }
   }
 
   // Fetch discounts
@@ -210,19 +248,34 @@ const OfficialReceipt = () => {
   }
 
   // Fetch official receipts
-  const fetchOfficialReceipts = () => {
+  const fetchOfficialReceipts = (url?: string) => {
     setOrListLoading(true)
     if (accessToken) {
-      API.getOfficialReceipts(accessToken)
-        .then((response) => {
-          const res = response?.data.data
-          setOrList(res)
-          setOrListLoading(false)
-        })
-        .catch((error) => {
-          toast.error('An error occurred while fetching official receipts. Please try again.')
-          setOrListLoading(false)
-        })
+      const errorMessage = 'An error occurred while fetching official receipts. Please try again.'
+
+      if (url) {
+        API.getOfficialReceiptsByUrl(accessToken, url)
+          .then((response) => {
+            const res = response?.data.data
+            setOrListData(res)
+            setOrListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setOrListLoading(false)
+          })
+      } else {
+        API.getOfficialReceipts(accessToken)
+          .then((response) => {
+            const res = response?.data.data
+            setOrListData(res)
+            setOrListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setOrListLoading(false)
+          })
+      }
     }
   }
 
@@ -282,7 +335,7 @@ const OfficialReceipt = () => {
     setTabValue(newValue)
   }
 
-  // // Handle input changes
+  // Handle input changes
   const handleInputChange = (input_name: string, value: string | number | null) => {
     let amountWords = ''
 

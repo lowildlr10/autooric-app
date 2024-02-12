@@ -1,6 +1,4 @@
 import { SvgIconComponent } from "@mui/icons-material"
-import { SelectChangeEvent } from "@mui/material"
-import { ReactElement } from "react"
 
 export interface ILoginProps {
   username: string
@@ -186,4 +184,80 @@ export interface ICreateOrFieldsProps {
   fetchPayor: () => void
   fetchParticular: () => void
   fetchDiscount: () => void
+}
+
+export interface IOrColumn {
+  id: 'receipt_date' | 'or_no' | 'payor' | 'nature_collection' | 'amount'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
+export interface IOrListRow {
+  id?: string
+  receipt_date: string
+  or_no: string
+  payor: string
+  nature_collection: string
+  amount: number
+}
+
+export interface ITableListLinks {
+  url: string
+  label: string
+  active: boolean
+}
+
+export interface IOrListProps {
+  rows: IOrListRow[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handlePageChange: (url: string) => void
+}
+
+export interface ITableListProps {
+  displayType: 'official_receipt' | 'particulars' | 'discounts' | 'signatories' | 'paper_sizes'
+  columns: any
+  rows: any
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  search: string
+  searchLoading: boolean
+  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handlePageChange: (url: string) => void
+} 
+
+export interface ITableListPaginationProps {
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handlePageChange: (url: string) => void
+} 
+
+export interface ITableListActionSectionProps {
+  search: string
+  hasCreateButton?: boolean
+  searchLoading: boolean
+  handleCreate?: () => void
+  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface ITableListActionSectionSearchProps {
+  search: string
+  loading: boolean
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
