@@ -141,4 +141,22 @@ export default class API {
 			},
 		})
 	}
+
+	// Update official receipt deposit
+	static async depositOfficialReceipt(accessToken: string, orId: string, formData: any) {
+		return axios.post(`${API.API_BASE_URL}/api/v1/official-receipts/${orId}/deposit?_method=PATCH`, formData, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		})
+	}
+
+	// Cancel official receipt
+	static async cancelOfficialReceipt(accessToken: string, orId: string) {
+		return axios.post(`${API.API_BASE_URL}/api/v1/official-receipts/${orId}/cancel?_method=PATCH`, {}, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		})
+	}
 }

@@ -30,18 +30,26 @@ export type DialogContent = 'particulars' | 'discounts' | 'signatories' | 'paper
 
 export interface ISystemDialogProps {
   open: boolean
+  id?: string
   title: string
-  dialogType: 'logout' | 'create' | 'update' | 'delete' | 'print'
+  dialogType: 'logout' | 'create' | 'update' | 'delete' | 'print' | 'cancel' | 'deposit'
   content?:DialogContent
-  formData?: ILoginProps | IParticular | IDiscount | IPaperSize
+  formData?: ILoginProps | IParticular | IDiscount | IPaperSize | IDeposit
   printUrl?: string
   handleClose: () => void
   handleLogout?: () => void
+  handleCancel?: (id: string) => void
+  handleDeposit?: (formData: any) => void
   handleCreate?: (formData: any) => void
   handleUpdate?: (formData: any) => void
   handleDelete?: (id: string) => void
   handleClear?: () => void
   handleInputChange?: any
+}
+
+export interface IDepositContentProps {
+  formData: any
+  handleInputChange: any
 }
 
 export interface ICreateContentProps {
@@ -64,11 +72,19 @@ export interface IDiscountsSubContentProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export type OpenDialogType = 'logout' | 'create_particulars' | 'create_discounts' | 'print'
+export interface IDepositSubContentProps {
+  formData: IDeposit
+  handleInputChange: (input_name: string, value: string | number | null) => void
+}
+
+export type OpenDialogType = 
+  'logout' | 'create_particulars' | 'create_discounts' | 'print' | 'deposit_or' | 'cancel_or'
 export interface IOpenDialog {
   logout?: boolean
   create_particulars?: boolean
   create_discounts?: boolean
+  deposit_or?: boolean
+  cancel_or?: boolean
   print?: boolean
 }
 
@@ -116,6 +132,7 @@ export interface IOfficialReceipt {
   payor?: string
   nature_collection?: string
   discount?: string
+  discount_percent?: number
   payment_mode?: '' | 'cash' | 'check' | 'money_order'
   is_cancelled?: boolean
   status?: string
@@ -200,7 +217,7 @@ export interface ICreateOrFieldsProps {
 }
 
 export interface IOrColumn {
-  id: 'receipt_date' | 'or_no' | 'payor' | 'nature_collection' | 'amount' | 'status'
+  id: 'receipt_date' | 'or_no' | 'payor' | 'nature_collection' | 'amount' | 'status' | 'deposit'
   label: string
   minWidth?: number
   align?: 'right' | 'center' | 'left'
@@ -222,7 +239,13 @@ export interface IOrListProps {
   to: number
   total: number
   links: ITableListLinks[]
+  showDetails: boolean
+  details: IOfficialReceipt
+  handleShowDetails: (details: IOfficialReceipt) => void
+  handleCloseDetails: () => void
   handlePageChange: (url: string) => void
+  handleDeposit: () => void
+  handleCancel: () => void
 }
 
 export interface ITableListProps {
@@ -266,4 +289,13 @@ export interface ITableListActionSectionSearchProps {
   search: string
   loading: boolean
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface IDeposit {
+  id: string
+  deposit: number
+  has_discount: boolean
+  card_no?: string
+  regular: number
+  discounted: number
 }

@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { Stack } from '@mui/material'
 import SystemDialog from '../SystemDialog'
 import CardContainer from '../CardContainer'
-import { IDiscount, IOfficialReceipt, IOpenDialog, IPaperSize, IParticular, IPayor, ITabContents, OpenDialogType } from '@/Interfaces'
+import { IDeposit, IDiscount, IOfficialReceipt, IOpenDialog, IPaperSize, IParticular, IPayor, ITabContents, OpenDialogType } from '@/Interfaces'
 import TabContainer, { CustomTabPanel } from '../TabContainer'
 import CreateOr from './CreateOr'
 import OrList from './OrList'
@@ -37,6 +37,15 @@ const defaultDiscountFormData: IDiscount = {
   percent: 0
 }
 
+const defaultDepositFormData: IDeposit = {
+  id: '',
+  deposit: 0,
+  has_discount: false,
+  card_no: '',
+  regular: 0,
+  discounted: 0,
+}
+
 const OfficialReceipt = () => {
   const { accessToken, forceRelogin } = useAccessToken()
   const { userInfo, isAuthenticated, userLoading } = useUserInfo(accessToken ?? '')
@@ -60,8 +69,11 @@ const OfficialReceipt = () => {
   const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>(defaultCreateOrFormData)
   const [particularFormData, setParticularFormData] = useState<IParticular>(defaultParticularFormData)
   const [discountFormData, setDiscountFormData] = useState<IDiscount>(defaultDiscountFormData)
+  const [depositFormData, setDepositFormData] = useState<IDeposit>(defaultDepositFormData)
   const [printUrl, setPrintUrl] = useState('')
   const [changedAmountDiscount, setChangedAmountDiscount] = useState(false)
+  const [details, setDetails] = useState<IOfficialReceipt | undefined>({})
+  const [showDetails, setShowDetails] = useState(false)
 
   // Discount computation with timeOut
   useEffect(() => {
@@ -183,14 +195,15 @@ const OfficialReceipt = () => {
         return {
           id: or.id,
           receipt_date: dayjs(or.receipt_date).format('MM/DD/YYYY'),
-          cancelled_date: dayjs(or.cancelled_date).format('MM/DD/YYYY'),
-          deposited_date: dayjs(or.deposited_date).format('MM/DD/YYYY'),
+          cancelled_date: !!or.cancelled_date === true ? dayjs(or.cancelled_date).format('MM/DD/YYYY') : '',
+          deposited_date: !!or.deposited_date === true ? dayjs(or.deposited_date).format('MM/DD/YYYY') : '',
           or_no: or.or_no,
           payor: or.payor.payor_name,
           nature_collection: or.nature_collection.particular_name,
           amount: or.amount.toFixed(2),
           amount_words: or.amount_words,
           discount: or?.discount?.discount_name ?? 'N/a',
+          discount_percent: or?.discount?.percent ?? 0,
           deposit: or.deposit,
           payment_mode: or.payment_mode,
           is_cancelled: or.is_cancelled,
@@ -218,6 +231,12 @@ const OfficialReceipt = () => {
           total={total}
           links={links}
           handlePageChange={handlePageChange}
+          handleDeposit={() => handleDialogOpen('deposit_or')}
+          handleCancel={() => handleDialogOpen('cancel_or')}
+          showDetails={showDetails}
+          details={details ?? {}}
+          handleShowDetails={handleShowDetails}
+          handleCloseDetails={handleCloseDetails}
         />
       )
     }
@@ -377,12 +396,17 @@ const OfficialReceipt = () => {
   const handleInputChangeDiscounts = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiscountFormData({ ...discountFormData, [e.target.name]: e.target.value })
   }
+  
+  const handleInputChangeDeposit = (input_name: string, value: string | number | null) => {
+    setDepositFormData({ ...depositFormData, [input_name]: value })
+  }
 
   // Handle clear form
   const handleClear = () => {
     setCreateOrFormData(defaultCreateOrFormData)
     setParticularFormData(defaultParticularFormData)
     setDiscountFormData(defaultDiscountFormData)
+    handleCloseDetails()
   }
 
   // Handle create official receipt
@@ -496,6 +520,91 @@ const OfficialReceipt = () => {
     }
   }
 
+  // Handle deposit OR
+  const handleDepositOr = (formData: IDeposit) => {
+    setFormSaveLoading(true)
+    if (accessToken) {
+      API.depositOfficialReceipt(accessToken, formData.id, formData)
+        .then((response) => {
+          const res = response?.data.data
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          fetchOfficialReceipts()
+          handleCloseDetails()
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res.message)
+          setFormSaveLoading(false)
+        })
+    } else {
+      toast.error('An error occurred while depositing official receipt. Please try again.')
+      setFormSaveLoading(false)
+    }
+  }
+
+  const handleCancelOr = (orId: string) => {
+    setFormSaveLoading(true)
+    if (accessToken && orId) {
+      API.cancelOfficialReceipt(accessToken, orId)
+        .then((response) => {
+          const res = response?.data.data
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          fetchOfficialReceipts()
+          handleCloseDetails()
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res.message)
+          setFormSaveLoading(false)
+        })
+    } else {
+      toast.error('An error occurred while cancelling official receipt. Please try again.')
+      setFormSaveLoading(false)
+    }
+  }
+
+  const handleShowDetails = (details: IOfficialReceipt) => {
+    const hasDiscount = details?.discount === 'N/a' ? false : true
+    const regular = hasDiscount ? 
+      (details?.amount ?? 0) / (1 - ((details?.discount_percent ?? 0) / 100)) ?? 0 :
+      details?.amount ?? 0
+    const discounted = hasDiscount ? 
+      (details?.amount ?? 0) :
+      0
+    const deposit = details?.amount ?? 0
+
+    setDetails(details)
+    setDepositFormData({
+      ...depositFormData,
+      id: details?.id ?? '',
+      has_discount: hasDiscount,
+      deposit,
+      regular,
+      discounted
+    })
+    setShowDetails(true)
+  }
+
+  const handleCloseDetails = () => {
+    setShowDetails(false)
+    setDetails({})
+    setDepositFormData(defaultDepositFormData)
+  }
+
   // Handle print official receipt
   const handlePrint = (orId: string, paperSizeId: string) => {
     if (accessToken) {
@@ -585,6 +694,23 @@ const OfficialReceipt = () => {
         handleClear={() => setDiscountFormData(defaultDiscountFormData)}
         handleCreate={handleCreateDiscount}
         handleInputChange={handleInputChangeDiscounts}
+      />
+      <SystemDialog 
+        open={dialogOpen.deposit_or ?? false} 
+        title="Deposit OR" 
+        dialogType="deposit"
+        formData={depositFormData}
+        handleClose={() => handleDialogClose('deposit_or')} 
+        handleDeposit={handleDepositOr}
+        handleInputChange={handleInputChangeDeposit}
+      />
+      <SystemDialog 
+        open={dialogOpen.cancel_or ?? false} 
+        title="Cancel OR" 
+        dialogType="cancel"
+        id={details?.id}
+        handleClose={() => handleDialogClose('cancel_or')} 
+        handleCancel={handleCancelOr}
       />
     </MiniVariantDrawer>
   )

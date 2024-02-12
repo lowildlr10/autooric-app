@@ -531,29 +531,46 @@ const ActionButtons = ({
   const renderDynamicContents = (readOnly: boolean) => {
     if (readOnly) return (
       <>
-        <Button
-          onClick={() => handleDeposit && handleDeposit()}
-          variant='contained'
-          color='primary'
-          fullWidth
-          sx={{  
-            py: '0.8em',
-          }}
-        >Deposit</Button>
-        <Divider />
-        <Button
-          onClick={() => handleCancel && handleCancel()}
-          variant='contained'
-          color='primary'
-          fullWidth
-          sx={{  
-            py: '0.8em',
-            bgcolor: 'warning.main',
-            '&:hover': {
-              bgcolor: 'warning.darker'
-            }
-          }}
-        >Cancel</Button>
+        {formData?.deposited_date !== '' && (
+          <Typography variant='body2' fontWeight={500} color='success'
+          >Deposited on: {formData?.deposited_date}</Typography>
+        )}
+
+        {formData?.cancelled_date !== '' && (
+          <Typography variant='body2' fontWeight={500} color='error'
+          >Cancelled on: {formData?.cancelled_date}</Typography>
+        )}
+
+        {!formData?.deposit && !formData?.is_cancelled && (
+          <>
+            <Button
+              onClick={() => handleDeposit && handleDeposit()}
+              variant='contained'
+              color='secondary'
+              fullWidth
+              sx={{  
+                py: '0.8em',
+              }}
+            >Deposit</Button>
+            <Divider />
+          </>
+        )}
+            
+        {!formData?.is_cancelled && (
+          <Button
+            onClick={() => handleCancel && handleCancel()}
+            variant='contained'
+            color='primary'
+            fullWidth
+            sx={{  
+              py: '0.8em',
+              bgcolor: 'warning.main',
+              '&:hover': {
+                bgcolor: 'warning.darker'
+              }
+            }}
+          >Cancel</Button>
+        )}
         <Button
           onClick={handleClose}
           variant='outlined'

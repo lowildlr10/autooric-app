@@ -13,9 +13,12 @@ import { useTheme } from '@mui/material/styles'
 import LogoutContent from './LogoutContent'
 import PrintContent from './PrintContent'
 import CreateContent from './CreateContent'
+import CancelContent from './CancelContent'
+import DepositContent from './DepositContent'
 
 const SystemDialog = ({
   open,
+  id,
   title,
   formData,
   printUrl,
@@ -25,7 +28,9 @@ const SystemDialog = ({
   handleLogout,
   handleCreate,
   handleUpdate,
+  handleCancel,
   handleDelete,
+  handleDeposit,
   handleClear,
   handleInputChange
 }: ISystemDialogProps) => {
@@ -43,6 +48,13 @@ const SystemDialog = ({
         <Stack py={2} px={3} gap={4}>  
           {dialogType === 'logout' && <LogoutContent />}
           {dialogType === 'print' && printUrl && <PrintContent printUrl={printUrl} />}
+          {dialogType === 'cancel' && <CancelContent />}
+          {dialogType === 'deposit' && (
+            <DepositContent 
+              formData={formData} 
+              handleInputChange={handleInputChange}
+            />
+          )}
           {dialogType === 'create' && content && handleInputChange && (
             <CreateContent 
               content={content} 
@@ -62,7 +74,7 @@ const SystemDialog = ({
           autoFocus
           sx={theme => ({ color: theme.palette.text.primary })}
         >
-          Cancel
+          Close
         </Button>
 
         {dialogType === 'logout' && (
@@ -75,6 +87,51 @@ const SystemDialog = ({
             autoFocus
           >
             Logout
+          </Button>
+        )}
+
+        {dialogType === 'cancel' && (
+          <Button 
+            onClick={() => {
+              handleCancel && handleCancel(id ?? '')
+              handleClose()
+            }} 
+            autoFocus
+            sx={{  
+              color: 'warning.main',
+            }}
+          >
+            Cancel
+          </Button>
+        )}
+
+        {dialogType === 'deposit' && (
+          <Button 
+            onClick={() => {
+              handleDeposit && handleDeposit(formData)
+              handleClose()
+            }} 
+            autoFocus
+            sx={{  
+              color: 'secondary.dark',
+            }}
+          >
+            Deposit
+          </Button>
+        )}
+
+        {dialogType === 'update' && (
+          <Button 
+            onClick={() => {
+              handleUpdate && handleUpdate(formData)
+              handleClose()
+            }} 
+            autoFocus
+            sx={{  
+              color: 'warning.main',
+            }}
+          >
+            Update
           </Button>
         )}
 

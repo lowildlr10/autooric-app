@@ -9,7 +9,8 @@ const columns: readonly IOrColumn[] = [
   { id: 'payor', label: 'Payor', minWidth: 180 },
   { id: 'nature_collection', label: 'Nature of Collection', minWidth: 150 },
   { id: 'status', label: 'Status', minWidth: 90, align: 'right'},
-  { id: 'amount', label: 'Amount', minWidth: 80, align: 'right'}
+  { id: 'amount', label: 'Amount', minWidth: 80, align: 'right'},
+  { id: 'deposit', label: 'Deposit', minWidth: 80, align: 'right'}
 ]
 
 const OrList = ({
@@ -22,12 +23,16 @@ const OrList = ({
   to,
   total,
   links,
-  handlePageChange
+  showDetails,
+  details,
+  handlePageChange,
+  handleDeposit,
+  handleCancel,
+  handleShowDetails,
+  handleCloseDetails
 }: IOrListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
-  const [details, setDetails] = useState<IOfficialReceipt | undefined>({})
-  const [showDetails, setShowDetails] = useState(false)
 
   useEffect(() => {
     if (search.trim()) {
@@ -50,25 +55,15 @@ const OrList = ({
     setSearch(e.target.value)
   }
 
-  const handleShowDetails = (id: string) => {
-    setDetails(
-      rows?.find((row: IOfficialReceipt) => row.id === id)
-    )
-    setShowDetails(true)
-  }
-
-  const handleClose = () => {
-    setShowDetails(false)
-    setDetails({})
-  }
-
   if (showDetails) {
     return (
       <CreateOr 
         personelName={personelName}
         formData={details ?? {}}
         readOnly={showDetails}
-        handleClose={handleClose}
+        handleClose={handleCloseDetails}
+        handleDeposit={handleDeposit}
+        handleCancel={handleCancel}
       />
     )
   }
@@ -89,7 +84,9 @@ const OrList = ({
       searchLoading={searchLoading}
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
-      handleShowDetails={handleShowDetails}
+      handleShowDetails={(id: string) => handleShowDetails(
+        rows?.find((row: IOfficialReceipt) => row.id === id) ?? {}
+      )}
     />
   )
 }

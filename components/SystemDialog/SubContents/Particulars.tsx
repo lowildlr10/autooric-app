@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ICategories, IParticularsSubContentProps } from '@/Interfaces'
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material'
 import useAccessToken from '@/hooks/useAccessToken'
