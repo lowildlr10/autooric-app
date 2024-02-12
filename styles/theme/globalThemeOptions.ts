@@ -6,7 +6,6 @@ const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
   weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
-  
 })
 
 const globalThemeOptions: ThemeOptions = {
@@ -71,8 +70,8 @@ const globalThemeOptions: ThemeOptions = {
           borderRadius: 0,
         },
       },
-    }
+    },
   },
-};
+}
 
 export const globalTheme: Theme = createTheme(globalThemeOptions)

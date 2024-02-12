@@ -10,14 +10,16 @@ const filter = createFilterOptions<any>()
 
 const Particulars = ({
   formData,
-  handleInputChange
+  handleInputChange,
 }: IParticularsSubContentProps) => {
   const { accessToken } = useAccessToken()
   const [categories, setCategories] = useState<ICategories[]>()
-  const [formattedCategories, setFormattedCategories] = useState<any>([{
-    id: '1',
-    label: 'loading...'
-  }])
+  const [formattedCategories, setFormattedCategories] = useState<any>([
+    {
+      id: '1',
+      label: 'loading...',
+    },
+  ])
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -27,14 +29,16 @@ const Particulars = ({
   useEffect(() => {
     setLoading(true)
     if (categories) {
-      setFormattedCategories(categories.map(category => ({
-        id: category.id,
-        label: category.category_name
-      })))
+      setFormattedCategories(
+        categories.map((category) => ({
+          id: category.id,
+          label: category.category_name,
+        }))
+      )
     }
     setLoading(false)
   }, [categories])
-  
+
   const fetchCategories = () => {
     setLoading(true)
     if (accessToken) {
@@ -45,7 +49,10 @@ const Particulars = ({
           setLoading(false)
         })
         .catch((error) => {
-          toast.error(error?.response?.data?.message ?? 'An error occured while fetching categories')
+          toast.error(
+            error?.response?.data?.message ??
+              'An error occured while fetching categories'
+          )
           setLoading(false)
         })
     }
@@ -57,14 +64,14 @@ const Particulars = ({
     <>
       <Autocomplete
         freeSolo
-        id="sel-category"
+        id='sel-category'
         options={formattedCategories}
         fullWidth
         clearOnBlur
         renderInput={(params) => (
-          <TextField 
-            {...params} 
-            label="Category" 
+          <TextField
+            {...params}
+            label='Category'
             name='category_id'
             id='category_id'
             size='small'
@@ -76,57 +83,68 @@ const Particulars = ({
         onKeyDown={(event) => {
           if (event.key === 'Enter') event.defaultMuiPrevented = true
         }}
-        isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
+        isOptionEqualToValue={(option: any, value: any) =>
+          option.id === value.id
+        }
         getOptionLabel={(option: any) => {
           // Value selected with enter, right from the input
           if (typeof option === 'string') {
-            return option;
+            return option
           }
           // Add "xxx" option created dynamically
           if (option.inputValue) {
-            return option.inputValue;
+            return option.inputValue
           }
           // Regular option
-          return option.label;
+          return option.label
         }}
         renderOption={(props: any, option: any) => {
           delete props['key']
-          return <li key={option.label} {...props}>{option.label}</li>
+          return (
+            <li key={option.label} {...props}>
+              {option.label}
+            </li>
+          )
         }}
         filterOptions={(options, params) => {
-          const filtered = filter(options, params);
+          const filtered = filter(options, params)
 
-          const { inputValue } = params;
+          const { inputValue } = params
           // Suggest the creation of a new value
-          const isExisting = options.some((option) => inputValue === option.label);
+          const isExisting = options.some(
+            (option) => inputValue === option.label
+          )
           if (inputValue !== '' && !isExisting) {
             filtered.push({
               inputValue,
               label: `Add "${inputValue}"`,
-            });
+            })
           }
 
-          return filtered;
+          return filtered
         }}
         onChange={(e: any, newValue: any) => {
-          handleInputChange('category_id', newValue?.id ?? newValue?.inputValue ?? '')
+          handleInputChange(
+            'category_id',
+            newValue?.id ?? newValue?.inputValue ?? ''
+          )
         }}
       />
 
       <TextField
-        variant="outlined"
-        margin="normal"
+        variant='outlined'
+        margin='normal'
         required
         fullWidth
-        id="particular_name"
-        label="Particular Name"
-        name="particular_name"
-        autoComplete=""
+        id='particular_name'
+        label='Particular Name'
+        name='particular_name'
+        autoComplete=''
         size='small'
         focused
         autoFocus
         value={formData?.particular_name ?? ''}
-        onChange={e => handleInputChange('particular_name', e.target.value)}
+        onChange={(e) => handleInputChange('particular_name', e.target.value)}
         sx={{ m: 0 }}
       />
     </>

@@ -24,58 +24,58 @@ interface Props {
   sortBy: SortBy
 }
 
-const drawerMenus: {text: string, value: SortBy, icon: SvgIconComponent}[] = [
+const drawerMenus: { text: string; value: SortBy; icon: SvgIconComponent }[] = [
   {
     text: 'All Sensors',
     value: 'all',
-    icon: SelectAllIcon
+    icon: SelectAllIcon,
   },
   {
     text: 'Automated Rain Gauge',
     value: 'rain',
-    icon: WaterDropIcon
+    icon: WaterDropIcon,
   },
   {
     text: 'Water Level Monitoring Sensor',
     value: 'waterlevel',
-    icon: WaterIcon
-  }
+    icon: WaterIcon,
+  },
 ]
 
 const drawerLegends = [
   {
     text: 'No Data',
-    icon: '/pin_gray.png'
+    icon: '/pin_gray.png',
   },
   {
     text: 'Light',
-    icon: '/pin_green.png'
+    icon: '/pin_green.png',
   },
   {
     text: 'Moderate',
-    icon: '/pin_orange.png'
+    icon: '/pin_orange.png',
   },
   {
     text: 'Torrential',
-    icon: '/pin_red.png'
+    icon: '/pin_red.png',
   },
 ]
 
-const LeftDrawer = ({ 
+const LeftDrawer = ({
   toggleDrawer,
-  toggleSort, 
+  toggleSort,
   isOpenDrawer,
-  sortBy
+  sortBy,
 }: Props) => {
   const list = () => {
     return (
       <Box
         sx={{ width: 250 }}
-        role="presentation"
+        role='presentation'
         onClick={() => toggleDrawer(false)}
         onKeyDown={() => toggleDrawer(false)}
       >
-        <Divider variant='middle' sx={{ mt: 2}} />
+        <Divider variant='middle' sx={{ mt: 2 }} />
         <Box p={2} textAlign='center'>
           <Typography fontWeight={700}>Display</Typography>
         </Box>
@@ -83,19 +83,23 @@ const LeftDrawer = ({
         <List>
           {drawerMenus.map((menu, index) => (
             <ListItem key={menu.text} disablePadding>
-              <ListItemButton 
+              <ListItemButton
                 onClick={() => toggleSort(menu.value)}
-                sx={{  
+                sx={{
                   background: sortBy === menu.value ? deepOrange[500] : 'unset',
                   color: sortBy === menu.value ? 'white' : 'unset',
                   '&:hover': {
                     background: deepOrange[300],
-                    color: 'white'
-                  }
+                    color: 'white',
+                  },
                 }}
               >
                 <ListItemIcon>
-                  {<menu.icon sx={{ color: sortBy === menu.value ? 'white' : 'unset' }} />}
+                  {
+                    <menu.icon
+                      sx={{ color: sortBy === menu.value ? 'white' : 'unset' }}
+                    />
+                  }
                 </ListItemIcon>
                 <ListItemText primary={menu.text} />
               </ListItemButton>
@@ -123,7 +127,7 @@ const LeftDrawer = ({
     )
   }
 
-   return (
+  return (
     <div>
       <>
         <Drawer
@@ -134,7 +138,6 @@ const LeftDrawer = ({
           {list()}
         </Drawer>
       </>
-      
     </div>
   )
 }

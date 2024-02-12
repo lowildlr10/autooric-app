@@ -1,4 +1,4 @@
-import { SvgIconComponent } from "@mui/icons-material"
+import { SvgIconComponent } from '@mui/icons-material'
 
 export interface ILoginProps {
   username: string
@@ -26,14 +26,26 @@ export interface IDrawerMenu {
   onClick?: () => void
 }
 
-export type DialogContent = 'particulars' | 'discounts' | 'signatories' | 'paper_sizes' | 'print_official_receipt' 
+export type DialogContent =
+  | 'particulars'
+  | 'discounts'
+  | 'signatories'
+  | 'paper_sizes'
+  | 'print_official_receipt'
 
 export interface ISystemDialogProps {
   open: boolean
   id?: string
   title: string
-  dialogType: 'logout' | 'create' | 'update' | 'delete' | 'print' | 'cancel' | 'deposit'
-  content?:DialogContent
+  dialogType:
+    | 'logout'
+    | 'create'
+    | 'update'
+    | 'delete'
+    | 'print'
+    | 'cancel'
+    | 'deposit'
+  content?: DialogContent
   formData?: ILoginProps | IParticular | IDiscount | IPaperSize | IDeposit
   printUrl?: string
   handleClose: () => void
@@ -77,8 +89,13 @@ export interface IDepositSubContentProps {
   handleInputChange: (input_name: string, value: string | number | null) => void
 }
 
-export type OpenDialogType = 
-  'logout' | 'create_particulars' | 'create_discounts' | 'print' | 'deposit_or' | 'cancel_or'
+export type OpenDialogType =
+  | 'logout'
+  | 'create_particulars'
+  | 'create_discounts'
+  | 'print'
+  | 'deposit_or'
+  | 'cancel_or'
 export interface IOpenDialog {
   logout?: boolean
   create_particulars?: boolean
@@ -125,8 +142,10 @@ export interface IOfficialReceipt {
   payor_id?: string
   nature_collection_id?: string
   amount?: number
+  amount_str?: string
   discount_id?: string
   deposit?: number
+  deposit_str?: string
   amount_words?: string
   card_no?: string
   payor?: string
@@ -178,7 +197,10 @@ export interface ICreateOrProps {
   formData: IOfficialReceipt
   readOnly?: boolean
   handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
-  handleInputChange?: (input_name: string, value: string | number | null) => void
+  handleInputChange?: (
+    input_name: string,
+    value: string | number | null
+  ) => void
   handlePrint?: (orId: string, paperSizeId: string) => void
   handleClear?: () => void
   fetchPayor?: () => void
@@ -209,7 +231,10 @@ export interface ICreateOrFieldsProps {
   computingDiscount?: boolean
   formData: IOfficialReceipt
   readOnly?: boolean
-  handleInputChange?: (input_name: string, value: string | number | null) => void
+  handleInputChange?: (
+    input_name: string,
+    value: string | number | null
+  ) => void
   handleDialogOpen?: (dialogType: OpenDialogType) => void
   fetchPayor?: () => void
   fetchParticular?: () => void
@@ -217,7 +242,14 @@ export interface ICreateOrFieldsProps {
 }
 
 export interface IOrColumn {
-  id: 'receipt_date' | 'or_no' | 'payor' | 'nature_collection' | 'amount' | 'status' | 'deposit'
+  id:
+    | 'receipt_date'
+    | 'or_no'
+    | 'payor'
+    | 'nature_collection'
+    | 'amount_str'
+    | 'status'
+    | 'deposit_str'
   label: string
   minWidth?: number
   align?: 'right' | 'center' | 'left'
@@ -249,7 +281,12 @@ export interface IOrListProps {
 }
 
 export interface ITableListProps {
-  displayType: 'official_receipt' | 'particulars' | 'discounts' | 'signatories' | 'paper_sizes'
+  displayType:
+    | 'official_receipt'
+    | 'particulars'
+    | 'discounts'
+    | 'signatories'
+    | 'paper_sizes'
   columns: any
   rows: any
   currentPage: number
@@ -264,7 +301,7 @@ export interface ITableListProps {
   handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   handlePageChange: (url: string) => void
   handleShowDetails?: (id: string) => void
-} 
+}
 
 export interface ITableListPaginationProps {
   currentPage: number
@@ -275,7 +312,7 @@ export interface ITableListPaginationProps {
   total: number
   links: ITableListLinks[]
   handlePageChange: (url: string) => void
-} 
+}
 
 export interface ITableListActionSectionProps {
   search: string

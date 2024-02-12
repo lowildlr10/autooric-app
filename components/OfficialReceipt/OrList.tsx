@@ -8,9 +8,9 @@ const columns: readonly IOrColumn[] = [
   { id: 'or_no', label: 'OR No.', minWidth: 90 },
   { id: 'payor', label: 'Payor', minWidth: 180 },
   { id: 'nature_collection', label: 'Nature of Collection', minWidth: 150 },
-  { id: 'status', label: 'Status', minWidth: 90, align: 'right'},
-  { id: 'amount', label: 'Amount', minWidth: 80, align: 'right'},
-  { id: 'deposit', label: 'Deposit', minWidth: 80, align: 'right'}
+  { id: 'status', label: 'Status', minWidth: 90, align: 'left' },
+  { id: 'amount_str', label: 'Amount', minWidth: 80, align: 'right' },
+  { id: 'deposit_str', label: 'Deposited', minWidth: 80, align: 'right' },
 ]
 
 const OrList = ({
@@ -29,19 +29,22 @@ const OrList = ({
   handleDeposit,
   handleCancel,
   handleShowDetails,
-  handleCloseDetails
+  handleCloseDetails,
 }: IOrListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
 
   useEffect(() => {
-    if (search.trim()) {
-      setSearchLoading(true)
+    if (!searchLoading) return
+
+    const query = search.trim() ?? ''
+
+    if (query) {
       const timer = setTimeout(() => {
         handlePageChange(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/official-receipts?search=${search.trim()}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/official-receipts?search=${query}`
         )
-        setSearchLoading(false)  
+        setSearchLoading(false)
       }, 500)
 
       return () => clearTimeout(timer)
@@ -49,15 +52,16 @@ const OrList = ({
       handlePageChange('')
       setSearchLoading(false)
     }
-  }, [search])
+  }, [search, searchLoading])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchLoading(true)
     setSearch(e.target.value)
   }
 
   if (showDetails) {
     return (
-      <CreateOr 
+      <CreateOr
         personelName={personelName}
         formData={details ?? {}}
         readOnly={showDetails}
@@ -69,14 +73,14 @@ const OrList = ({
   }
 
   return (
-    <TableList 
+    <TableList
       search={search}
       displayType='official_receipt'
       columns={columns}
       rows={rows ?? []}
       currentPage={currentPage ?? 1}
       nextPageUrl={nextPageUrl}
-      prevPageUrl={prevPageUrl} 
+      prevPageUrl={prevPageUrl}
       from={from ?? 0}
       to={to ?? 0}
       total={total ?? 0}
@@ -84,9 +88,11 @@ const OrList = ({
       searchLoading={searchLoading}
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
-      handleShowDetails={(id: string) => handleShowDetails(
-        rows?.find((row: IOfficialReceipt) => row.id === id) ?? {}
-      )}
+      handleShowDetails={(id: string) =>
+        handleShowDetails(
+          rows?.find((row: IOfficialReceipt) => row.id === id) ?? {}
+        )
+      }
     />
   )
 }

@@ -4,14 +4,11 @@ import Deposit from './SubContents/Deposit'
 
 const DepositContent = ({
   formData,
-  handleInputChange
+  handleInputChange,
 }: IDepositContentProps) => {
   return (
     <>
-      <Deposit 
-        formData={formData}
-        handleInputChange={handleInputChange}
-      />
+      <Deposit formData={formData} handleInputChange={handleInputChange} />
     </>
   )
 }

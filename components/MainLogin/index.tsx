@@ -44,44 +44,43 @@ const MainLogin = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
-  
+
   // Handle login form submission using API utilities
   const handleLogin = () => {
     setLoginLoading(true)
 
     // Call login API
-    API.login(formData.username, formData.password)
-      .then((response) => {
-        const res = response?.data.data
-        
-        if (res?.error) {
-          toast.error(res?.message)
-          setLoginLoading(false)
-          handleClearFields()
-          return
-        }
+    API.login(formData.username, formData.password).then((response) => {
+      const res = response?.data.data
 
-        saveAccessToken(res?.access_token)
-        toast.success(res?.message)
+      if (res?.error) {
+        toast.error(res?.message)
+        setLoginLoading(false)
         handleClearFields()
-        window.location.href = '/official-receipt'
-      })
+        return
+      }
+
+      saveAccessToken(res?.access_token)
+      toast.success(res?.message)
+      handleClearFields()
+      window.location.href = '/official-receipt'
+    })
   }
-    
+
   // Handle clear fields
   const handleClearFields = () => {
     setFormData({ username: '', password: '' })
   }
-  
+
   return (
-    <Stack direction="row" justifyContent="center" alignItems="center">
+    <Stack direction='row' justifyContent='center' alignItems='center'>
       {loading && <Loader />}
 
-      <Stack  
-        alignItems="center"
-        height="100vh"
+      <Stack
+        alignItems='center'
+        height='100vh'
         width='50vw'
-        sx={{ 
+        sx={{
           backgroundColor: 'primary.dark',
           color: 'white',
           opacity: 0.97,
@@ -90,18 +89,18 @@ const MainLogin = () => {
         <TitleSection />
       </Stack>
       <Stack
-        justifyContent="center" 
-        alignItems="center"
-        height="100vh"
+        justifyContent='center'
+        alignItems='center'
+        height='100vh'
         width='50vw'
-        sx={{ 
+        sx={{
           backgroundColor: '#F1F1F1',
-          }}
+        }}
       >
-        <LoginSection 
+        <LoginSection
           loading={loading}
-          formData={formData} 
-          handleLogin={handleLogin} 
+          formData={formData}
+          handleLogin={handleLogin}
           handleInputChange={handleInputChange}
         />
       </Stack>

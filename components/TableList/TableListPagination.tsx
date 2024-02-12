@@ -10,7 +10,7 @@ const TableListPagination = ({
   to,
   total,
   links,
-  handlePageChange
+  handlePageChange,
 }: ITableListPaginationProps) => {
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     handlePageChange(links[value]?.url ?? '')
@@ -18,12 +18,13 @@ const TableListPagination = ({
 
   return (
     <Stack spacing={2} alignItems='center' my={3} px={2}>
-      <Typography variant='body2' width='100%' textAlign='right'
-      >Displaying: {from} - {to} of {total}</Typography>
+      <Typography variant='body2' width='100%' textAlign='right'>
+        Displaying: {from} - {to} of {total}
+      </Typography>
       <Pagination
         page={currentPage ?? 1}
-        count={links?.length ? links?.length - 2 : 0} 
-        color="primary" 
+        count={links?.length ? links?.length - 2 : 0}
+        color='primary'
         showFirstButton={!!prevPageUrl}
         showLastButton={!!nextPageUrl}
         size='small'

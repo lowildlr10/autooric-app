@@ -6,22 +6,19 @@ import Discount from './SubContents/Discount'
 const CreateContent = ({
   content,
   formData,
-  handleInputChange
-} : ICreateContentProps) => {
+  handleInputChange,
+}: ICreateContentProps) => {
   return (
     <>
       {content === 'particulars' && (
-        <Particulars 
+        <Particulars
           formData={formData}
           handleInputChange={handleInputChange}
         />
       )}
 
       {content === 'discounts' && (
-        <Discount 
-          formData={formData}
-          handleInputChange={handleInputChange}
-        />
+        <Discount formData={formData} handleInputChange={handleInputChange} />
       )}
     </>
   )

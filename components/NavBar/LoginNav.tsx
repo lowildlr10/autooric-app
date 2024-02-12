@@ -3,20 +3,22 @@ import { AppBar, Toolbar, Button } from '@mui/material'
 
 const LoginNav = () => {
   return (
-    <AppBar position="fixed">
+    <AppBar position='fixed'>
       <Toolbar
-        sx={{  
+        sx={{
           minHeight: { xs: '3em', sm: '3.5em' },
         }}
       >
-        <Button 
-          href="/"
-          color="inherit"
-          sx={{  
+        <Button
+          href='/'
+          color='inherit'
+          sx={{
             textTransform: 'none',
             fontSize: { xs: '1rem', sm: '1.125rem' },
           }}
-        >AutoORIC</Button>
+        >
+          AutoORIC
+        </Button>
       </Toolbar>
     </AppBar>
   )

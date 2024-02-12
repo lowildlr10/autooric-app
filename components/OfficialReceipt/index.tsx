@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useAccessToken from '@/hooks/useAccessToken'
 import useUserInfo from '@/hooks/useUserInfo'
 import Loader from '../Loader'
@@ -9,7 +9,17 @@ import toast from 'react-hot-toast'
 import { Stack } from '@mui/material'
 import SystemDialog from '../SystemDialog'
 import CardContainer from '../CardContainer'
-import { IDeposit, IDiscount, IOfficialReceipt, IOpenDialog, IPaperSize, IParticular, IPayor, ITabContents, OpenDialogType } from '@/Interfaces'
+import {
+  IDeposit,
+  IDiscount,
+  IOfficialReceipt,
+  IOpenDialog,
+  IPaperSize,
+  IParticular,
+  IPayor,
+  ITabContents,
+  OpenDialogType,
+} from '@/Interfaces'
 import TabContainer, { CustomTabPanel } from '../TabContainer'
 import CreateOr from './CreateOr'
 import OrList from './OrList'
@@ -29,12 +39,12 @@ const defaultCreateOrFormData: IOfficialReceipt = {
 
 const defaultParticularFormData: IParticular = {
   particular_name: '',
-  category_id: ''
+  category_id: '',
 }
 
 const defaultDiscountFormData: IDiscount = {
   discount_name: '',
-  percent: 0
+  percent: 0,
 }
 
 const defaultDepositFormData: IDeposit = {
@@ -48,7 +58,9 @@ const defaultDepositFormData: IDeposit = {
 
 const OfficialReceipt = () => {
   const { accessToken, forceRelogin } = useAccessToken()
-  const { userInfo, isAuthenticated, userLoading } = useUserInfo(accessToken ?? '')
+  const { userInfo, isAuthenticated, userLoading } = useUserInfo(
+    accessToken ?? ''
+  )
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [loading, setLoading] = useState(true)
   const [payorLoading, setPayorLoading] = useState(false)
@@ -66,10 +78,18 @@ const OfficialReceipt = () => {
   const [orListData, setOrListData] = useState<any>()
   const [paperSizes, setPaperSizes] = useState<IPaperSize[]>()
   const [paperSize, setPaperSize] = useState('')
-  const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>(defaultCreateOrFormData)
-  const [particularFormData, setParticularFormData] = useState<IParticular>(defaultParticularFormData)
-  const [discountFormData, setDiscountFormData] = useState<IDiscount>(defaultDiscountFormData)
-  const [depositFormData, setDepositFormData] = useState<IDeposit>(defaultDepositFormData)
+  const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>(
+    defaultCreateOrFormData
+  )
+  const [particularFormData, setParticularFormData] = useState<IParticular>(
+    defaultParticularFormData
+  )
+  const [discountFormData, setDiscountFormData] = useState<IDiscount>(
+    defaultDiscountFormData
+  )
+  const [depositFormData, setDepositFormData] = useState<IDeposit>(
+    defaultDepositFormData
+  )
   const [printUrl, setPrintUrl] = useState('')
   const [changedAmountDiscount, setChangedAmountDiscount] = useState(false)
   const [details, setDetails] = useState<IOfficialReceipt | undefined>({})
@@ -77,16 +97,21 @@ const OfficialReceipt = () => {
 
   // Discount computation with timeOut
   useEffect(() => {
-    if (changedAmountDiscount && createOrFormData?.amount && createOrFormData?.discount_id) {
+    if (
+      changedAmountDiscount &&
+      createOrFormData?.amount &&
+      createOrFormData?.discount_id
+    ) {
       const timer = setTimeout(() => {
         const discount = handleComputeDiscountedAmount(
-          createOrFormData?.amount as number, createOrFormData?.discount_id as string
+          createOrFormData?.amount as number,
+          createOrFormData?.discount_id as string
         )
 
         setCreateOrFormData({
           ...createOrFormData,
           amount: discount?.discountedAmount as number,
-          amount_words: discount?.discountedAmountWords as string
+          amount_words: discount?.discountedAmountWords as string,
         })
 
         setChangedAmountDiscount(false)
@@ -112,19 +137,21 @@ const OfficialReceipt = () => {
     setTabContents([
       {
         index: 0,
-        label: 'CREATE/ISSUE OR'
+        label: 'CREATE/ISSUE OR',
       },
       {
         index: 1,
-        label: 'OR LIST'
-      }
+        label: 'OR LIST',
+      },
     ])
   }, [])
 
   // Set default paper size
   useEffect(() => {
     if (paperSizes) {
-      const defaultPaperSize = paperSizes.find(paper => paper.paper_name === 'Official Receipt')
+      const defaultPaperSize = paperSizes.find(
+        (paper) => paper.paper_name === 'Official Receipt'
+      )
       setPaperSize(defaultPaperSize?.id ?? '')
     }
   }, [paperSizes])
@@ -132,18 +159,30 @@ const OfficialReceipt = () => {
   // Handle global loading
   useEffect(() => {
     if (
-      userLoading || payorLoading || particularLoading || discountLoading || 
-      orListLoading || paperSizeLoading || logoutLoading || formSaveLoading
+      userLoading ||
+      payorLoading ||
+      particularLoading ||
+      discountLoading ||
+      orListLoading ||
+      paperSizeLoading ||
+      logoutLoading ||
+      formSaveLoading
     ) {
       setLoading(true)
     } else {
       setLoading(false)
     }
   }, [
-    userLoading, payorLoading, particularLoading, discountLoading, 
-    orListLoading, paperSizeLoading, logoutLoading, formSaveLoading
+    userLoading,
+    payorLoading,
+    particularLoading,
+    discountLoading,
+    orListLoading,
+    paperSizeLoading,
+    logoutLoading,
+    formSaveLoading,
   ])
-  
+
   // Check if user is already logged in
   useEffect(() => {
     if (loading) return
@@ -160,7 +199,9 @@ const OfficialReceipt = () => {
           setPayorLoading(false)
         })
         .catch((error) => {
-          toast.error('An error occurred while fetching payors. Please try again.')
+          toast.error(
+            'An error occurred while fetching payors. Please try again.'
+          )
           setPayorLoading(false)
         })
     }
@@ -171,44 +212,70 @@ const OfficialReceipt = () => {
   }
 
   const dynamicTabContents = (index: number) => {
-    if (index === 0) return (
-      <CreateOr 
-        personelName={userInfo ? `${userInfo?.first_name} ${userInfo?.last_name}` : 'Loading...'}
-        payors={payors ?? []} 
-        particulars={particulars ?? []} 
-        discounts={discounts ?? []} 
-        formData={createOrFormData}
-        computingDiscount={changedAmountDiscount}
-        handleInputChange={(input_name, value) => handleInputChange(input_name, value)}
-        handleCreate={(data, print) => handleCreateOr(data, print)}
-        handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId)}
-        handleClear={handleClear}
-        fetchPayor={() => fetchPayors()}
-        fetchParticular={() => fetchParticulars()}
-        fetchDiscount={() => fetchDiscounts()}
-        handleDialogOpen={(dialogType) => handleDialogOpen(dialogType)}
-      />
-    )
+    if (index === 0)
+      return (
+        <CreateOr
+          personelName={
+            userInfo
+              ? `${userInfo?.first_name} ${userInfo?.last_name}`
+              : 'Loading...'
+          }
+          payors={payors ?? []}
+          particulars={particulars ?? []}
+          discounts={discounts ?? []}
+          formData={createOrFormData}
+          computingDiscount={changedAmountDiscount}
+          handleInputChange={(input_name, value) =>
+            handleInputChange(input_name, value)
+          }
+          handleCreate={(data, print) => handleCreateOr(data, print)}
+          handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId)}
+          handleClear={handleClear}
+          fetchPayor={() => fetchPayors()}
+          fetchParticular={() => fetchParticulars()}
+          fetchDiscount={() => fetchDiscounts()}
+          handleDialogOpen={(dialogType) => handleDialogOpen(dialogType)}
+        />
+      )
 
     if (index === 1) {
       const rows = orListData?.data?.map((or: any) => {
         return {
           id: or.id,
           receipt_date: dayjs(or.receipt_date).format('MM/DD/YYYY'),
-          cancelled_date: !!or.cancelled_date === true ? dayjs(or.cancelled_date).format('MM/DD/YYYY') : '',
-          deposited_date: !!or.deposited_date === true ? dayjs(or.deposited_date).format('MM/DD/YYYY') : '',
+          cancelled_date:
+            !!or.cancelled_date === true
+              ? dayjs(or.cancelled_date).format('MM/DD/YYYY')
+              : '',
+          deposited_date:
+            !!or.deposited_date === true
+              ? dayjs(or.deposited_date).format('MM/DD/YYYY')
+              : '',
           or_no: or.or_no,
           payor: or.payor.payor_name,
           nature_collection: or.nature_collection.particular_name,
-          amount: or.amount.toFixed(2),
+          amount: or.amount,
+          amount_str: or.amount
+            .toFixed(2)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
           amount_words: or.amount_words,
           discount: or?.discount?.discount_name ?? 'N/a',
           discount_percent: or?.discount?.percent ?? 0,
-          deposit: or.deposit,
+          deposit: or.deposit ?? 0,
+          deposit_str: or.deposit
+            ? or.deposit
+                .toFixed(2)
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            : 0,
           payment_mode: or.payment_mode,
           is_cancelled: or.is_cancelled,
-          status: or.is_cancelled ? 'Cancelled' : 
-            or.deposit ? 'Deposited' : 'Pending'
+          status: or.is_cancelled
+            ? 'Cancelled'
+            : or.deposit
+              ? 'Deposited'
+              : 'Pending',
         }
       })
       const currentPage = orListData?.current_page
@@ -220,12 +287,16 @@ const OfficialReceipt = () => {
       const links = orListData?.links
 
       return (
-        <OrList 
-          personelName={userInfo ? `${userInfo?.first_name} ${userInfo?.last_name}` : 'Loading...'}
+        <OrList
+          personelName={
+            userInfo
+              ? `${userInfo?.first_name} ${userInfo?.last_name}`
+              : 'Loading...'
+          }
           rows={rows ?? []}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
-          prevPageUrl={prevPageUrl} 
+          prevPageUrl={prevPageUrl}
           from={from}
           to={to}
           total={total}
@@ -253,7 +324,9 @@ const OfficialReceipt = () => {
           setDiscountLoading(false)
         })
         .catch((error) => {
-          toast.error('An error occurred while fetching discounts. Please try again.')
+          toast.error(
+            'An error occurred while fetching discounts. Please try again.'
+          )
           setDiscountLoading(false)
         })
     }
@@ -270,7 +343,9 @@ const OfficialReceipt = () => {
           setParticularLoading(false)
         })
         .catch((error) => {
-          toast.error('An error occurred while fetching particulars. Please try again.')
+          toast.error(
+            'An error occurred while fetching particulars. Please try again.'
+          )
           setParticularLoading(false)
         })
     }
@@ -280,7 +355,8 @@ const OfficialReceipt = () => {
   const fetchOfficialReceipts = (url?: string) => {
     setOrListLoading(true)
     if (accessToken) {
-      const errorMessage = 'An error occurred while fetching official receipts. Please try again.'
+      const errorMessage =
+        'An error occurred while fetching official receipts. Please try again.'
 
       if (url) {
         API.getOfficialReceiptsByUrl(accessToken, url)
@@ -319,7 +395,9 @@ const OfficialReceipt = () => {
           setPaperSizeLoading(false)
         })
         .catch((error) => {
-          toast.error('An error occurred while fetching paper sizes. Please try again.')
+          toast.error(
+            'An error occurred while fetching paper sizes. Please try again.'
+          )
           setPaperSizeLoading(false)
         })
     }
@@ -330,20 +408,19 @@ const OfficialReceipt = () => {
     setLogoutLoading(true)
 
     if (accessToken) {
-      API.logout(accessToken)
-        .then((response) => {
-          const res = response?.data.data
+      API.logout(accessToken).then((response) => {
+        const res = response?.data.data
 
-          if (res?.error) {
-            toast.error(res?.message)
-            setLogoutLoading(false)
-            return
-          }
-
-          toast.success(res?.message)
-          forceRelogin()
+        if (res?.error) {
+          toast.error(res?.message)
           setLogoutLoading(false)
-        })
+          return
+        }
+
+        toast.success(res?.message)
+        forceRelogin()
+        setLogoutLoading(false)
+      })
     } else {
       forceRelogin()
       setLogoutLoading(false)
@@ -365,39 +442,53 @@ const OfficialReceipt = () => {
   }
 
   // Handle input changes
-  const handleInputChange = (input_name: string, value: string | number | null) => {
+  const handleInputChange = (
+    input_name: string,
+    value: string | number | null
+  ) => {
     let amountWords = ''
 
     if (input_name === 'discount_id') setChangedAmountDiscount(true)
     if (input_name === 'amount') {
       setChangedAmountDiscount(true)
       try {
-        amountWords = convertToWords(value as number ?? 0)
+        amountWords = convertToWords((value as number) ?? 0)
 
         if (!!value === false) amountWords = ''
       } catch (error) {
         amountWords = ''
       }
-    
-      setCreateOrFormData({ 
-        ...createOrFormData, 
-        amount: value as number, 
-        amount_words: amountWords
+
+      setCreateOrFormData({
+        ...createOrFormData,
+        amount: value as number,
+        amount_words: amountWords,
       })
     } else {
-      setCreateOrFormData({ ...createOrFormData, [input_name]: value }) 
+      setCreateOrFormData({ ...createOrFormData, [input_name]: value })
     }
   }
 
-  const handleInputChangeParticulars = (input_name: string, value: string | number | null) => {
+  const handleInputChangeParticulars = (
+    input_name: string,
+    value: string | number | null
+  ) => {
     setParticularFormData({ ...particularFormData, [input_name]: value })
   }
 
-  const handleInputChangeDiscounts = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDiscountFormData({ ...discountFormData, [e.target.name]: e.target.value })
+  const handleInputChangeDiscounts = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDiscountFormData({
+      ...discountFormData,
+      [e.target.name]: e.target.value,
+    })
   }
-  
-  const handleInputChangeDeposit = (input_name: string, value: string | number | null) => {
+
+  const handleInputChangeDeposit = (
+    input_name: string,
+    value: string | number | null
+  ) => {
     setDepositFormData({ ...depositFormData, [input_name]: value })
   }
 
@@ -444,19 +535,24 @@ const OfficialReceipt = () => {
   }
 
   // Handle compute discounted amount from discounts with amount words
-  const handleComputeDiscountedAmount = (amount: number, discount_id: string) => {
+  const handleComputeDiscountedAmount = (
+    amount: number,
+    discount_id: string
+  ) => {
     // Find discount using discount id
-    const selectedDiscount = discounts?.find(discount => discount.id === discount_id)
-    
+    const selectedDiscount = discounts?.find(
+      (discount) => discount.id === discount_id
+    )
+
     if (!selectedDiscount) return
-    
+
     const totalDiscount = amount * ((selectedDiscount?.percent ?? 0) / 100)
     const discountedAmount = amount - totalDiscount
     const discountedAmountWords = convertToWords(discountedAmount)
 
     return {
       discountedAmount: discountedAmount ?? 0,
-      discountedAmountWords: discountedAmountWords ?? ''
+      discountedAmountWords: discountedAmountWords ?? '',
     }
   }
 
@@ -485,7 +581,9 @@ const OfficialReceipt = () => {
           setFormSaveLoading(false)
         })
     } else {
-      toast.error('An error occurred while creating particulars. Please try again.')
+      toast.error(
+        'An error occurred while creating particulars. Please try again.'
+      )
       setFormSaveLoading(false)
     }
   }
@@ -515,7 +613,9 @@ const OfficialReceipt = () => {
           setFormSaveLoading(false)
         })
     } else {
-      toast.error('An error occurred while creating discounts. Please try again.')
+      toast.error(
+        'An error occurred while creating discounts. Please try again.'
+      )
       setFormSaveLoading(false)
     }
   }
@@ -544,7 +644,9 @@ const OfficialReceipt = () => {
           setFormSaveLoading(false)
         })
     } else {
-      toast.error('An error occurred while depositing official receipt. Please try again.')
+      toast.error(
+        'An error occurred while depositing official receipt. Please try again.'
+      )
       setFormSaveLoading(false)
     }
   }
@@ -572,19 +674,20 @@ const OfficialReceipt = () => {
           setFormSaveLoading(false)
         })
     } else {
-      toast.error('An error occurred while cancelling official receipt. Please try again.')
+      toast.error(
+        'An error occurred while cancelling official receipt. Please try again.'
+      )
       setFormSaveLoading(false)
     }
   }
 
   const handleShowDetails = (details: IOfficialReceipt) => {
     const hasDiscount = details?.discount === 'N/a' ? false : true
-    const regular = hasDiscount ? 
-      (details?.amount ?? 0) / (1 - ((details?.discount_percent ?? 0) / 100)) ?? 0 :
-      details?.amount ?? 0
-    const discounted = hasDiscount ? 
-      (details?.amount ?? 0) :
-      0
+    const regular = hasDiscount
+      ? (details?.amount ?? 0) / (1 - (details?.discount_percent ?? 0) / 100) ??
+        0
+      : details?.amount ?? 0
+    const discounted = hasDiscount ? details?.amount ?? 0 : 0
     const deposit = details?.amount ?? 0
 
     setDetails(details)
@@ -594,7 +697,7 @@ const OfficialReceipt = () => {
       has_discount: hasDiscount,
       deposit,
       regular,
-      discounted
+      discounted,
     })
     setShowDetails(true)
   }
@@ -617,99 +720,106 @@ const OfficialReceipt = () => {
           console.log(error.message)
         })
     } else {
-      toast.error('An error occurred while fetching printable official receipt. Please try again.')
+      toast.error(
+        'An error occurred while fetching printable official receipt. Please try again.'
+      )
     }
   }
 
   // Convert to to words
   const convertToWords = (amount: number) => {
     const toWords = new ToWords({
-      localeCode: 'en-PH'
+      localeCode: 'en-PH',
     })
-    return toWords.convert(amount, { 
+    return toWords.convert(amount, {
       currency: true,
     })
   }
 
   return (
-    <MiniVariantDrawer 
-      name={userInfo ? `${userInfo?.first_name} ${userInfo?.last_name}` : 'Loading...'} 
+    <MiniVariantDrawer
+      name={
+        userInfo
+          ? `${userInfo?.first_name} ${userInfo?.last_name}`
+          : 'Loading...'
+      }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
     >
       {loading && <Loader />}
       <Stack p={2}>
-        <CardContainer title="Official Receipt">
-          <TabContainer 
-            tabs={tabContents} 
-            currentTab={tabValue} 
+        <CardContainer title='Official Receipt'>
+          <TabContainer
+            tabs={tabContents}
+            currentTab={tabValue}
             handleChange={handleTabChange}
           >
             {tabContents.map((content, index) => {
               return (
-                <CustomTabPanel 
-                  key={content.index} 
-                  value={tabValue} 
+                <CustomTabPanel
+                  key={content.index}
+                  value={tabValue}
                   index={content.index}
                 >
-                  {content.index === tabValue && dynamicTabContents(content.index)}
+                  {content.index === tabValue &&
+                    dynamicTabContents(content.index)}
                 </CustomTabPanel>
               )
             })}
           </TabContainer>
         </CardContainer>
       </Stack>
-      <SystemDialog 
-        open={dialogOpen.logout ?? false} 
-        title="Logout" 
-        dialogType="logout" 
-        handleClose={() => handleDialogClose('logout')} 
-        handleLogout={handleLogout} 
+      <SystemDialog
+        open={dialogOpen.logout ?? false}
+        title='Logout'
+        dialogType='logout'
+        handleClose={() => handleDialogClose('logout')}
+        handleLogout={handleLogout}
       />
-      <SystemDialog 
-        open={dialogOpen.print ?? false} 
-        title="Print Official Receipt" 
-        dialogType="print" 
+      <SystemDialog
+        open={dialogOpen.print ?? false}
+        title='Print Official Receipt'
+        dialogType='print'
         printUrl={printUrl}
         handleClose={() => handleDialogClose('print')}
       />
-      <SystemDialog 
-        open={dialogOpen.create_particulars ?? false} 
-        title="Create Particular" 
-        dialogType="create"
-        content="particulars"
-        formData={particularFormData} 
-        handleClose={() => handleDialogClose('create_particulars')} 
+      <SystemDialog
+        open={dialogOpen.create_particulars ?? false}
+        title='Create Particular'
+        dialogType='create'
+        content='particulars'
+        formData={particularFormData}
+        handleClose={() => handleDialogClose('create_particulars')}
         handleClear={() => setParticularFormData(defaultParticularFormData)}
         handleCreate={handleCreateParticulars}
         handleInputChange={handleInputChangeParticulars}
       />
-      <SystemDialog 
-        open={dialogOpen.create_discounts ?? false} 
-        title="Create Discount" 
-        dialogType="create"
-        content="discounts" 
+      <SystemDialog
+        open={dialogOpen.create_discounts ?? false}
+        title='Create Discount'
+        dialogType='create'
+        content='discounts'
         formData={discountFormData}
-        handleClose={() => handleDialogClose('create_discounts')} 
+        handleClose={() => handleDialogClose('create_discounts')}
         handleClear={() => setDiscountFormData(defaultDiscountFormData)}
         handleCreate={handleCreateDiscount}
         handleInputChange={handleInputChangeDiscounts}
       />
-      <SystemDialog 
-        open={dialogOpen.deposit_or ?? false} 
-        title="Deposit OR" 
-        dialogType="deposit"
+      <SystemDialog
+        open={dialogOpen.deposit_or ?? false}
+        title='Deposit OR'
+        dialogType='deposit'
         formData={depositFormData}
-        handleClose={() => handleDialogClose('deposit_or')} 
+        handleClose={() => handleDialogClose('deposit_or')}
         handleDeposit={handleDepositOr}
         handleInputChange={handleInputChangeDeposit}
       />
-      <SystemDialog 
-        open={dialogOpen.cancel_or ?? false} 
-        title="Cancel OR" 
-        dialogType="cancel"
+      <SystemDialog
+        open={dialogOpen.cancel_or ?? false}
+        title='Cancel OR'
+        dialogType='cancel'
         id={details?.id}
-        handleClose={() => handleDialogClose('cancel_or')} 
+        handleClose={() => handleDialogClose('cancel_or')}
         handleCancel={handleCancelOr}
       />
     </MiniVariantDrawer>

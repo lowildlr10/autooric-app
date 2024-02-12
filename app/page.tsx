@@ -13,7 +13,7 @@ const LoginPage = () => {
       <ImageBackdrop />
       <MainLogin />
     </Stack>
-  );
+  )
 }
 
 export default LoginPage

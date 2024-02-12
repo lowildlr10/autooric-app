@@ -26,23 +26,23 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import Link from 'next/link'
 import { IDrawerMenu, IMiniVariantDrawerProps } from '@/Interfaces'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 const defaultDrawerTop: IDrawerMenu[] = [
   {
     text: 'Official Receipt',
     href: '/official-receipt',
-    icon: ReceiptLongIcon
+    icon: ReceiptLongIcon,
   },
   {
     text: 'Report',
     href: '/report',
-    icon: AssessmentIcon
+    icon: AssessmentIcon,
   },
   {
     text: 'Library',
     href: '/library',
-    icon: LibraryBooksIcon
-  }
+    icon: LibraryBooksIcon,
+  },
 ]
 
 const defaultDrawerMenuBottom: IDrawerMenu[] = [
@@ -52,8 +52,8 @@ const defaultDrawerMenuBottom: IDrawerMenu[] = [
     icon: LogoutIcon,
     onClick: () => {
       alert('logout')
-    }
-  }
+    },
+  },
 ]
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -63,7 +63,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
-});
+})
 
 const closedMixin = (theme: Theme): CSSObject => ({
   transition: theme.transitions.create('width', {
@@ -75,7 +75,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-});
+})
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -84,10 +84,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-}));
+}))
 
 interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
+  open?: boolean
 }
 
 const AppBar = styled(MuiAppBar, {
@@ -106,28 +106,31 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
-}));
+}))
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}))
 
-const MiniVariantDrawer = ({ 
-  children, name, role, handleLogoutDialogOpen
- }: IMiniVariantDrawerProps) => {
+const MiniVariantDrawer = ({
+  children,
+  name,
+  role,
+  handleLogoutDialogOpen,
+}: IMiniVariantDrawerProps) => {
   const pathname = usePathname()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -151,46 +154,48 @@ const MiniVariantDrawer = ({
           {
             text: 'User Management',
             href: '/user-management',
-            icon: ManageAccountsIcon
-          }
+            icon: ManageAccountsIcon,
+          },
         ])
       } else {
-        setDrawerMenuTop(defaultDrawerTop)        
+        setDrawerMenuTop(defaultDrawerTop)
       }
 
-      setDrawerMenuBottom(defaultDrawerMenuBottom.map(menu => {
-        if (menu.text === 'Logout') {
-          return {
-            ...menu,
-            onClick: handleLogoutDialogOpen
+      setDrawerMenuBottom(
+        defaultDrawerMenuBottom.map((menu) => {
+          if (menu.text === 'Logout') {
+            return {
+              ...menu,
+              onClick: handleLogoutDialogOpen,
+            }
           }
-        }
-        return menu
-      }))
+          return menu
+        })
+      )
     }
   }, [role, handleLogoutDialogOpen])
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" open={open}>
+      <AppBar position='fixed' open={open}>
         <Toolbar
-          sx={{  
+          sx={{
             minHeight: { xs: '3em', sm: '3.5em' },
           }}
         >
           <IconButton
-            color="inherit"
-            aria-label="open drawer"
+            color='inherit'
+            aria-label='open drawer'
             onClick={handleDrawerOpen}
-            edge="start"
+            edge='start'
             sx={{
               marginRight: 5,
               ...(open && { display: 'none' }),
@@ -200,51 +205,60 @@ const MiniVariantDrawer = ({
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
           <Box>
-            <Link 
-              href='/official-receipt'
-              style={{ textDecoration: 'none' }}
-            >
-              <Button 
-                sx={{ 
+            <Link href='/official-receipt' style={{ textDecoration: 'none' }}>
+              <Button
+                sx={{
                   display: { xs: 'none', sm: 'block' },
-                  color: 'primary.contrastText', 
+                  color: 'primary.contrastText',
                 }}
-              >{name}</Button>
+              >
+                {name}
+              </Button>
             </Link>
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant='permanent' open={open}>
         <DrawerHeader
-          sx={{  
+          sx={{
             minHeight: { xs: '3em', sm: '3.5em' },
           }}
         >
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
           {drawerMenuTop.map((menu, index) => {
             return (
-              <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
-                <Link 
-                  href={menu.href} 
-                  style={{ textDecoration: 'none' }}
-                >
+              <ListItem
+                key={menu.text}
+                disablePadding
+                sx={{ display: 'block' }}
+              >
+                <Link href={menu.href} style={{ textDecoration: 'none' }}>
                   <ListItemButton
-                    sx={theme => ({
+                    sx={(theme) => ({
                       minHeight: 48,
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
-                      background: pathname === menu.href ? theme.palette.secondary.main : 'unset',
-                      color: pathname === menu.href ? 
-                        theme.palette.secondary.contrastText : theme.palette.text.primary,
+                      background:
+                        pathname === menu.href
+                          ? theme.palette.secondary.main
+                          : 'unset',
+                      color:
+                        pathname === menu.href
+                          ? theme.palette.secondary.contrastText
+                          : theme.palette.text.primary,
                       '&:hover': {
                         background: theme.palette.secondary.light,
                         color: 'white',
-                      }
+                      },
                     })}
                   >
                     <ListItemIcon
@@ -254,9 +268,18 @@ const MiniVariantDrawer = ({
                         justifyContent: 'center',
                       }}
                     >
-                      {<menu.icon sx={{ color: pathname === menu.href ? 'white' : 'unset' }} />}
+                      {
+                        <menu.icon
+                          sx={{
+                            color: pathname === menu.href ? 'white' : 'unset',
+                          }}
+                        />
+                      }
                     </ListItemIcon>
-                    <ListItemText primary={menu.text} sx={{ opacity: open ? 1 : 0 }} />
+                    <ListItemText
+                      primary={menu.text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
                   </ListItemButton>
                 </Link>
               </ListItem>
@@ -268,14 +291,14 @@ const MiniVariantDrawer = ({
           {drawerMenuBottom.map((menu, index) => (
             <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
-                sx={theme => ({
+                sx={(theme) => ({
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                   '&:hover': {
                     background: theme.palette.secondary.light,
-                    color: 'white'
-                  }
+                    color: 'white',
+                  },
                 })}
                 onClick={menu.onClick ?? undefined}
               >
@@ -288,28 +311,31 @@ const MiniVariantDrawer = ({
                 >
                   {<menu.icon />}
                 </ListItemIcon>
-                <ListItemText primary={menu.text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={menu.text}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Drawer>
-      
-      <Box 
-        component="main" 
-        sx={theme => ({ 
-          flexGrow: 1, 
+
+      <Box
+        component='main'
+        sx={(theme) => ({
+          flexGrow: 1,
           background: theme.palette.background.default,
           color: theme.palette.text.primary,
           height: '100vh',
-          overflowY: 'auto'
+          overflowY: 'auto',
         })}
       >
         <DrawerHeader />
         <Stack>{children}</Stack>
       </Box>
     </Box>
-  );
+  )
 }
 
 export default MiniVariantDrawer

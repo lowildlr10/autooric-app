@@ -4,19 +4,19 @@ import { InputAdornment, TextField } from '@mui/material'
 
 const Discount = ({
   formData,
-  handleInputChange
+  handleInputChange,
 }: IDiscountsSubContentProps) => {
   return (
     <>
       <TextField
-        variant="outlined"
-        margin="normal"
+        variant='outlined'
+        margin='normal'
         required
         fullWidth
-        id="discount_name"
-        label="Discount Name"
-        name="discount_name"
-        autoComplete=""
+        id='discount_name'
+        label='Discount Name'
+        name='discount_name'
+        autoComplete=''
         size='small'
         focused
         autoFocus
@@ -25,20 +25,20 @@ const Discount = ({
       />
 
       <TextField
-        variant="outlined"
-        margin="normal"
+        variant='outlined'
+        margin='normal'
         required
         fullWidth
-        id="percent"
-        label="Percentage %"
-        name="percent"
-        autoComplete=""
+        id='percent'
+        label='Percentage %'
+        name='percent'
+        autoComplete=''
         size='small'
         focused
         sx={{ m: 0 }}
         InputProps={{
           type: 'number',
-          endAdornment: <InputAdornment position="end">%</InputAdornment>
+          endAdornment: <InputAdornment position='end'>%</InputAdornment>,
         }}
         value={formData?.percent ?? ''}
         onChange={handleInputChange}

@@ -14,7 +14,7 @@ const useUserInfo = (accessToken: string) => {
       API.getCurrentUser(accessToken)
         .then((response) => {
           setUserInfo(response?.data?.data)
-          
+
           if (response?.data) {
             setIsAuthenticated(true)
           }

@@ -8,18 +8,17 @@ const ActionSection = ({
   handleSearchChange,
   searchLoading,
   hasCreateButton,
-  handleCreate
+  handleCreate,
 }: ITableListActionSectionProps) => {
   return (
     <Stack direction='row' justifyContent='space-between' my={2}>
       {hasCreateButton && (
-        <Button 
-          variant='contained'
-          onClick={handleCreate}
-        >Create</Button>
+        <Button variant='contained' onClick={handleCreate}>
+          Create
+        </Button>
       )}
       {!hasCreateButton && <div></div>}
-      <SearchField 
+      <SearchField
         search={search}
         loading={searchLoading}
         handleChange={handleSearchChange}

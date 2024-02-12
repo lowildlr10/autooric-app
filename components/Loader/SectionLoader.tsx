@@ -3,10 +3,10 @@ import { CircularProgress, Stack } from '@mui/material'
 
 const SectionLoader = () => {
   return (
-    <Stack 
-      width='100%' 
-      justifyContent='center' 
-      justifyItems='center' 
+    <Stack
+      width='100%'
+      justifyContent='center'
+      justifyItems='center'
       textAlign='center'
       alignItems='center'
       pt={5}

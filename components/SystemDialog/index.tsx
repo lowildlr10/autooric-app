@@ -1,13 +1,13 @@
 import React from 'react'
 import { ISystemDialogProps } from '@/Interfaces'
-import { 
+import {
   Button,
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogTitle, 
-  Stack, 
-  useMediaQuery 
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  useMediaQuery,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import LogoutContent from './LogoutContent'
@@ -32,58 +32,59 @@ const SystemDialog = ({
   handleDelete,
   handleDeposit,
   handleClear,
-  handleInputChange
+  handleInputChange,
 }: ISystemDialogProps) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <Dialog
-      fullScreen={fullScreen || dialogType === 'print'}
-      open={open}
-    >
-      <DialogTitle fontWeight={600} my={1}>{title}</DialogTitle>
-      
-      <DialogContent sx={{ width: { xs: 'initial', sm: 500}, my: 1 }}>
-        <Stack py={2} px={3} gap={4}>  
+    <Dialog fullScreen={fullScreen || dialogType === 'print'} open={open}>
+      <DialogTitle fontWeight={600} my={1}>
+        {title}
+      </DialogTitle>
+
+      <DialogContent sx={{ width: { xs: 'initial', sm: 500 }, my: 1 }}>
+        <Stack py={2} px={3} gap={4}>
           {dialogType === 'logout' && <LogoutContent />}
-          {dialogType === 'print' && printUrl && <PrintContent printUrl={printUrl} />}
+          {dialogType === 'print' && printUrl && (
+            <PrintContent printUrl={printUrl} />
+          )}
           {dialogType === 'cancel' && <CancelContent />}
           {dialogType === 'deposit' && (
-            <DepositContent 
-              formData={formData} 
+            <DepositContent
+              formData={formData}
               handleInputChange={handleInputChange}
             />
           )}
           {dialogType === 'create' && content && handleInputChange && (
-            <CreateContent 
-              content={content} 
-              formData={formData} 
+            <CreateContent
+              content={content}
+              formData={formData}
               handleInputChange={handleInputChange}
             />
           )}
-        </Stack>  
+        </Stack>
       </DialogContent>
 
       <DialogActions sx={{ mb: 1, mr: 1 }}>
-        <Button 
+        <Button
           onClick={() => {
             handleClear && handleClear()
             handleClose()
-          }} 
+          }}
           autoFocus
-          sx={theme => ({ color: theme.palette.text.primary })}
+          sx={(theme) => ({ color: theme.palette.text.primary })}
         >
           Close
         </Button>
 
         {dialogType === 'logout' && (
-          <Button 
-            sx={theme => ({ color: theme.palette.error.main })}
+          <Button
+            sx={(theme) => ({ color: theme.palette.error.main })}
             onClick={() => {
               handleLogout && handleLogout()
               handleClose()
-            }} 
+            }}
             autoFocus
           >
             Logout
@@ -91,13 +92,13 @@ const SystemDialog = ({
         )}
 
         {dialogType === 'cancel' && (
-          <Button 
+          <Button
             onClick={() => {
               handleCancel && handleCancel(id ?? '')
               handleClose()
-            }} 
+            }}
             autoFocus
-            sx={{  
+            sx={{
               color: 'warning.main',
             }}
           >
@@ -106,13 +107,13 @@ const SystemDialog = ({
         )}
 
         {dialogType === 'deposit' && (
-          <Button 
+          <Button
             onClick={() => {
               handleDeposit && handleDeposit(formData)
               handleClose()
-            }} 
+            }}
             autoFocus
-            sx={{  
+            sx={{
               color: 'secondary.dark',
             }}
           >
@@ -121,13 +122,13 @@ const SystemDialog = ({
         )}
 
         {dialogType === 'update' && (
-          <Button 
+          <Button
             onClick={() => {
               handleUpdate && handleUpdate(formData)
               handleClose()
-            }} 
+            }}
             autoFocus
-            sx={{  
+            sx={{
               color: 'warning.main',
             }}
           >
@@ -136,11 +137,11 @@ const SystemDialog = ({
         )}
 
         {dialogType === 'create' && (
-          <Button 
+          <Button
             onClick={() => {
               handleCreate && handleCreate(formData)
               handleClose()
-            }} 
+            }}
             autoFocus
           >
             Create

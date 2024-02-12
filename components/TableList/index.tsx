@@ -1,6 +1,16 @@
 'use client'
-import React, { useState } from 'react'
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, useMediaQuery, useTheme } from '@mui/material'
+import React from 'react'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import ActionSection from './ActionSection'
 import { IOfficialReceipt, IOrColumn, ITableListProps } from '@/Interfaces'
 import TableListPagination from './TableListPagination'
@@ -16,11 +26,10 @@ const TableList = ({
   to,
   total,
   links,
-  displayType,
   searchLoading,
   handleSearchChange,
   handlePageChange,
-  handleShowDetails
+  handleShowDetails,
 }: ITableListProps) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -33,7 +42,11 @@ const TableList = ({
         handleSearchChange={handleSearchChange}
       />
       <TableContainer sx={{ height: 'calc(100vh - 30em)' }}>
-        <Table stickyHeader aria-label="sticky table" size={isMobile ? 'small' : 'medium'}>
+        <Table
+          stickyHeader
+          aria-label='sticky table'
+          size={isMobile ? 'small' : 'medium'}
+        >
           <TableHead>
             <TableRow>
               {columns.map((column: IOrColumn) => (
@@ -49,49 +62,52 @@ const TableList = ({
           </TableHead>
           <TableBody>
             {total === 0 && (
-              <TableRow 
-                hover 
-                role="checkbox" 
-                tabIndex={-1} 
-              >
-                <TableCell 
+              <TableRow hover role='checkbox' tabIndex={-1}>
+                <TableCell
                   align='center'
                   sx={{ cursor: 'pointer', color: 'error.main' }}
                   colSpan={columns?.length}
-                >No data.</TableCell>
+                >
+                  No data.
+                </TableCell>
               </TableRow>
             )}
             {rows?.map((row: IOfficialReceipt) => {
-                return (
-                  <TableRow 
-                    hover 
-                    role="checkbox" 
-                    tabIndex={-1} 
-                    key={row.or_no}
-                  >
-                    {columns.map((column: IOrColumn) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell 
-                          key={column.id} 
-                          align={column.align}
-                          sx={{ cursor: 'pointer' }}
-                          onClick={() => handleShowDetails && handleShowDetails(row?.id ?? '')}
-                        >
-                          {value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+              return (
+                <TableRow hover role='checkbox' tabIndex={-1} key={row.or_no}>
+                  {columns.map((column: IOrColumn) => {
+                    const value = row[column.id]
+                    let color = 'text.primary'
+
+                    if (column.id === 'status') {
+                      if (value === 'Pending') color = 'gray'
+                      if (value === 'Cancelled') color = 'error.main'
+                      if (value === 'Deposited') color = 'secondary.main'
+                    }
+
+                    return (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        sx={{ cursor: 'pointer', color }}
+                        onClick={() =>
+                          handleShowDetails && handleShowDetails(row?.id ?? '')
+                        }
+                      >
+                        {value}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>
       <TableListPagination
         currentPage={currentPage}
         nextPageUrl={nextPageUrl}
-        prevPageUrl={prevPageUrl} 
+        prevPageUrl={prevPageUrl}
         from={from}
         to={to}
         total={total}

@@ -5,18 +5,18 @@ import { ITableListActionSectionSearchProps } from '@/Interfaces'
 const SearchField = ({
   search,
   loading,
-  handleChange
+  handleChange,
 }: ITableListActionSectionSearchProps) => {
   return (
     <TextField
-      type="search"
-      variant="outlined"
-      label={loading ? "Searching..." : "Search"}
-      size="small"
+      type='search'
+      variant='outlined'
+      label={loading ? 'Searching...' : 'Search'}
+      size='small'
       focused
-      sx={{ 
+      sx={{
         width: 250,
-        minWidth: 200 
+        minWidth: 200,
       }}
       value={search}
       onChange={handleChange}
