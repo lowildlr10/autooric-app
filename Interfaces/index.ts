@@ -113,8 +113,12 @@ export interface IOfficialReceipt {
   deposit?: number
   amount_words?: string
   card_no?: string
+  payor?: string
+  nature_collection?: string
+  discount?: string
   payment_mode?: '' | 'cash' | 'check' | 'money_order'
   is_cancelled?: boolean
+  status?: string
 }
 
 export interface IPaperSize {
@@ -150,56 +154,56 @@ export interface ITabPanelProps {
 
 export interface ICreateOrProps {
   personelName: string
-  payors: IPayor[]
-  particulars: IParticular[]
-  discounts: IDiscount[]
+  payors?: IPayor[]
+  particulars?: IParticular[]
+  discounts?: IDiscount[]
   computingDiscount?: boolean
   formData: IOfficialReceipt
-  handleCreate: (formData: IOfficialReceipt, print: boolean) => void
-  handleInputChange: (input_name: string, value: string | number | null) => void
-  handlePrint: (orId: string, paperSizeId: string) => void
-  handleClear: () => void
-  fetchPayor: () => void
-  fetchParticular: () => void
-  fetchDiscount: () => void
-  handleDialogOpen: (dialogType: OpenDialogType) => void
+  readOnly?: boolean
+  handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
+  handleInputChange?: (input_name: string, value: string | number | null) => void
+  handlePrint?: (orId: string, paperSizeId: string) => void
+  handleClear?: () => void
+  fetchPayor?: () => void
+  fetchParticular?: () => void
+  fetchDiscount?: () => void
+  handleDialogOpen?: (dialogType: OpenDialogType) => void
+  handleDeposit?: () => void
+  handleCancel?: () => void
+  handleClose?: () => void
 }
 
 export interface ICreateOrActionButtonsProps {
   formData: IOfficialReceipt
-  handleCreate: (formData: IOfficialReceipt, print: boolean) => void
-  handlePrint: (orId: string, paperSizeId: string) => void
-  handleClear: () => void
+  readOnly?: boolean
+  handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
+  handlePrint?: (orId: string, paperSizeId: string) => void
+  handleClear?: () => void
+  handleDeposit?: () => void
+  handleCancel?: () => void
+  handleClose?: () => void
 }
 
 export interface ICreateOrFieldsProps {
   personelName: string
-  payors: IPayor[]
-  particulars: IParticular[]
-  discounts: IDiscount[]
+  payors?: IPayor[]
+  particulars?: IParticular[]
+  discounts?: IDiscount[]
   computingDiscount?: boolean
   formData: IOfficialReceipt
-  handleInputChange: (input_name: string, value: string | number | null) => void
-  handleDialogOpen: (dialogType: OpenDialogType) => void
-  fetchPayor: () => void
-  fetchParticular: () => void
-  fetchDiscount: () => void
+  readOnly?: boolean
+  handleInputChange?: (input_name: string, value: string | number | null) => void
+  handleDialogOpen?: (dialogType: OpenDialogType) => void
+  fetchPayor?: () => void
+  fetchParticular?: () => void
+  fetchDiscount?: () => void
 }
 
 export interface IOrColumn {
-  id: 'receipt_date' | 'or_no' | 'payor' | 'nature_collection' | 'amount'
+  id: 'receipt_date' | 'or_no' | 'payor' | 'nature_collection' | 'amount' | 'status'
   label: string
   minWidth?: number
   align?: 'right' | 'center' | 'left'
-}
-
-export interface IOrListRow {
-  id?: string
-  receipt_date: string
-  or_no: string
-  payor: string
-  nature_collection: string
-  amount: number
 }
 
 export interface ITableListLinks {
@@ -209,7 +213,8 @@ export interface ITableListLinks {
 }
 
 export interface IOrListProps {
-  rows: IOrListRow[]
+  personelName: string
+  rows: IOfficialReceipt[]
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -235,6 +240,7 @@ export interface ITableListProps {
   searchLoading: boolean
   handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   handlePageChange: (url: string) => void
+  handleShowDetails?: (id: string) => void
 } 
 
 export interface ITableListPaginationProps {

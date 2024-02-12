@@ -16,6 +16,7 @@ const CreateOrFields = ({
   discounts,
   computingDiscount,
   formData,
+  readOnly,
   handleDialogOpen,
   fetchPayor,
   fetchParticular,
@@ -78,123 +79,90 @@ const CreateOrFields = ({
     >
       <Stack direction={{ xs: 'column', sm: 'row' }} gap={4}>
         <Stack flex={1}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker  
-              name='receipt_date'
-              label="OR Date *"
-              value={dayjs(formData?.receipt_date) ?? dayjs()}
-              autoFocus
-              slotProps={{ 
-                textField: {
-                  size: 'small',
-                  focused: true
-                }
-               }}
-              onChange={
-                (newValue) => 
-                  handleInputChange('receipt_date', newValue ? newValue.format('YYYY-MM-DD') : '')}
+          {!readOnly ? (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker  
+                name='receipt_date'
+                label="OR Date *"
+                value={dayjs(formData?.receipt_date) ?? dayjs()}
+                autoFocus
+                slotProps={{ 
+                  textField: {
+                    size: 'small',
+                    focused: true
+                  }
+                }}
+                onChange={
+                  (newValue) => 
+                    handleInputChange && handleInputChange('receipt_date', newValue ? newValue.format('YYYY-MM-DD') : '')}
+                sx={{ m: 0 }}
+              />
+            </LocalizationProvider>
+          ) : (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label="Receipt Date"
+              size='small'
+              focused
+              value={formData?.receipt_date}
+              disabled
               sx={{ m: 0 }}
             />
-          </LocalizationProvider>
+          )}
         </Stack>
         <Stack flex={1}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="or_no"
-            label="OR Number"
-            name="or_no"
-            autoComplete=""
-            size='small'
-            focused
-            autoFocus
-            value={formData?.or_no ?? ''}
-            onChange={e => handleInputChange(e.target.name, e.target.value)}
-            sx={{ m: 0 }}
-          />
+          {!readOnly ? (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="or_no"
+              label="OR Number"
+              name="or_no"
+              autoComplete=""
+              size='small'
+              focused
+              autoFocus
+              value={formData?.or_no ?? ''}
+              onChange={
+                e => handleInputChange && handleInputChange(e.target.name, e.target.value)
+              }
+              sx={{ m: 0 }}
+            />
+          ) : (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label="OR Number"
+              size='small'
+              focused
+              value={formData?.or_no}
+              disabled
+              sx={{ m: 0 }}
+            />
+          )}
         </Stack>
       </Stack>
         
       <Stack direction='row'>
-        <Autocomplete
-          onFocus={() => fetchPayor()}
-          freeSolo
-          id="sel-payor"
-          options={formattedPayors}
-          fullWidth
-          clearOnBlur
-          renderInput={(params) => (
-            <TextField 
-              {...params} 
-              label="Payor" 
-              name='payor_id'
-              id='payor_id'
-              size='small'
-              focused
-              required
-              fullWidth
-            />
-          )}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') event.defaultMuiPrevented = true
-          }}
-          isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
-          getOptionLabel={(option: any) => {
-            // Value selected with enter, right from the input
-            if (typeof option === 'string') {
-              return option;
-            }
-            // Add "xxx" option created dynamically
-            if (option.inputValue) {
-              return option.inputValue;
-            }
-            // Regular option
-            return option.label;
-          }}
-          renderOption={(props: any, option: any) => {
-            delete props['key']
-            return <li key={option.label} {...props}>{option.label}</li>
-          }}
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
-
-            const { inputValue } = params;
-            // Suggest the creation of a new value
-            const isExisting = options.some((option) => inputValue === option.label);
-            if (inputValue !== '' && !isExisting) {
-              filtered.push({
-                inputValue,
-                label: `Add "${inputValue}"`,
-              });
-            }
-
-            return filtered;
-          }}
-          value={payorValue}
-          onChange={(e: any, newValue: any) => {
-            handleInputChange('payor_id', newValue?.id ?? newValue?.inputValue ?? '')
-          }}
-        />
-      </Stack>
-
-      <Stack direction='row' gap={2}>
-        <Stack flex={1}>
+        {!readOnly ? (
           <Autocomplete
-            onFocus={() => fetchParticular()}
+            onFocus={() => fetchPayor && fetchPayor()}
             freeSolo
-            clearOnBlur
-            handleHomeEndKeys={false}
-            id="sel-particulars"
-            options={formattedParticulars}
+            id="sel-payor"
+            options={formattedPayors}
             fullWidth
+            clearOnBlur
             renderInput={(params) => (
               <TextField 
                 {...params} 
-                name='nature_collection_id'
-                id='nature_collection_id'
-                label="Nature of Collection" 
+                label="Payor" 
+                name='payor_id'
+                id='payor_id'
                 size='small'
                 focused
                 required
@@ -204,124 +172,267 @@ const CreateOrFields = ({
             onKeyDown={(event) => {
               if (event.key === 'Enter') event.defaultMuiPrevented = true
             }}
-            isOptionEqualToValue={(option: any, value: any) => option?.id === value?.id}
+            isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
+            getOptionLabel={(option: any) => {
+              // Value selected with enter, right from the input
+              if (typeof option === 'string') {
+                return option;
+              }
+              // Add "xxx" option created dynamically
+              if (option.inputValue) {
+                return option.inputValue;
+              }
+              // Regular option
+              return option.label;
+            }}
+            renderOption={(props: any, option: any) => {
+              delete props['key']
+              return <li key={option.label} {...props}>{option.label}</li>
+            }}
+            filterOptions={(options, params) => {
+              const filtered = filter(options, params);
+
+              const { inputValue } = params;
+              // Suggest the creation of a new value
+              const isExisting = options.some((option) => inputValue === option.label);
+              if (inputValue !== '' && !isExisting) {
+                filtered.push({
+                  inputValue,
+                  label: `Add "${inputValue}"`,
+                });
+              }
+
+              return filtered;
+            }}
+            value={payorValue}
             onChange={(e: any, newValue: any) => {
-              handleInputChange('nature_collection_id', newValue?.id ?? '')
+              handleInputChange && handleInputChange('payor_id', newValue?.id ?? newValue?.inputValue ?? '')
             }}
-            value={particularValue}
           />
-        </Stack>
-        <Stack>
-          <Button
-            onClick={() => handleDialogOpen('create_particulars')}
-            variant='contained'
-            color='primary'
+        ) : (
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Payor"
             size='small'
-            sx={{ 
-              py: '0.7em', 
-              minWidth: 'auto',
-              borderRadius: 5,
-            }}
-          ><LibraryAddIcon fontSize='small' /></Button>
-        </Stack>
+            focused
+            value={formData?.payor}
+            disabled
+            sx={{ m: 0 }}
+          />
+        )}
+      </Stack>
+
+      <Stack direction={!readOnly ? 'row' : 'column'} gap={2}>
+        {!readOnly ? (
+          <>
+            <Stack flex={1}>
+              <Autocomplete
+                onFocus={() => fetchParticular && fetchParticular()}
+                freeSolo
+                clearOnBlur
+                handleHomeEndKeys={false}
+                id="sel-particulars"
+                options={formattedParticulars}
+                fullWidth
+                renderInput={(params) => (
+                  <TextField 
+                    {...params} 
+                    name='nature_collection_id'
+                    id='nature_collection_id'
+                    label="Nature of Collection" 
+                    size='small'
+                    focused
+                    required
+                    fullWidth
+                  />
+                )}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') event.defaultMuiPrevented = true
+                }}
+                isOptionEqualToValue={(option: any, value: any) => option?.id === value?.id}
+                onChange={(e: any, newValue: any) => {
+                  handleInputChange && handleInputChange('nature_collection_id', newValue?.id ?? '')
+                }}
+                value={particularValue}
+              />
+            </Stack>
+            <Stack>
+              <Button
+                onClick={() => handleDialogOpen && handleDialogOpen('create_particulars')}
+                variant='contained'
+                color='primary'
+                size='small'
+                sx={{ 
+                  py: '0.7em', 
+                  minWidth: 'auto',
+                  borderRadius: 5,
+                }}
+              ><LibraryAddIcon fontSize='small' /></Button>
+            </Stack>
+          </>
+        ) : (
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Nature of Collection"
+            size='small'
+            focused
+            value={formData?.nature_collection}
+            disabled
+            sx={{ m: 0 }}
+          />
+        )}
       </Stack>
 
       <Stack>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="amount"
-          label="Amount"
-          name="amount"
-          autoComplete=""
-          size='small'
-          focused
-          sx={{ m: 0 }}
-          value={formData?.amount ?? ''}
-          InputProps={{
-            type: 'number',
-            startAdornment: <InputAdornment position="start">₱</InputAdornment>,
-          }}
-          onChange={e => handleInputChange(e.target.name, e.target.value)}
-        />
-        {computingDiscount && (
-          <FormHelperText 
-            sx={{ 
-              color: 'secondary.light', 
-              '& svg': { color: 'secondary.light' }
+        {!readOnly ? (
+          <>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="amount"
+              label="Amount"
+              name="amount"
+              autoComplete=""
+              size='small'
+              focused
+              sx={{ m: 0 }}
+              value={formData?.amount ?? ''}
+              InputProps={{
+                type: 'number',
+                startAdornment: <InputAdornment position="start">₱</InputAdornment>,
+              }}
+              onChange={e => handleInputChange && handleInputChange(e.target.name, e.target.value)}
+            />
+            {computingDiscount && (
+              <FormHelperText 
+                sx={{ 
+                  color: 'secondary.light', 
+                  '& svg': { color: 'secondary.light' }
+                }}
+              >
+                <em>
+                  <CircularProgress size='0.7rem' /> Computing discount...
+                </em>
+              </FormHelperText>
+            )}
+          </>
+        ) : (
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Amount"
+            size='small'
+            focused
+            value={formData?.amount}
+            disabled
+            InputProps={{
+              type: 'number',
+              startAdornment: <InputAdornment position="start">₱</InputAdornment>,
             }}
-          >
-            <em>
-              <CircularProgress size='0.7rem' /> Computing discount...
-            </em>
-          </FormHelperText>
+            sx={{ m: 0 }}
+          />
         )}
       </Stack>
 
       <Stack direction='row' gap={2}>
-        <Stack flex={1}>
-          <Autocomplete
-            onFocus={() => fetchDiscount()}
-            freeSolo
-            clearOnBlur
-            handleHomeEndKeys={false}
-            id="sel-discounts"
-            options={formattedDiscounts}
-            fullWidth
-            renderInput={(params) => (
-              <TextField 
-                {...params} 
-                name='discount_id'
-                id='discount_id'
-                label="Discount" 
-                size='small'
-                focused
+        {!readOnly ? (
+          <>
+            <Stack flex={1}>
+              <Autocomplete
+                onFocus={() => fetchDiscount && fetchDiscount()}
+                freeSolo
+                clearOnBlur
+                handleHomeEndKeys={false}
+                id="sel-discounts"
+                options={formattedDiscounts}
                 fullWidth
+                renderInput={(params) => (
+                  <TextField 
+                    {...params} 
+                    name='discount_id'
+                    id='discount_id'
+                    label="Discount" 
+                    size='small'
+                    focused
+                    fullWidth
+                  />
+                )}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') event.defaultMuiPrevented = true
+                }}
+                isOptionEqualToValue={(option: any, value: any) => option?.id === value?.id}
+                onChange={(e: any, newValue: any) => {
+                  handleInputChange && handleInputChange('discount_id', newValue?.id ?? '')
+                }}
+                value={discountValue}
               />
-            )}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') event.defaultMuiPrevented = true
-            }}
-            isOptionEqualToValue={(option: any, value: any) => option?.id === value?.id}
-            onChange={(e: any, newValue: any) => {
-              handleInputChange('discount_id', newValue?.id ?? '')
-            }}
-            value={discountValue}
-          />
-        </Stack>
-        <Stack>
-          <Button
-            onClick={() => handleDialogOpen('create_discounts')}
-            variant='contained'
-            color='primary'
+            </Stack>
+            <Stack>
+              <Button
+                onClick={() => handleDialogOpen && handleDialogOpen('create_discounts')}
+                variant='contained'
+                color='primary'
+                size='small'
+                sx={{ 
+                  py: '0.7em', 
+                  minWidth: 'auto',
+                  borderRadius: 5,
+                }}
+              ><LibraryAddIcon fontSize='small' /></Button>
+            </Stack>
+          </>
+        ) : (
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Discount"
             size='small'
-            sx={{ 
-              py: '0.7em', 
-              minWidth: 'auto',
-              borderRadius: 5,
-            }}
-          ><LibraryAddIcon fontSize='small' /></Button>
-        </Stack>
+            focused
+            value={formData?.discount ?? 'N/a'}
+            disabled
+            sx={{ m: 0 }}
+          />
+        )}
       </Stack>
 
       <Stack direction='row'>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="amount_words"
-          label="Amount in Words"
-          name="amount_words"
-          autoComplete=""
-          size='small'
-          focused
-          sx={{ m: 0 }}
-          value={formData?.amount_words ?? ''}
-          onChange={e => handleInputChange(e.target.name, e.target.value)}
-        />
+        {!readOnly ? (
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="amount_words"
+            label="Amount in Words"
+            name="amount_words"
+            autoComplete=""
+            size='small'
+            focused
+            sx={{ m: 0 }}
+            value={formData?.amount_words ?? ''}
+            onChange={e => handleInputChange && handleInputChange(e.target.name, e.target.value)}
+          />
+        ) : (
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Amount in Words"
+            size='small'
+            focused
+            value={formData?.amount_words}
+            disabled
+            sx={{ m: 0 }}
+          />
+        )}
       </Stack>
       
       <Stack direction={{ xs: 'column', sm: 'row' }} gap={3}>
@@ -335,13 +446,14 @@ const CreateOrFields = ({
               aria-labelledby="payment_mode"
               name="payment_mode"
               id='payment_mode'
-              onChange={e => handleInputChange(e.target.name, e.target.value)}
+              onChange={e => handleInputChange && handleInputChange(e.target.name, e.target.value)}
               value={formData?.payment_mode ?? ''}
             >
               <FormControlLabel 
                 value="cash" 
-                control={<Radio size='small' onChange={e => handleInputChange(e.target.name, e.target.value)} />} 
-                label="Cash" 
+                control={<Radio />} 
+                label="Cash"
+                disabled={readOnly} 
                 sx={{  
                   '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
                   '& .MuiSvgIcon-root': { fontSize: '1rem' }
@@ -351,6 +463,7 @@ const CreateOrFields = ({
                 value="check" 
                 control={<Radio size='small' />} 
                 label="Check" 
+                disabled={readOnly} 
                 sx={{  
                   '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
                   '& .MuiSvgIcon-root': { fontSize: '1rem' }
@@ -360,6 +473,7 @@ const CreateOrFields = ({
                 value="money_order" 
                 control={<Radio size='small' />} 
                 label="Money Order"
+                disabled={readOnly} 
                 sx={{  
                   '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
                   '& .MuiSvgIcon-root': { fontSize: '1rem' }
@@ -405,49 +519,100 @@ const CreateOrFields = ({
 
 const ActionButtons = ({
   formData,
+  readOnly,
   handleCreate,
   handlePrint,
   handleClear,
+  handleDeposit,
+  handleCancel,
+  handleClose,
 }: ICreateOrActionButtonsProps) => {
+  
+  const renderDynamicContents = (readOnly: boolean) => {
+    if (readOnly) return (
+      <>
+        <Button
+          onClick={() => handleDeposit && handleDeposit()}
+          variant='contained'
+          color='primary'
+          fullWidth
+          sx={{  
+            py: '0.8em',
+          }}
+        >Deposit</Button>
+        <Divider />
+        <Button
+          onClick={() => handleCancel && handleCancel()}
+          variant='contained'
+          color='primary'
+          fullWidth
+          sx={{  
+            py: '0.8em',
+            bgcolor: 'warning.main',
+            '&:hover': {
+              bgcolor: 'warning.darker'
+            }
+          }}
+        >Cancel</Button>
+        <Button
+          onClick={handleClose}
+          variant='outlined'
+          fullWidth
+          sx={{ 
+            py: '0.8em',
+            color: 'common.black', 
+            borderColor: 'common.black'
+          }}
+        >Close</Button>
+      </>
+    )
+
+    return (
+      <>
+        <Button
+          onClick={() => handleCreate && handleCreate(formData, true)}
+          variant='contained'
+          color='primary'
+          fullWidth
+          sx={{  
+            py: '0.8em',
+          }}
+        >Save & Print</Button>
+        <Divider />
+        <Button
+          onClick={() => handleCreate && handleCreate(formData, false)}
+          variant='contained'
+          color='primary'
+          fullWidth
+          sx={{  
+            py: '0.8em',
+            bgcolor: 'secondary.main',
+            '&:hover': {
+              bgcolor: 'secondary.dark'
+            }
+          }}
+        >Save Only</Button>
+        <Button
+          onClick={handleClear}
+          variant='outlined'
+          fullWidth
+          sx={{ 
+            py: '0.8em',
+            color: 'common.black', 
+            borderColor: 'common.black'
+          }}
+        >Clear</Button>
+      </>
+    )
+  }
+
   return (
     <Stack 
       spacing={2} 
       px={4}
       width={{ xs: '100%', lg: 350 }}
     >
-      <Button
-        onClick={() => handleCreate(formData, true)}
-        variant='contained'
-        color='primary'
-        fullWidth
-        sx={{  
-          py: '0.8em',
-        }}
-      >Save & Print</Button>
-      <Divider />
-      <Button
-        onClick={() => handleCreate(formData, false)}
-        variant='contained'
-        color='primary'
-        fullWidth
-        sx={{  
-          py: '0.8em',
-          bgcolor: 'secondary.main',
-          '&:hover': {
-            bgcolor: 'secondary.dark'
-          }
-        }}
-      >Save Only</Button>
-      <Button
-        onClick={handleClear}
-        variant='outlined'
-        fullWidth
-        sx={{ 
-          py: '0.8em',
-          color: 'common.black', 
-          borderColor: 'common.black'
-        }}
-      >Clear</Button>
+      {renderDynamicContents(readOnly ?? false)}
     </Stack>
   )
 }
@@ -459,6 +624,7 @@ const CreateOr = ({
   discounts,
   computingDiscount,
   formData,
+  readOnly,
   handleCreate,
   handleInputChange,
   handlePrint,
@@ -466,11 +632,13 @@ const CreateOr = ({
   fetchDiscount,
   fetchParticular,
   fetchPayor,
-  handleDialogOpen
+  handleDialogOpen,
+  handleDeposit,
+  handleCancel,
+  handleClose
 }: ICreateOrProps) => {
-
   useEffect(() => {
-    handleClear()
+    if (handleClear) handleClear()
   }, [])
 
   return (
@@ -492,6 +660,7 @@ const CreateOr = ({
             discounts={discounts}
             computingDiscount={computingDiscount}
             formData={formData}
+            readOnly={readOnly}
             handleDialogOpen={handleDialogOpen}
             fetchDiscount={fetchDiscount}
             fetchParticular={fetchParticular}
@@ -504,9 +673,13 @@ const CreateOr = ({
         >
           <ActionButtons 
             formData={formData}
+            readOnly={readOnly}
             handleCreate={handleCreate}
             handlePrint={handlePrint}
             handleClear={handleClear}
+            handleDeposit={handleDeposit}
+            handleCancel={handleCancel}
+            handleClose={handleClose}
           />
         </Stack>
       </Stack>

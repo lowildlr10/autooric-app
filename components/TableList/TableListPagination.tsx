@@ -19,7 +19,7 @@ const TableListPagination = ({
   return (
     <Stack spacing={2} alignItems='center' my={3} px={2}>
       <Typography variant='body2' width='100%' textAlign='right'
-      >Page: {from} - {to} of {total}</Typography>
+      >Displaying: {from} - {to} of {total}</Typography>
       <Pagination
         page={currentPage ?? 1}
         count={links?.length ? links?.length - 2 : 0} 

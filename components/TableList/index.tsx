@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, useMediaQuery, useTheme } from '@mui/material'
 import ActionSection from './ActionSection'
-import { IOrColumn, IOrListRow, ITableListProps } from '@/Interfaces'
+import { IOfficialReceipt, IOrColumn, ITableListProps } from '@/Interfaces'
 import TableListPagination from './TableListPagination'
 
 const TableList = ({
@@ -19,7 +19,8 @@ const TableList = ({
   displayType,
   searchLoading,
   handleSearchChange,
-  handlePageChange
+  handlePageChange,
+  handleShowDetails
 }: ITableListProps) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -60,7 +61,7 @@ const TableList = ({
                 >No data.</TableCell>
               </TableRow>
             )}
-            {rows?.map((row: IOrListRow) => {
+            {rows?.map((row: IOfficialReceipt) => {
                 return (
                   <TableRow 
                     hover 
@@ -75,7 +76,7 @@ const TableList = ({
                           key={column.id} 
                           align={column.align}
                           sx={{ cursor: 'pointer' }}
-                          onClick={() => alert(row.id)}
+                          onClick={() => handleShowDetails && handleShowDetails(row?.id ?? '')}
                         >
                           {value}
                         </TableCell>

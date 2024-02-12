@@ -183,10 +183,19 @@ const OfficialReceipt = () => {
         return {
           id: or.id,
           receipt_date: dayjs(or.receipt_date).format('MM/DD/YYYY'),
+          cancelled_date: dayjs(or.cancelled_date).format('MM/DD/YYYY'),
+          deposited_date: dayjs(or.deposited_date).format('MM/DD/YYYY'),
           or_no: or.or_no,
           payor: or.payor.payor_name,
           nature_collection: or.nature_collection.particular_name,
-          amount: or.amount.toFixed(2)
+          amount: or.amount.toFixed(2),
+          amount_words: or.amount_words,
+          discount: or?.discount?.discount_name ?? 'N/a',
+          deposit: or.deposit,
+          payment_mode: or.payment_mode,
+          is_cancelled: or.is_cancelled,
+          status: or.is_cancelled ? 'Cancelled' : 
+            or.deposit ? 'Deposited' : 'Pending'
         }
       })
       const currentPage = orListData?.current_page
@@ -199,6 +208,7 @@ const OfficialReceipt = () => {
 
       return (
         <OrList 
+          personelName={userInfo ? `${userInfo?.first_name} ${userInfo?.last_name}` : 'Loading...'}
           rows={rows ?? []}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}

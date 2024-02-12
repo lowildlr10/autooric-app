@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import TableList from '../TableList'
-import { IOrColumn, IOrListProps } from '@/Interfaces'
+import { IOfficialReceipt, IOrColumn, IOrListProps } from '@/Interfaces'
+import CreateOr from './CreateOr'
 
 const columns: readonly IOrColumn[] = [
   { id: 'receipt_date', label: 'Date', minWidth: 90 },
   { id: 'or_no', label: 'OR No.', minWidth: 90 },
-  { id: 'payor', label: 'Payor', minWidth: 200 },
+  { id: 'payor', label: 'Payor', minWidth: 180 },
   { id: 'nature_collection', label: 'Nature of Collection', minWidth: 150 },
-  { id: 'amount', label: 'Amount', minWidth: 80, align: 'right'},
+  { id: 'status', label: 'Status', minWidth: 90, align: 'right'},
+  { id: 'amount', label: 'Amount', minWidth: 80, align: 'right'}
 ]
 
 const OrList = ({
+  personelName,
   rows,
   currentPage,
   nextPageUrl,
@@ -23,6 +26,8 @@ const OrList = ({
 }: IOrListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
+  const [details, setDetails] = useState<IOfficialReceipt | undefined>({})
+  const [showDetails, setShowDetails] = useState(false)
 
   useEffect(() => {
     if (search.trim()) {
@@ -45,6 +50,29 @@ const OrList = ({
     setSearch(e.target.value)
   }
 
+  const handleShowDetails = (id: string) => {
+    setDetails(
+      rows?.find((row: IOfficialReceipt) => row.id === id)
+    )
+    setShowDetails(true)
+  }
+
+  const handleClose = () => {
+    setShowDetails(false)
+    setDetails({})
+  }
+
+  if (showDetails) {
+    return (
+      <CreateOr 
+        personelName={personelName}
+        formData={details ?? {}}
+        readOnly={showDetails}
+        handleClose={handleClose}
+      />
+    )
+  }
+
   return (
     <TableList 
       search={search}
@@ -61,6 +89,7 @@ const OrList = ({
       searchLoading={searchLoading}
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
+      handleShowDetails={handleShowDetails}
     />
   )
 }
