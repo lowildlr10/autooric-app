@@ -704,12 +704,24 @@ const OfficialReceipt = () => {
     setDepositFormData(defaultDepositFormData)
   }
 
+  const handleDownloadPdf = (filename: string, blob: string) => {
+    const link = document.createElement('a')
+    link.href = blob
+    link.download = filename
+    link.click()
+  }
+
   // Handle print official receipt
   const handlePrint = (orId: string, paperSizeId: string) => {
     if (accessToken) {
       API.getPrintableOR(accessToken, orId, paperSizeId)
         .then((response) => {
-          setPrintUrl(`data:application/pdf;base64,${response.data.data.pdf}`)
+          const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+          setPrintUrl(pdfUrl)
+          handleDownloadPdf(
+            response.data.data.filename, 
+            pdfUrl
+          )
           handleDialogOpen('print')
         })
         .catch((error) => {
