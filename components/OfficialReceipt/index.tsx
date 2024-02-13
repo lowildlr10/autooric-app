@@ -229,7 +229,7 @@ const OfficialReceipt = () => {
             handleInputChange(input_name, value)
           }
           handleCreate={(data, print) => handleCreateOr(data, print)}
-          handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId, true)}
+          handlePrint={(orId, paperSizeId) => handlePrintDownloadOr(orId, paperSizeId, true)}
           handleClear={handleClear}
           fetchPayor={() => fetchPayors()}
           fetchParticular={() => fetchParticulars()}
@@ -513,8 +513,13 @@ const OfficialReceipt = () => {
           toast.success(res?.message)
           setFormSaveLoading(false)
 
-          handlePrint(res?.data?.id, paperSize, print)
-
+          if (print) {
+            handlePrintDownloadOr(res?.data?.id, paperSize, print)
+            handlePrintDownloadOr(res?.data?.id, paperSize, false)
+          } else {
+            handlePrintDownloadOr(res?.data?.id, paperSize, false)
+          }
+            
           setCreateOrFormData(defaultCreateOrFormData)
         })
         .catch((error) => {
@@ -710,21 +715,27 @@ const OfficialReceipt = () => {
   }
 
   // Handle print official receipt
-  const handlePrint = (orId: string, paperSizeId: string, print: boolean) => {
+  const handlePrintDownloadOr = (
+    orId: string, 
+    paperSizeId: string, 
+    print = false
+  ) => {
     if (accessToken) {
-      API.getPrintableOR(accessToken, orId, paperSizeId)
+      const hasTemplate = print ? '0' : '1'
+      console.log('hasTemplate', hasTemplate)
+      API.getPrintableOR(accessToken, orId, paperSizeId, hasTemplate)
         .then((response) => {
           const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
 
           if (print) {
             setPrintUrl(pdfUrl)
             handleDialogOpen('print')
+          } else {
+            handleDownloadPdf(
+              response.data.data.filename, 
+              pdfUrl
+            )
           }
-
-          handleDownloadPdf(
-            response.data.data.filename, 
-            pdfUrl
-          )
         })
         .catch((error) => {
           console.log(error.message)

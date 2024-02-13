@@ -110,10 +110,11 @@ export default class API {
   static async getPrintableOR(
     accessToken: string,
     orId: string,
-    paperSizeId: string
+    paperSizeId: string,
+    hasTemplate: '1' | '0'
   ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/official-receipt?or_id=${orId}&paper_size_id=${paperSizeId}`,
+      `${API.API_BASE_URL}/api/v1/print/official-receipt?or_id=${orId}&paper_size_id=${paperSizeId}&has_template=${hasTemplate}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
