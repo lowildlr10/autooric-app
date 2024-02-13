@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ICategories, IParticularsSubContentProps } from '@/Interfaces'
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material'
 import useAccessToken from '@/hooks/useAccessToken'
@@ -14,13 +14,14 @@ const Particulars = ({
 }: IParticularsSubContentProps) => {
   const { accessToken } = useAccessToken()
   const [categories, setCategories] = useState<ICategories[]>()
-  const [formattedCategories, setFormattedCategories] = useState<any>([
-    {
-      id: '1',
-      label: 'loading...',
-    },
-  ])
+  const [formattedCategories, setFormattedCategories] = useState<any>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const categoryValue = useMemo(
+    () =>
+      formattedCategories.find((category: any) => category.id === formData?.category_id) ??
+      formData?.category_id,
+    [formattedCategories, formData?.category_id]
+  )
 
   useEffect(() => {
     fetchCategories()
@@ -80,9 +81,8 @@ const Particulars = ({
             fullWidth
           />
         )}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') event.defaultMuiPrevented = true
-        }}
+        autoFocus
+        autoHighlight
         isOptionEqualToValue={(option: any, value: any) =>
           option.id === value.id
         }
@@ -123,6 +123,7 @@ const Particulars = ({
 
           return filtered
         }}
+        value={categoryValue}
         onChange={(e: any, newValue: any) => {
           handleInputChange(
             'category_id',

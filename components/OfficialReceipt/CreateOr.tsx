@@ -211,9 +211,8 @@ const CreateOrFields = ({
                 fullWidth
               />
             )}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') event.defaultMuiPrevented = true
-            }}
+            autoFocus
+            autoHighlight
             isOptionEqualToValue={(option: any, value: any) =>
               option.id === value.id
             }
@@ -302,9 +301,6 @@ const CreateOrFields = ({
                     fullWidth
                   />
                 )}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') event.defaultMuiPrevented = true
-                }}
                 isOptionEqualToValue={(option: any, value: any) =>
                   option?.id === value?.id
                 }
@@ -315,6 +311,9 @@ const CreateOrFields = ({
                       newValue?.id ?? ''
                     )
                 }}
+                autoFocus
+                autoComplete
+                autoHighlight
                 value={particularValue}
               />
             </Stack>
@@ -435,9 +434,6 @@ const CreateOrFields = ({
                     fullWidth
                   />
                 )}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') event.defaultMuiPrevented = true
-                }}
                 isOptionEqualToValue={(option: any, value: any) =>
                   option?.id === value?.id
                 }
@@ -445,6 +441,9 @@ const CreateOrFields = ({
                   handleInputChange &&
                     handleInputChange('discount_id', newValue?.id ?? '')
                 }}
+                autoFocus
+                autoComplete
+                autoHighlight
                 value={discountValue}
               />
             </Stack>

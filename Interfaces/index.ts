@@ -56,6 +56,7 @@ export interface ISystemDialogProps {
   handleUpdate?: (formData: any) => void
   handleDelete?: (id: string) => void
   handleClear?: () => void
+  handleDownload?: () => void
   handleInputChange?: any
 }
 

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import useAccessToken from '@/hooks/useAccessToken'
 import useUserInfo from '@/hooks/useUserInfo'
 import Loader from '../Loader'
@@ -69,6 +69,7 @@ const OfficialReceipt = () => {
   const [orListLoading, setOrListLoading] = useState(false)
   const [paperSizeLoading, setPaperSizeLoading] = useState(false)
   const [formSaveLoading, setFormSaveLoading] = useState(false)
+  const [printDownloadLoading, setPrintDownloadLoading] = useState(false)
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
   const [tabContents, setTabContents] = useState<ITabContents[]>([])
@@ -94,6 +95,7 @@ const OfficialReceipt = () => {
   const [changedAmountDiscount, setChangedAmountDiscount] = useState(false)
   const [details, setDetails] = useState<IOfficialReceipt | undefined>({})
   const [showDetails, setShowDetails] = useState(false)
+  const [tempPrintId, setTempPrintId] = useState('')
 
   // Discount computation with timeOut
   useEffect(() => {
@@ -166,7 +168,8 @@ const OfficialReceipt = () => {
       orListLoading ||
       paperSizeLoading ||
       logoutLoading ||
-      formSaveLoading
+      formSaveLoading ||
+      printDownloadLoading
     ) {
       setLoading(true)
     } else {
@@ -181,6 +184,7 @@ const OfficialReceipt = () => {
     paperSizeLoading,
     logoutLoading,
     formSaveLoading,
+    printDownloadLoading
   ])
 
   // Check if user is already logged in
@@ -415,7 +419,6 @@ const OfficialReceipt = () => {
 
         toast.success(res?.message)
         forceRelogin()
-        setLogoutLoading(false)
       })
     } else {
       forceRelogin()
@@ -519,7 +522,8 @@ const OfficialReceipt = () => {
           } else {
             handlePrintDownloadOr(res?.data?.id, paperSize, false)
           }
-            
+          
+          setTempPrintId(res?.data?.id)
           setCreateOrFormData(defaultCreateOrFormData)
         })
         .catch((error) => {
@@ -720,6 +724,7 @@ const OfficialReceipt = () => {
     paperSizeId: string, 
     print = false
   ) => {
+    setPrintDownloadLoading(true)
     if (accessToken) {
       const hasTemplate = print ? '0' : '1'
       API.getPrintableOR(accessToken, orId, paperSizeId, hasTemplate)
@@ -735,14 +740,18 @@ const OfficialReceipt = () => {
               pdfUrl
             )
           }
+
+          setPrintDownloadLoading(false)
         })
         .catch((error) => {
           console.log(error.message)
+          setPrintDownloadLoading(false)
         })
     } else {
       toast.error(
         'An error occurred while fetching printable official receipt. Please try again.'
       )
+      setPrintDownloadLoading(false)
     }
   }
 
@@ -802,6 +811,8 @@ const OfficialReceipt = () => {
         dialogType='print'
         printUrl={printUrl}
         handleClose={() => handleDialogClose('print')}
+        handleDownload={() => handlePrintDownloadOr(tempPrintId, paperSize, false)}
+        handleClear={() => setPrintUrl('')}
       />
       <SystemDialog
         open={dialogOpen.create_particulars ?? false}
@@ -827,7 +838,7 @@ const OfficialReceipt = () => {
       />
       <SystemDialog
         open={dialogOpen.deposit_or ?? false}
-        title='Deposit OR'
+        title='Deposit Official Receipt'
         dialogType='deposit'
         formData={depositFormData}
         handleClose={() => handleDialogClose('deposit_or')}
@@ -836,7 +847,7 @@ const OfficialReceipt = () => {
       />
       <SystemDialog
         open={dialogOpen.cancel_or ?? false}
-        title='Cancel OR'
+        title='Cancel Official Receipt'
         dialogType='cancel'
         id={details?.id}
         handleClose={() => handleDialogClose('cancel_or')}

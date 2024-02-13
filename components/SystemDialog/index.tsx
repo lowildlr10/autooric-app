@@ -32,6 +32,7 @@ const SystemDialog = ({
   handleDelete,
   handleDeposit,
   handleClear,
+  handleDownload,
   handleInputChange,
 }: ISystemDialogProps) => {
   const theme = useTheme()
@@ -88,6 +89,16 @@ const SystemDialog = ({
             autoFocus
           >
             Logout
+          </Button>
+        )}
+
+        {dialogType === 'print' && (
+          <Button
+            sx={(theme) => ({ color: theme.palette.primary.main })}
+            onClick={() => handleDownload && handleDownload()}
+            autoFocus
+          >
+            Download
           </Button>
         )}
 
