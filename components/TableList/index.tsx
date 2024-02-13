@@ -108,6 +108,7 @@ const TableList = ({
         </Table>
       </TableContainer>
       <TableListPagination
+        search={search}
         currentPage={currentPage}
         nextPageUrl={nextPageUrl}
         prevPageUrl={prevPageUrl}

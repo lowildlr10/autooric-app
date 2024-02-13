@@ -3,6 +3,7 @@ import { ITableListPaginationProps } from '@/Interfaces'
 import { Pagination, Stack, Typography } from '@mui/material'
 
 const TableListPagination = ({
+  search,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -13,7 +14,9 @@ const TableListPagination = ({
   handlePageChange,
 }: ITableListPaginationProps) => {
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    handlePageChange(links[value]?.url ?? '')
+    const additionalQuery = search ? `&search=${search}` : ''
+    const url = links[value]?.url ?? ''
+    handlePageChange(url + additionalQuery)
   }
 
   return (

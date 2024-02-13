@@ -305,6 +305,7 @@ export interface ITableListProps {
 }
 
 export interface ITableListPaginationProps {
+  search?: string
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
