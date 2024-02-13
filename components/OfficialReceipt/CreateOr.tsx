@@ -169,6 +169,9 @@ const CreateOrFields = ({
                 handleInputChange &&
                 handleInputChange(e.target.name, e.target.value)
               }
+              inputProps={{ 
+                maxLength: 10
+               }}
               sx={{ m: 0 }}
             />
           ) : (

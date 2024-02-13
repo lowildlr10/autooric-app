@@ -229,7 +229,7 @@ const OfficialReceipt = () => {
             handleInputChange(input_name, value)
           }
           handleCreate={(data, print) => handleCreateOr(data, print)}
-          handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId)}
+          handlePrint={(orId, paperSizeId) => handlePrint(orId, paperSizeId, true)}
           handleClear={handleClear}
           fetchPayor={() => fetchPayors()}
           fetchParticular={() => fetchParticulars()}
@@ -513,9 +513,7 @@ const OfficialReceipt = () => {
           toast.success(res?.message)
           setFormSaveLoading(false)
 
-          if (print) {
-            handlePrint(res?.data?.id, paperSize)
-          }
+          handlePrint(res?.data?.id, paperSize, print)
 
           setCreateOrFormData(defaultCreateOrFormData)
         })
@@ -712,17 +710,21 @@ const OfficialReceipt = () => {
   }
 
   // Handle print official receipt
-  const handlePrint = (orId: string, paperSizeId: string) => {
+  const handlePrint = (orId: string, paperSizeId: string, print: boolean) => {
     if (accessToken) {
       API.getPrintableOR(accessToken, orId, paperSizeId)
         .then((response) => {
           const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
-          setPrintUrl(pdfUrl)
+
+          if (print) {
+            setPrintUrl(pdfUrl)
+            handleDialogOpen('print')
+          }
+
           handleDownloadPdf(
             response.data.data.filename, 
             pdfUrl
           )
-          handleDialogOpen('print')
         })
         .catch((error) => {
           console.log(error.message)
