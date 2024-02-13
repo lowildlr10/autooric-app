@@ -53,7 +53,10 @@ const TableList = ({
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{ 
+                    minWidth: column.minWidth,
+                    width: column.minWidth 
+                  }}
                 >
                   {column.label}
                 </TableCell>

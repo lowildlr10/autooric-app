@@ -8,9 +8,9 @@ const columns: readonly IOrColumn[] = [
   { id: 'or_no', label: 'OR No.', minWidth: 90 },
   { id: 'payor', label: 'Payor', minWidth: 180 },
   { id: 'nature_collection', label: 'Nature of Collection', minWidth: 150 },
-  { id: 'status', label: 'Status', minWidth: 90, align: 'left' },
   { id: 'amount_str', label: 'Amount', minWidth: 80, align: 'right' },
   { id: 'deposit_str', label: 'Deposited', minWidth: 80, align: 'right' },
+  { id: 'status', label: 'Status', minWidth: 90, align: 'center' },
 ]
 
 const OrList = ({
