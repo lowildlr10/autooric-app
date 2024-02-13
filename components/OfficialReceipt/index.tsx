@@ -722,7 +722,6 @@ const OfficialReceipt = () => {
   ) => {
     if (accessToken) {
       const hasTemplate = print ? '0' : '1'
-      console.log('hasTemplate', hasTemplate)
       API.getPrintableOR(accessToken, orId, paperSizeId, hasTemplate)
         .then((response) => {
           const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
