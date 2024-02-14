@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "if [ \"$npm_config_omit\" = \"dev\" ]; then echo \"Skip husky installation\"; else husky install; fi",
     "export": "next export",
-    "prepare": "is-ci || husky install",
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore ."
   },
