@@ -8,9 +8,7 @@
     "start": "next start",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore . --fix",
-    "format": "prettier --write --ignore-path .gitignore . && eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore .",
-    "prepare": "husky install",
-    "postinstall": "patch-package"
+    "format": "prettier --write --ignore-path .gitignore . && eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore ."
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
