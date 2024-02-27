@@ -131,6 +131,7 @@ export interface IParticular {
   id?: string
   particular_name?: string
   category_id?: string
+  default_amount?: number
 }
 
 export interface IOfficialReceipt {

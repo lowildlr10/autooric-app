@@ -48,6 +48,7 @@ const CreateOrFields = ({
   const [formattedPayors, setFormattedPayors] = useState<any>([])
   const [formattedParticulars, setFormattedParticulars] = useState<any>([])
   const [formattedDiscounts, setFormattedDiscounts] = useState<any>([])
+  const [defaultAmount, setDefaultAmount] = useState(0)
   const payorValue = useMemo(
     () =>
       formattedPayors.find((payor: any) => payor.id === formData?.payor_id) ??
@@ -86,6 +87,7 @@ const CreateOrFields = ({
         particulars.map((particular) => ({
           id: particular.id,
           label: particular.particular_name,
+          default_amount: particular.default_amount ?? 0
         }))
       )
     }
@@ -101,6 +103,14 @@ const CreateOrFields = ({
       )
     }
   }, [discounts])
+
+  useEffect(() => {
+    handleInputChange && handleInputChange('amount', defaultAmount)
+  }, [defaultAmount])
+
+  useEffect(() => {
+    console.log(formData)
+  }, [formData])
 
   return (
     <Stack
@@ -311,6 +321,13 @@ const CreateOrFields = ({
                       newValue?.id ?? ''
                     )
                 }}
+                onInputChange={(e: any, newValue: any) => {                  
+                  setDefaultAmount(
+                    formattedParticulars.find((particular: any) => 
+                        particular?.label === newValue
+                      )?.default_amount ?? 0
+                  )
+                }}
                 autoFocus
                 autoComplete
                 autoHighlight
@@ -479,6 +496,42 @@ const CreateOrFields = ({
           />
         )}
       </Stack>
+      
+      {(formData?.discount_id || formData?.discount) && (
+        <Stack>
+          {!readOnly ? (
+            <TextField
+              variant='outlined'
+              margin='normal'
+              fullWidth
+              id='card_no'
+              label='ID/Card Number (Optional)'
+              name='card_no'
+              autoComplete=''
+              size='small'
+              focused
+              value={formData?.card_no ?? ''}
+              onChange={(e) =>
+                handleInputChange &&
+                handleInputChange(e.target.name, e.target.value)
+              }
+              sx={{ m: 0 }}
+            />
+          ) : (
+            <TextField
+              variant='outlined'
+              margin='normal'
+              fullWidth
+              label='ID/Card No'
+              size='small'
+              focused
+              value={formData?.card_no}
+              disabled
+              sx={{ m: 0 }}
+            />
+          )}
+        </Stack>
+      )}
 
       <Stack direction='row'>
         {!readOnly ? (
@@ -646,7 +699,7 @@ const ActionButtons = ({
             </>
           )}
 
-          {!formData?.is_cancelled && (
+          {!formData?.deposit && !formData?.is_cancelled && (
             <Button
               onClick={() => handleCancel && handleCancel()}
               variant='contained'

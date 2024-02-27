@@ -33,6 +33,7 @@ const defaultCreateOrFormData: IOfficialReceipt = {
   nature_collection_id: '',
   discount_id: '',
   amount: 0,
+  card_no: '',
   amount_words: '',
   payment_mode: '',
 }
@@ -267,6 +268,7 @@ const OfficialReceipt = () => {
           amount_words: or.amount_words,
           discount: or?.discount?.discount_name ?? 'N/a',
           discount_percent: or?.discount?.percent ?? 0,
+          card_no: or?.card_no ?? 'N/a',
           deposit: or.deposit ?? 0,
           deposit_str: or.deposit
             ? or.deposit

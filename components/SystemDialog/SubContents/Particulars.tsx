@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { ICategories, IParticularsSubContentProps } from '@/Interfaces'
-import { Autocomplete, TextField, createFilterOptions } from '@mui/material'
+import { Autocomplete, InputAdornment, TextField, createFilterOptions } from '@mui/material'
 import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
@@ -147,6 +147,28 @@ const Particulars = ({
         value={formData?.particular_name ?? ''}
         onChange={(e) => handleInputChange('particular_name', e.target.value)}
         sx={{ m: 0 }}
+      />
+
+      <TextField
+        variant='outlined'
+        margin='normal'
+        required
+        fullWidth
+        id='default_amount'
+        label='Default Amount'
+        name='default_amount'
+        autoComplete=''
+        size='small'
+        focused
+        sx={{ m: 0 }}
+        value={formData?.default_amount ?? ''}
+        InputProps={{
+          type: 'number',
+          startAdornment: (
+            <InputAdornment position='start'>₱</InputAdornment>
+          ),
+        }}
+        onChange={(e) => handleInputChange('default_amount', e.target.value)}
       />
     </>
   )

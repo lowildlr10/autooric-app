@@ -31,7 +31,14 @@ const TabContainer = ({
         onChange={handleChange}
         variant='scrollable'
         scrollButtons='auto'
-        sx={{ borderBottom: 1, borderColor: 'divider' }}
+        sx={{ 
+          borderBottom: 1, 
+          borderColor: 'divider', 
+          position: 'sticky',
+          top: 0,
+          background: 'white',
+          zIndex: 100
+        }}
       >
         {tabs?.map((tab, index) => <Tab key={tab.index} label={tab.label} />)}
       </Tabs>
