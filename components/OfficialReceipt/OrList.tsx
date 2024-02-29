@@ -53,9 +53,11 @@ const OrList = ({
     }
   }, [search, searchLoading])
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchDateParticularsChange = (
+    value: string | null
+  ) => {
     setSearchLoading(true)
-    setSearch(e.target.value)
+    setSearch(value ?? '')
   }
 
   if (showDetails) {
@@ -66,7 +68,10 @@ const OrList = ({
         readOnly={showDetails}
         handleClose={handleCloseDetails}
         handleDeposit={handleDeposit}
-        handleCancel={handleCancel}
+        handleCancel={() => {
+          handleCancel()
+          handleSearchDateParticularsChange(search)
+        }}
       />
     )
   }
@@ -74,6 +79,7 @@ const OrList = ({
   return (
     <TableList
       search={search}
+      searchType='date_particulars'
       displayType='official_receipt'
       columns={columns}
       rows={rows ?? []}
@@ -85,7 +91,7 @@ const OrList = ({
       total={total ?? 0}
       links={links}
       searchLoading={searchLoading}
-      handleSearchChange={handleSearchChange}
+      handleSearchChange={handleSearchDateParticularsChange}
       handlePageChange={handlePageChange}
       handleShowDetails={(id: string) =>
         handleShowDetails(

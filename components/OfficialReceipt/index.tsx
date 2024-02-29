@@ -134,11 +134,6 @@ const OfficialReceipt = () => {
   }, [accessToken])
 
   useEffect(() => {
-    if (!accessToken || tabValue !== 1) return
-    fetchOfficialReceipts()
-  }, [accessToken, tabValue])
-
-  useEffect(() => {
     setTabContents([
       {
         index: 0,

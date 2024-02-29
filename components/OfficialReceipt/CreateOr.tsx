@@ -794,7 +794,7 @@ const ActionButtons = ({
     <Stack 
       spacing={2} 
       px={4} 
-      width={{ xs: '100%', lg: 'calc(25vw - 1em)', xl: 350 }}
+      width={{ xs: '74%', lg: 'calc(25vw - 1em)', xl: 350 }}
       position={{ xs: 'relative', lg: 'absolute' }}
       bottom={{ xs: 'unset', lg: '86px' }}
     >

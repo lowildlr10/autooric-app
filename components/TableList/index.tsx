@@ -27,6 +27,7 @@ const TableList = ({
   total,
   links,
   searchLoading,
+  searchType,
   handleSearchChange,
   handlePageChange,
   handleShowDetails,
@@ -38,6 +39,7 @@ const TableList = ({
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <ActionSection
         search={search}
+        searchType={searchType}
         searchLoading={searchLoading}
         handleSearchChange={handleSearchChange}
       />

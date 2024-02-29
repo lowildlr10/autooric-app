@@ -2,9 +2,11 @@ import { Button, Stack } from '@mui/material'
 import React from 'react'
 import SearchField from './SearchField'
 import { ITableListActionSectionProps } from '@/Interfaces'
+import DateRangeParticulars from './DateRangeParticulars'
 
 const ActionSection = ({
   search,
+  searchType = 'search',
   handleSearchChange,
   searchLoading,
   hasCreateButton,
@@ -18,11 +20,22 @@ const ActionSection = ({
         </Button>
       )}
       {!hasCreateButton && <div></div>}
-      <SearchField
-        search={search}
-        loading={searchLoading}
-        handleChange={handleSearchChange}
-      />
+
+      {searchType === 'search' && (
+        <SearchField
+          search={search}
+          loading={searchLoading}
+          handleChange={handleSearchChange}
+        />
+      )}
+      
+      {searchType === 'date_particulars' && (
+        <DateRangeParticulars 
+          search={search}
+          loading={searchLoading}
+          handleChange={handleSearchChange}
+        />
+      )}
     </Stack>
   )
 }

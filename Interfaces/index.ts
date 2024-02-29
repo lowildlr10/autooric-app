@@ -283,6 +283,8 @@ export interface IOrListProps {
   handleCancel: () => void
 }
 
+export type SearchType = 'none' | 'search' | 'date_particulars'
+
 export interface ITableListProps {
   displayType:
     | 'official_receipt'
@@ -301,7 +303,8 @@ export interface ITableListProps {
   links: ITableListLinks[]
   search: string
   searchLoading: boolean
-  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  searchType: SearchType
+  handleSearchChange: any
   handlePageChange: (url: string) => void
   handleShowDetails?: (id: string) => void
 }
@@ -322,14 +325,21 @@ export interface ITableListActionSectionProps {
   search: string
   hasCreateButton?: boolean
   searchLoading: boolean
+  searchType: SearchType
   handleCreate?: () => void
-  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleSearchChange: any
 }
 
 export interface ITableListActionSectionSearchProps {
   search: string
   loading: boolean
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface ITableListActionSectionDateRangeParticularsProps {
+  search: string
+  loading: boolean
+  handleChange: (value: string | null) => void
 }
 
 export interface IDeposit {
@@ -339,4 +349,10 @@ export interface IDeposit {
   card_no?: string
   regular: number
   discounted: number
+}
+
+export interface ISearchData {
+  from: string
+  to: string
+  particulars: string
 }
