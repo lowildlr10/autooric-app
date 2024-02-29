@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { IDiscountsSubContentProps } from '@/Interfaces'
-import { InputAdornment, TextField } from '@mui/material'
+import { FormControl, FormControlLabel, InputAdornment, Switch, TextField } from '@mui/material'
 
 const Discount = ({
   formData,
@@ -43,6 +43,24 @@ const Discount = ({
         value={formData?.percent ?? ''}
         onChange={handleInputChange}
       />
+
+      <FormControl component="fieldset" variant="standard">
+        <FormControlLabel
+          control={
+            <Switch 
+              checked={formData?.requires_card_no ?? false}
+              color="secondary" 
+              id='requires_card_no'
+              name='requires_card_no'
+              required
+              inputProps={{ 'aria-label': 'controlled' }}
+              onChange={handleInputChange}
+            />
+          }
+          label="Requires ID/Card Number?"
+          labelPlacement="start"
+        />
+      </FormControl>
     </>
   )
 }

@@ -120,6 +120,7 @@ export interface IDiscount {
   id?: string
   discount_name?: string
   percent?: number
+  requires_card_no?: boolean
 }
 
 export interface ICategories {

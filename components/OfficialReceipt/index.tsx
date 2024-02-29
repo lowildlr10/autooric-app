@@ -41,11 +41,13 @@ const defaultCreateOrFormData: IOfficialReceipt = {
 const defaultParticularFormData: IParticular = {
   particular_name: '',
   category_id: '',
+  default_amount: 0
 }
 
 const defaultDiscountFormData: IDiscount = {
   discount_name: '',
   percent: 0,
+  requires_card_no: false
 }
 
 const defaultDepositFormData: IDeposit = {
@@ -268,7 +270,7 @@ const OfficialReceipt = () => {
           amount_words: or.amount_words,
           discount: or?.discount?.discount_name ?? 'N/a',
           discount_percent: or?.discount?.percent ?? 0,
-          card_no: or?.card_no ?? 'N/a',
+          card_no: or?.card_no ?? '',
           deposit: or.deposit ?? 0,
           deposit_str: or.deposit
             ? or.deposit
@@ -480,9 +482,19 @@ const OfficialReceipt = () => {
   const handleInputChangeDiscounts = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
+    const elemName = e.target.name
+
+    if (elemName === 'requires_card_no') {
+      setDiscountFormData({
+        ...discountFormData,
+        requires_card_no: e.target.checked,
+      })
+      return
+    }
+
     setDiscountFormData({
       ...discountFormData,
-      [e.target.name]: e.target.value,
+      [elemName]: e.target.value,
     })
   }
 

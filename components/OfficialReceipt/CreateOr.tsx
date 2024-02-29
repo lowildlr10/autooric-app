@@ -9,11 +9,8 @@ import {
   FormHelperText,
   FormLabel,
   InputAdornment,
-  InputLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -49,6 +46,7 @@ const CreateOrFields = ({
   const [formattedParticulars, setFormattedParticulars] = useState<any>([])
   const [formattedDiscounts, setFormattedDiscounts] = useState<any>([])
   const [defaultAmount, setDefaultAmount] = useState(0)
+  const [cardNoRequired, setCardNoRequired] = useState(false)
   const payorValue = useMemo(
     () =>
       formattedPayors.find((payor: any) => payor.id === formData?.payor_id) ??
@@ -99,6 +97,7 @@ const CreateOrFields = ({
         discounts.map((discount) => ({
           id: discount.id,
           label: discount.discount_name,
+          requires_card_no: discount.requires_card_no
         }))
       )
     }
@@ -107,10 +106,6 @@ const CreateOrFields = ({
   useEffect(() => {
     handleInputChange && handleInputChange('amount', defaultAmount)
   }, [defaultAmount])
-
-  useEffect(() => {
-    console.log(formData)
-  }, [formData])
 
   return (
     <Stack
@@ -458,6 +453,13 @@ const CreateOrFields = ({
                   handleInputChange &&
                     handleInputChange('discount_id', newValue?.id ?? '')
                 }}
+                onInputChange={(e: any, newValue: any) => {                  
+                  setCardNoRequired(
+                    formattedDiscounts.find((discount: any) => 
+                        discount?.label === newValue
+                      )?.requires_card_no ?? false
+                  )
+                }}
                 autoFocus
                 autoComplete
                 autoHighlight
@@ -498,39 +500,51 @@ const CreateOrFields = ({
       </Stack>
       
       {(formData?.discount_id || formData?.discount) && (
-        <Stack>
+        <>
           {!readOnly ? (
-            <TextField
-              variant='outlined'
-              margin='normal'
-              fullWidth
-              id='card_no'
-              label='ID/Card Number (Optional)'
-              name='card_no'
-              autoComplete=''
-              size='small'
-              focused
-              value={formData?.card_no ?? ''}
-              onChange={(e) =>
-                handleInputChange &&
-                handleInputChange(e.target.name, e.target.value)
-              }
-              sx={{ m: 0 }}
-            />
+            <>
+              {!!cardNoRequired && (
+                <Stack>
+                  <TextField
+                    variant='outlined'
+                    margin='normal'
+                    fullWidth
+                    id='card_no'
+                    label='ID/Card Number (Optional)'
+                    name='card_no'
+                    autoComplete=''
+                    size='small'
+                    focused
+                    value={formData?.card_no ?? ''}
+                    onChange={(e) =>
+                      handleInputChange &&
+                      handleInputChange(e.target.name, e.target.value)
+                    }
+                    sx={{ m: 0 }}
+                  />
+                </Stack>
+              )}
+            </>
           ) : (
-            <TextField
-              variant='outlined'
-              margin='normal'
-              fullWidth
-              label='ID/Card No'
-              size='small'
-              focused
-              value={formData?.card_no}
-              disabled
-              sx={{ m: 0 }}
-            />
+            <>
+              {formData?.card_no !== '' && (
+                <Stack>
+                  <TextField
+                    variant='outlined'
+                    margin='normal'
+                    fullWidth
+                    label='ID/Card No'
+                    size='small'
+                    focused
+                    value={formData?.card_no}
+                    disabled
+                    sx={{ m: 0 }}
+                  />
+                </Stack>
+              )}
+            </>
           )}
-        </Stack>
+        </>
       )}
 
       <Stack direction='row'>
@@ -777,7 +791,13 @@ const ActionButtons = ({
   }
 
   return (
-    <Stack spacing={2} px={4} width={{ xs: '100%', lg: 350 }}>
+    <Stack 
+      spacing={2} 
+      px={4} 
+      width={{ xs: '100%', lg: 'calc(25vw - 1em)', xl: 350 }}
+      position={{ xs: 'relative', lg: 'absolute' }}
+      bottom={{ xs: 'unset', lg: '86px' }}
+    >
       {renderDynamicContents(readOnly ?? false)}
     </Stack>
   )
@@ -831,7 +851,11 @@ const CreateOr = ({
             fetchPayor={fetchPayor}
           />
         </Stack>
-        <Stack justifyContent='end' alignItems={{ xs: 'center', lg: 'start' }}>
+        <Stack 
+          justifyContent='end' 
+          alignItems={{ xs: 'center', lg: 'start' }}
+          width={{ xs: '100%', lg: 350 }}
+        >
           <ActionButtons
             formData={formData}
             readOnly={readOnly}
