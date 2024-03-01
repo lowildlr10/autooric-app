@@ -150,7 +150,7 @@ const DateRangeParticulars = ({
             </MenuItem>
           )) : (
             <MenuItem value={searchData.particulars}>
-              {searchData.particulars}
+              Loading...
             </MenuItem>
           )}
         </Select>
