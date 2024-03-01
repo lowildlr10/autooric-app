@@ -202,4 +202,55 @@ export default class API {
       },
     })
   }
+
+  // Create users
+  static async createUser(accessToken: string, formData: any) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Update users
+  static async updateUser(
+    accessToken: string, 
+    userId: string, 
+    formData: any
+  ) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}?_method=PATCH`, 
+      formData, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Fetch all positions
+  static async getPositions(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/positions`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all designations
+  static async getDesignations(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/designations`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all stations
+  static async getStations(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/stations`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
 }

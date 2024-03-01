@@ -37,6 +37,7 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true)
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [userListLoading, setUserListLoading] = useState(false)
+  const [formSaveLoading, setFormSaveLoading] = useState(false)
   const [userListData, setUserListData] = useState<any>()
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
@@ -50,7 +51,8 @@ const UserManagement = () => {
     if (
       userLoading ||
       logoutLoading ||
-      userListLoading
+      userListLoading ||
+      formSaveLoading
     ) {
       setLoading(true)
     } else {
@@ -59,7 +61,8 @@ const UserManagement = () => {
   }, [
     userLoading,
     logoutLoading,
-    userListLoading
+    userListLoading,
+    formSaveLoading
   ])
 
   // Check if user is already logged in
@@ -76,6 +79,17 @@ const UserManagement = () => {
       }
     ])
   }, [])
+
+  useEffect(() => {
+    if (!accessToken) return
+    switch (tabValue) {
+      case 0:
+        fetchUsers()   
+        break
+      default:
+        break
+    }
+  }, [accessToken, tabValue])
 
   // Handle logout using API utilities
   const handleLogout = () => {
@@ -151,17 +165,6 @@ const UserManagement = () => {
     fetchUsers(url)
   }
 
-  useEffect(() => {
-    if (!accessToken) return
-    switch (tabValue) {
-      case 0:
-        fetchUsers()   
-        break
-      default:
-        break
-    }
-  }, [accessToken, tabValue])
-
   const handleShowDetails = (details: IUser) => {
     setUserFormData({
       ...userFormData,
@@ -181,12 +184,81 @@ const UserManagement = () => {
     handleDialogOpen('update_users')
   }
 
+  const handleInputChangeUsers = (
+    input_name: string,
+    value: string | number | boolean | null
+  ) => {
+    setUserFormData({ ...userFormData, [input_name]: value })
+  }
+  
+  // Handle create users
+  const handleCreateUser = (formData: IUser) => {
+    setFormSaveLoading(true)
+    if (accessToken) {
+      API.createUser(accessToken, formData)
+        .then((response) => {
+          const res = response?.data.data
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          setUserFormData(defaultUserFormData)
+          fetchUsers()
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res.message)
+          setFormSaveLoading(false)
+        })
+    } else {
+      toast.error(
+        'An error occurred while creating user. Please try again.'
+      )
+      setFormSaveLoading(false)
+    }
+  }
+
+  // Handle create users
+  const handleUpdateUser = (formData: IUser) => {
+    setFormSaveLoading(true)
+    if (accessToken) {
+      API.updateUser(accessToken, formData?.id ?? '', formData)
+        .then((response) => {
+          const res = response?.data.data
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          setUserFormData(defaultUserFormData)
+          fetchUsers()
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res.message)
+          setFormSaveLoading(false)
+        })
+    } else {
+      toast.error(
+        'An error occurred while creating user. Please try again.'
+      )
+      setFormSaveLoading(false)
+    }
+  }
+
   const dynamicTabContents = (index: number) => {
     if (index === 0) {
       const rows = userListData?.data?.map((user: any) => {
         return {
           id: user.id,
-          fullname: user.first_name + `${user.middle_name ? ` ${user.middle_name[0]} ` : ' '}` + user.last_name,
+          fullname: user.first_name + `${user.middle_name ? ` ${user.middle_name[0]}. ` : ' '}` + user.last_name,
           first_name: user.first_name,
           middle_name: user.middle_name,
           last_name: user.last_name,
@@ -278,8 +350,10 @@ const UserManagement = () => {
         dialogType='create'
         content='users'
         formData={userFormData}
+        handleInputChange={handleInputChangeUsers}
         handleClose={() => handleDialogClose('create_users')}
-        handleCreate={() => alert()}
+        handleClear={() => setUserFormData(defaultUserFormData)}
+        handleCreate={handleCreateUser}
       />
       <SystemDialog
         open={dialogOpen.update_users ?? false}
@@ -288,8 +362,10 @@ const UserManagement = () => {
         content='users'
         id={userFormData?.id}
         formData={userFormData}
+        handleInputChange={handleInputChangeUsers}
         handleClose={() => handleDialogClose('update_users')}
-        handleUpdate={() => alert()}
+        handleClear={() => setUserFormData(defaultUserFormData)}
+        handleUpdate={handleUpdateUser}
       />
     </MiniVariantDrawer>
   )

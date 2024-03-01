@@ -1,6 +1,6 @@
 import React from 'react'
 import { IDepositSubContentProps } from '@/Interfaces'
-import { Button, InputAdornment, Stack, TextField } from '@mui/material'
+import { InputAdornment, Stack, TextField } from '@mui/material'
 
 const Deposit = ({ formData, handleInputChange }: IDepositSubContentProps) => {
   return (

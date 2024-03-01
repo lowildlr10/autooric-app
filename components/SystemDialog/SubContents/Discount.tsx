@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { IDiscountsSubContentProps } from '@/Interfaces'
 import { FormControl, FormControlLabel, InputAdornment, Switch, TextField } from '@mui/material'
 

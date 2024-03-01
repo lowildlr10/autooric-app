@@ -2,6 +2,7 @@ import React from 'react'
 import { ICreateContentProps } from '@/Interfaces'
 import Particulars from './SubContents/Particulars'
 import Discount from './SubContents/Discount'
+import User from './SubContents/User'
 
 const CreateContent = ({
   content,
@@ -10,6 +11,13 @@ const CreateContent = ({
 }: ICreateContentProps) => {
   return (
     <>
+      {content === 'users' && (
+        <User 
+          formData={formData}
+          handleInputChange={handleInputChange}
+        />
+      )}
+
       {content === 'particulars' && (
         <Particulars
           formData={formData}

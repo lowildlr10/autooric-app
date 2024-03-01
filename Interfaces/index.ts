@@ -98,6 +98,11 @@ export interface IDepositSubContentProps {
   handleInputChange: (input_name: string, value: string | number | null) => void
 }
 
+export interface IUserSubContentProps {
+  formData: IUser
+  handleInputChange: (input_name: string, value: string | number | boolean | null) => void
+}
+
 export type OpenDialogType =
   | 'logout'
   | 'create_users'
@@ -137,6 +142,21 @@ export interface IOpenDialog {
 export interface ICardContainerProps {
   title?: string
   children?: React.ReactNode
+}
+
+export interface IPositions {
+  id?: string
+  position_name?: string
+}
+
+export interface IDesignations {
+  id?: string
+  designation_name?: string
+}
+
+export interface IStations {
+  id?: string
+  station_name?: string
 }
 
 export interface IPayor {
