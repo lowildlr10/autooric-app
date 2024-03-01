@@ -27,6 +27,8 @@ export interface IDrawerMenu {
 }
 
 export type DialogContent =
+  | 'users'
+  | 'cateogories'
   | 'particulars'
   | 'discounts'
   | 'signatories'
@@ -46,7 +48,7 @@ export interface ISystemDialogProps {
     | 'cancel'
     | 'deposit'
   content?: DialogContent
-  formData?: ILoginProps | IParticular | IDiscount | IPaperSize | IDeposit
+  formData?: any
   printUrl?: string
   handleClose: () => void
   handleLogout?: () => void
@@ -66,6 +68,12 @@ export interface IDepositContentProps {
 }
 
 export interface ICreateContentProps {
+  content: DialogContent
+  formData: any
+  handleInputChange: any
+}
+
+export interface IUpdateContentProps {
   content: DialogContent
   formData: any
   handleInputChange: any
@@ -92,15 +100,35 @@ export interface IDepositSubContentProps {
 
 export type OpenDialogType =
   | 'logout'
+  | 'create_users'
+  | 'create_categories'
   | 'create_particulars'
   | 'create_discounts'
+  | 'create_signatories'
+  | 'create_paper_sizes'
+  | 'update_users'
+  | 'update_categories'
+  | 'update_particulars'
+  | 'update_discounts'
+  | 'update_signatories'
+  | 'update_paper_sizes'
   | 'print'
   | 'deposit_or'
   | 'cancel_or'
 export interface IOpenDialog {
   logout?: boolean
+  create_users?: boolean
+  create_cateogories?: boolean
   create_particulars?: boolean
   create_discounts?: boolean
+  create_signatories?: boolean
+  create_paper_sizes?: boolean
+  update_users?: boolean
+  update_categories?: boolean
+  update_particulars?: boolean
+  update_discounts?: boolean
+  update_signatories?: boolean
+  update_paper_sizes?: boolean
   deposit_or?: boolean
   cancel_or?: boolean
   print?: boolean
@@ -159,6 +187,25 @@ export interface IOfficialReceipt {
   payment_mode?: '' | 'cash' | 'check' | 'money_order'
   is_cancelled?: boolean
   status?: string
+}
+
+export interface IUser {
+  id?: string
+  first_name?: string
+  middle_name?: string
+  last_name?: string
+  email?: string
+  phone?: string
+  position_id?: string
+  position?: string
+  designation_id?: string
+  designation?: string
+  station_id?: string
+  station?: string
+  username?: string
+  password?: string
+  role?: 'admin' | 'staff'
+  is_active?: boolean
 }
 
 export interface IPaperSize {
@@ -259,6 +306,21 @@ export interface IOrColumn {
   align?: 'right' | 'center' | 'left'
 }
 
+export interface IUserListColumn {
+  id:
+    | 'fullname'
+    | 'phone_str'
+    | 'email'
+    | 'position'
+    | 'designation'
+    | 'station'
+    | 'role_str'
+    | 'status'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
 export interface ITableListLinks {
   url: string
   label: string
@@ -283,15 +345,31 @@ export interface IOrListProps {
   handleCancel: () => void
 }
 
+export interface IUserListProps {
+  rows: IUser[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handleShowDetails: (details: IUser) => void
+  handleShowCreate: () => void
+  handlePageChange: (url: string) => void
+}
+
 export type SearchType = 'none' | 'search' | 'date_particulars'
 
 export interface ITableListProps {
   displayType:
     | 'official_receipt'
+    | 'categories'
     | 'particulars'
     | 'discounts'
     | 'signatories'
     | 'paper_sizes'
+    | 'users'
   columns: any
   rows: any
   currentPage: number
@@ -304,9 +382,11 @@ export interface ITableListProps {
   search: string
   searchLoading: boolean
   searchType: SearchType
+  hasCreateButton?: boolean
   handleSearchChange: any
   handlePageChange: (url: string) => void
   handleShowDetails?: (id: string) => void
+  handleShowCreate?: () => void
 }
 
 export interface ITableListPaginationProps {
@@ -326,7 +406,7 @@ export interface ITableListActionSectionProps {
   hasCreateButton?: boolean
   searchLoading: boolean
   searchType: SearchType
-  handleCreate?: () => void
+  handleShowCreate?: () => void
   handleSearchChange: any
 }
 

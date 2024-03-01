@@ -15,6 +15,7 @@ import PrintContent from './PrintContent'
 import CreateContent from './CreateContent'
 import CancelContent from './CancelContent'
 import DepositContent from './DepositContent'
+import UpdateContent from './UpdateContent'
 
 const SystemDialog = ({
   open,
@@ -59,6 +60,14 @@ const SystemDialog = ({
           )}
           {dialogType === 'create' && content && handleInputChange && (
             <CreateContent
+              content={content}
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
+          )}
+
+          {dialogType === 'update' && content && handleInputChange && (
+            <UpdateContent
               content={content}
               formData={formData}
               handleInputChange={handleInputChange}
@@ -129,6 +138,21 @@ const SystemDialog = ({
             }}
           >
             Deposit
+          </Button>
+        )}
+
+        {(dialogType === 'update' || dialogType === 'delete') && (
+          <Button
+            onClick={() => {
+              handleDelete && handleDelete(id ?? '')
+              handleClose()
+            }}
+            autoFocus
+            sx={{
+              color: 'error.main',
+            }}
+          >
+            Delete
           </Button>
         )}
 

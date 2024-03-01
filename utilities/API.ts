@@ -184,4 +184,22 @@ export default class API {
       }
     )
   }
+  
+  // Fetch all official receipts
+  static async getUsers(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/user-management/users`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all official receipts with URL
+  static async getUsersByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
 }

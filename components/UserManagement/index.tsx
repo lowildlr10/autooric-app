@@ -5,12 +5,29 @@ import useUserInfo from '@/hooks/useUserInfo'
 import { Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
-import { IOpenDialog, ITabContents, OpenDialogType } from '@/Interfaces'
+import { IOpenDialog, ITabContents, IUser, OpenDialogType } from '@/Interfaces'
 import CardContainer from '@/components/CardContainer'
 import TabContainer, { CustomTabPanel } from '@/components/TabContainer'
 import SystemDialog from '../SystemDialog'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
+import UserList from './UserList'
+
+const defaultUserFormData: IUser = {
+  id: '',
+  first_name: '',
+  middle_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  position_id: '',
+  designation_id: '',
+  station_id: '',
+  username: '',
+  password: '',
+  role: 'staff',
+  is_active: false
+}
 
 const UserManagement = () => {
   const { accessToken, forceRelogin } = useAccessToken()
@@ -19,15 +36,21 @@ const UserManagement = () => {
   )
   const [loading, setLoading] = useState(true)
   const [logoutLoading, setLogoutLoading] = useState(false)
+  const [userListLoading, setUserListLoading] = useState(false)
+  const [userListData, setUserListData] = useState<any>()
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
   const [tabContents, setTabContents] = useState<ITabContents[]>([])
+  const [userFormData, setUserFormData] = useState<IUser>(
+    defaultUserFormData
+  )
 
   // Handle global loading
   useEffect(() => {
     if (
       userLoading ||
-      logoutLoading
+      logoutLoading ||
+      userListLoading
     ) {
       setLoading(true)
     } else {
@@ -35,8 +58,15 @@ const UserManagement = () => {
     }
   }, [
     userLoading,
-    logoutLoading
+    logoutLoading,
+    userListLoading
   ])
+
+  // Check if user is already logged in
+  useEffect(() => {
+    if (loading) return
+    if (!userLoading && !isAuthenticated) forceRelogin()
+  }, [isAuthenticated, loading, userLoading])
 
   useEffect(() => {
     setTabContents([
@@ -83,15 +113,123 @@ const UserManagement = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
+  
+  // Fetch users
+  const fetchUsers = (url?: string) => {
+    setUserListLoading(true)
+    if (accessToken) {
+      const errorMessage =
+        'An error occurred while fetching official receipts. Please try again.'
+
+      if (url) {
+        API.getUsersByUrl(accessToken, url)
+          .then((response) => {
+            const res = response?.data.data
+            setUserListData(res)
+            setUserListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setUserListLoading(false)
+          })
+      } else {
+        API.getUsers(accessToken)
+          .then((response) => {
+            const res = response?.data.data
+            setUserListData(res)
+            setUserListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setUserListLoading(false)
+          })
+      }
+    }
+  }
+
+  const handlePageChange = (url: string) => {
+    fetchUsers(url)
+  }
+
+  useEffect(() => {
+    if (!accessToken) return
+    switch (tabValue) {
+      case 0:
+        fetchUsers()   
+        break
+      default:
+        break
+    }
+  }, [accessToken, tabValue])
+
+  const handleShowDetails = (details: IUser) => {
+    setUserFormData({
+      ...userFormData,
+      id: details.id,
+      first_name: details.first_name,
+      middle_name: details.middle_name,
+      last_name: details.last_name,
+      email: details.email,
+      phone: details.phone,
+      position_id: details.position_id,
+      designation_id: details.designation_id,
+      station_id: details.station_id,
+      username: details.username,
+      password: '',
+      is_active: details.is_active,
+    })
+    handleDialogOpen('update_users')
+  }
 
   const dynamicTabContents = (index: number) => {
     if (index === 0) {
+      const rows = userListData?.data?.map((user: any) => {
+        return {
+          id: user.id,
+          fullname: user.first_name + `${user.middle_name ? ` ${user.middle_name[0]} ` : ' '}` + user.last_name,
+          first_name: user.first_name,
+          middle_name: user.middle_name,
+          last_name: user.last_name,
+          email: user.email,
+          phone: user.phone,
+          phone_str: user.phone ?? 'N/a',
+          position: user.position.position_name,
+          position_id: user.position.id,
+          designation: user.designation.designation_name,
+          designation_id: user.designation.id,
+          station: user.station.station_name,
+          station_id: user.station.id,
+          role: user.role,
+          is_active: user.is_active,
+          username: user.username,
+          role_str: user.role === 'admin' ? 'Admin' : 'Staff',
+          status: user.is_active ? 'Active' : 'Inactive'
+        }
+      })
+      const currentPage = userListData?.current_page
+      const nextPageUrl = userListData?.next_page_url
+      const prevPageUrl = userListData?.prev_page_url
+      const from = userListData?.from
+      const to = userListData?.to
+      const total = userListData?.total
+      const links = userListData?.links
+
       return (
-        <></>
+        <UserList
+          rows={rows ?? []}
+          currentPage={currentPage}
+          nextPageUrl={nextPageUrl}
+          prevPageUrl={prevPageUrl}
+          from={from}
+          to={to}
+          total={total}
+          links={links}
+          handlePageChange={handlePageChange}
+          handleShowDetails={handleShowDetails}
+          handleShowCreate={() => handleDialogOpen('create_users')}
+        />
       )
     }
-
-    return <></>
   }
 
   return (
@@ -133,6 +271,25 @@ const UserManagement = () => {
         dialogType='logout'
         handleClose={() => handleDialogClose('logout')}
         handleLogout={handleLogout}
+      />
+      <SystemDialog
+        open={dialogOpen.create_users ?? false}
+        title='Create User'
+        dialogType='create'
+        content='users'
+        formData={userFormData}
+        handleClose={() => handleDialogClose('create_users')}
+        handleCreate={() => alert()}
+      />
+      <SystemDialog
+        open={dialogOpen.update_users ?? false}
+        title={`User Details (${userFormData?.first_name})`}
+        dialogType='update'
+        content='users'
+        id={userFormData?.id}
+        formData={userFormData}
+        handleClose={() => handleDialogClose('update_users')}
+        handleUpdate={() => alert()}
       />
     </MiniVariantDrawer>
   )

@@ -12,11 +12,12 @@ import {
   useTheme,
 } from '@mui/material'
 import ActionSection from './ActionSection'
-import { IOfficialReceipt, IOrColumn, ITableListProps } from '@/Interfaces'
+import { ITableListProps } from '@/Interfaces'
 import TableListPagination from './TableListPagination'
 
 const TableList = ({
   search,
+  hasCreateButton = false,
   columns,
   rows,
   currentPage,
@@ -31,6 +32,7 @@ const TableList = ({
   handleSearchChange,
   handlePageChange,
   handleShowDetails,
+  handleShowCreate
 }: ITableListProps) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -39,9 +41,11 @@ const TableList = ({
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <ActionSection
         search={search}
+        hasCreateButton={hasCreateButton}
         searchType={searchType}
         searchLoading={searchLoading}
         handleSearchChange={handleSearchChange}
+        handleShowCreate={handleShowCreate}
       />
       <TableContainer sx={{ height: 'calc(100vh - 30em)' }}>
         <Table
@@ -51,7 +55,7 @@ const TableList = ({
         >
           <TableHead>
             <TableRow>
-              {columns.map((column: IOrColumn) => (
+              {columns.map((column: any) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -77,10 +81,10 @@ const TableList = ({
                 </TableCell>
               </TableRow>
             )}
-            {rows?.map((row: IOfficialReceipt) => {
+            {rows?.map((row: any) => {
               return (
-                <TableRow hover role='checkbox' tabIndex={-1} key={row.or_no}>
-                  {columns.map((column: IOrColumn) => {
+                <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
+                  {columns.map((column: any) => {
                     const value = row[column.id]
                     let color = 'text.primary'
 
@@ -88,6 +92,8 @@ const TableList = ({
                       if (value === 'Pending') color = 'gray'
                       if (value === 'Cancelled') color = 'error.main'
                       if (value === 'Deposited') color = 'secondary.main'
+                      if (value === 'Active') color = 'secondary.main'
+                      if (value === 'Inactive') color = 'error.main'
                     }
 
                     return (

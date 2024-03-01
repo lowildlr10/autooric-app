@@ -35,9 +35,7 @@ const OrList = ({
 
   useEffect(() => {
     if (!searchLoading) return
-
     const query = search.trim() ?? ''
-
     if (query) {
       const timer = setTimeout(() => {
         handlePageChange(

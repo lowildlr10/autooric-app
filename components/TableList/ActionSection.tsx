@@ -10,12 +10,17 @@ const ActionSection = ({
   handleSearchChange,
   searchLoading,
   hasCreateButton,
-  handleCreate,
+  handleShowCreate,
 }: ITableListActionSectionProps) => {
   return (
     <Stack direction='row' justifyContent='space-between' my={2}>
       {hasCreateButton && (
-        <Button variant='contained' onClick={handleCreate}>
+        <Button 
+          variant='contained' 
+          size='small'
+          onClick={handleShowCreate}
+          sx={{ px: 2 }}
+        >
           Create
         </Button>
       )}
