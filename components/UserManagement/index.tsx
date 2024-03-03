@@ -182,6 +182,7 @@ const UserManagement = () => {
       station_id: details.station_id,
       username: details.username,
       password: '',
+      role: details.role,
       is_active: details.is_active,
     })
     handleDialogOpen('update_users')

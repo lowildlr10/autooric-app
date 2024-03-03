@@ -61,10 +61,6 @@ const DateRangeParticulars = ({
     }
   }, [search, init])
 
-  useEffect(() => {
-    console.log(search)
-  }, [search])
-
   // Fetch particulars
   const fetchParticulars = () => {
     if (accessToken) {

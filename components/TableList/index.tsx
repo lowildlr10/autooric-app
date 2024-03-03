@@ -100,7 +100,11 @@ const TableList = ({
                       <TableCell
                         key={column.id}
                         align={column.align}
-                        sx={{ cursor: 'pointer', color }}
+                        sx={{ 
+                          cursor: 'pointer',
+                          color,
+                          fontWeight: typeof value === 'string' && value.includes('----') ? 'bold' : 'normal'
+                        }}
                         onClick={() =>
                           handleShowDetails && handleShowDetails(row?.id ?? '')
                         }

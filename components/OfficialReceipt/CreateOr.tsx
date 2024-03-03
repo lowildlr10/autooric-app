@@ -685,7 +685,7 @@ const ActionButtons = ({
       return (
         <>
           {formData?.deposited_date !== '' && (
-            <Typography variant='body2' fontWeight={500} color='success'>
+            <Typography variant='body2' fontWeight={500} color='secondary'>
               Deposited on: {formData?.deposited_date}
             </Typography>
           )}

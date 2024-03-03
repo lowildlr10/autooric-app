@@ -522,18 +522,28 @@ const Library = () => {
         />
       )
     } else if (index === 1) {
-      const rows = particularListData?.data?.map((particular: any) => {
-        return {
-          id: particular?.id,
-          particular_name: particular?.particular_name,
-          category_str: particular?.category.category_name,
-          default_amount_str: particular?.default_amount ? 
-            particular.default_amount
-            .toFixed(2)
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/a',
-          order_no: particular.order_no
-        }
+      const rows: any = [] 
+      particularListData?.data?.forEach((category: any) => {
+        rows.push({
+          id: `${category?.id}`,
+          particular_name: `---- Category Group: ${category?.category_name} ----`,
+          category_str: '',
+          default_amount_str: '',
+          order_no: ''
+        })
+        category?.particulars?.forEach((particular: any) => {
+          rows.push({
+            id: particular?.id,
+            particular_name: particular?.particular_name,
+            category_str: category?.category_name,
+            default_amount_str: particular?.default_amount ? 
+              particular.default_amount
+              .toFixed(2)
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/a',
+            order_no: particular.order_no
+          })
+        })
       })
       const currentPage = particularListData?.current_page
       const nextPageUrl = particularListData?.next_page_url
