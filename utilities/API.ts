@@ -52,6 +52,24 @@ export default class API {
     })
   }
 
+  // Fetch all categories
+  static async getPaginatedCategories(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/categories-paginated`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all categories with URL
+  static async getCategoriesByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // Fetch all payors
   static async getPayors(accessToken: string) {
     return axios.get(`${API.API_BASE_URL}/api/v1/payors`, {
@@ -64,6 +82,24 @@ export default class API {
   // Fetch all particulars
   static async getParticulars(accessToken: string) {
     return axios.get(`${API.API_BASE_URL}/api/v1/particulars`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all particulars
+  static async getPaginatedParticulars(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/particulars-paginated`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all particulars with URL
+  static async getParticularsByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -97,9 +133,45 @@ export default class API {
     })
   }
 
+  // Fetch all discounts
+  static async getPaginatedDiscounts(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/discounts-paginated`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all discounts with URL
+  static async getDiscountsByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // Fetch all paper sizes
   static async getPaperSizes(accessToken: string) {
     return axios.get(`${API.API_BASE_URL}/api/v1/paper-sizes`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all paper sizes
+  static async getPaginatedPaperSizes(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/paper-sizes-paginated`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all paper sizes with URL
+  static async getPaperSizesByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -220,6 +292,19 @@ export default class API {
   ) {
     return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}?_method=PATCH`, 
       formData, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Delete users
+  static async deleteUser(
+    accessToken: string, 
+    userId: string
+  ) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}`, 
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -38,6 +38,7 @@ const UserManagement = () => {
   const [logoutLoading, setLogoutLoading] = useState(false)
   const [userListLoading, setUserListLoading] = useState(false)
   const [formSaveLoading, setFormSaveLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const [userListData, setUserListData] = useState<any>()
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
@@ -52,7 +53,8 @@ const UserManagement = () => {
       userLoading ||
       logoutLoading ||
       userListLoading ||
-      formSaveLoading
+      formSaveLoading ||
+      deleteLoading
     ) {
       setLoading(true)
     } else {
@@ -62,7 +64,8 @@ const UserManagement = () => {
     userLoading,
     logoutLoading,
     userListLoading,
-    formSaveLoading
+    formSaveLoading,
+    deleteLoading
   ])
 
   // Check if user is already logged in
@@ -253,6 +256,42 @@ const UserManagement = () => {
     }
   }
 
+  const handleDeleteUser = (id: string) => {
+    setDeleteLoading(true)
+
+    if (accessToken && id) {
+      API.deleteUser(accessToken, id)
+        .then((response) => {
+          const res = response?.data.data
+          if (res?.error) {
+            toast.error(res?.message)
+            setDeleteLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setDeleteLoading(false)
+          setUserFormData(defaultUserFormData)
+          setDialogOpen({
+            create_users: false,
+            update_users: false,
+            delete_users: false
+          })
+          fetchUsers()
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res.message)
+          setDeleteLoading(false)
+        })
+    } else {
+      toast.error(
+        'An error occurred while creating user. Please try again.'
+      )
+      setDeleteLoading(false)
+    }
+  }
+
   const dynamicTabContents = (index: number) => {
     if (index === 0) {
       const rows = userListData?.data?.map((user: any) => {
@@ -366,6 +405,15 @@ const UserManagement = () => {
         handleClose={() => handleDialogClose('update_users')}
         handleClear={() => setUserFormData(defaultUserFormData)}
         handleUpdate={handleUpdateUser}
+        handleShowDelete={() => handleDialogOpen('delete_users')}
+      />
+      <SystemDialog
+        open={dialogOpen.delete_users ?? false}
+        title={`Delete User ${userFormData?.first_name}?`}
+        dialogType='delete'
+        id={userFormData?.id}
+        handleClose={() => handleDialogClose('delete_users')}
+        handleDelete={handleDeleteUser}
       />
     </MiniVariantDrawer>
   )

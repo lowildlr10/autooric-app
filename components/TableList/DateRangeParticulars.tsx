@@ -9,8 +9,8 @@ import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 
 const defaultSearchData: ISearchData = {
-  from: dayjs().format('YYYY-MM-DD'),
-  to: dayjs().format('YYYY-MM-DD'),
+  from: '',
+  to: '',
   particulars: '*'
 }
 
@@ -32,12 +32,19 @@ const DateRangeParticulars = ({
 
   useEffect(() => {
     if (search && init) return
+    
+    let from = '*'
+    let to = '*'
     if (searchData.from && searchData.to) {
       if (dayjs(searchData.from).isAfter(dayjs(searchData.to))) {
         handleInputChange('to', searchData.from)
       }
-      handleChange(`${searchData.from}|${searchData.to}|${searchData.particulars}`)
+      
+      from = searchData.from
+      to = searchData.to
     }
+
+    handleChange(`${from}|${to}|${searchData.particulars}`)
 
     setInit(false)
   }, [searchData, init, search])
@@ -53,6 +60,10 @@ const DateRangeParticulars = ({
       setInit(false)
     }
   }, [search, init])
+
+  useEffect(() => {
+    console.log(search)
+  }, [search])
 
   // Fetch particulars
   const fetchParticulars = () => {
@@ -89,6 +100,9 @@ const DateRangeParticulars = ({
               size: 'small',
               focused: true,
             },
+            field: {
+              clearable: true
+            }
           }}
           value={dayjs(searchData.from) ?? dayjs()}
           onChange={(newValue) =>
@@ -111,8 +125,11 @@ const DateRangeParticulars = ({
           slotProps={{
             textField: {
               size: 'small',
-              focused: true,
+              focused: true
             },
+            field: {
+              clearable: true
+            }
           }} 
           value={dayjs(searchData.to) ?? dayjs()}
           onChange={(newValue) =>

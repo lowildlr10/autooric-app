@@ -30,6 +30,7 @@ const SystemDialog = ({
   handleCreate,
   handleUpdate,
   handleCancel,
+  handleShowDelete,
   handleDelete,
   handleDeposit,
   handleClear,
@@ -72,6 +73,10 @@ const SystemDialog = ({
               formData={formData}
               handleInputChange={handleInputChange}
             />
+          )}
+
+          {dialogType === 'delete' && (
+            <>Are you sure you want to delete this record?</>
           )}
         </Stack>
       </DialogContent>
@@ -141,7 +146,7 @@ const SystemDialog = ({
           </Button>
         )}
 
-        {(dialogType === 'update' || dialogType === 'delete') && (
+        {(dialogType === 'delete') && (
           <Button
             onClick={() => {
               handleDelete && handleDelete(id ?? '')
@@ -157,18 +162,32 @@ const SystemDialog = ({
         )}
 
         {dialogType === 'update' && (
-          <Button
-            onClick={() => {
-              handleUpdate && handleUpdate(formData)
-              handleClose()
-            }}
-            autoFocus
-            sx={{
-              color: 'warning.main',
-            }}
-          >
-            Update
-          </Button>
+          <>
+            
+            <Button
+              onClick={() => {
+                handleShowDelete && handleShowDelete()
+              }}
+              autoFocus
+              sx={{
+                color: 'error.main',
+              }}
+            >
+              Delete
+            </Button>
+            <Button
+              onClick={() => {
+                handleUpdate && handleUpdate(formData)
+                handleClose()
+              }}
+              autoFocus
+              sx={{
+                color: 'warning.main',
+              }}
+            >
+              Update
+            </Button>
+          </>
         )}
 
         {dialogType === 'create' && (

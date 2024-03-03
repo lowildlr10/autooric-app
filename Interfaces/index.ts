@@ -56,6 +56,7 @@ export interface ISystemDialogProps {
   handleDeposit?: (formData: any) => void
   handleCreate?: (formData: any) => void
   handleUpdate?: (formData: any) => void
+  handleShowDelete?: () => void
   handleDelete?: (id: string) => void
   handleClear?: () => void
   handleDownload?: () => void
@@ -117,6 +118,12 @@ export type OpenDialogType =
   | 'update_discounts'
   | 'update_signatories'
   | 'update_paper_sizes'
+  | 'delete_users'
+  | 'delete_categories'
+  | 'delete_particulars'
+  | 'delete_discounts'
+  | 'delete_signatories'
+  | 'delete_paper_sizes'
   | 'print'
   | 'deposit_or'
   | 'cancel_or'
@@ -134,6 +141,12 @@ export interface IOpenDialog {
   update_discounts?: boolean
   update_signatories?: boolean
   update_paper_sizes?: boolean
+  delete_users?: boolean
+  delete_categories?: boolean
+  delete_particulars?: boolean
+  delete_discounts?: boolean
+  delete_signatories?: boolean
+  delete_paper_sizes?: boolean
   deposit_or?: boolean
   cancel_or?: boolean
   print?: boolean
@@ -168,19 +181,26 @@ export interface IDiscount {
   id?: string
   discount_name?: string
   percent?: number
+  percent_str?: string
   requires_card_no?: boolean
+  requires_card_no_str?: string
+  status?: string
 }
 
 export interface ICategories {
   id?: string
   category_name?: string
+  order_no?: number
 }
 
 export interface IParticular {
   id?: string
   particular_name?: string
   category_id?: string
+  category_str?: string
   default_amount?: number
+  default_amount_str?: string
+  order_no?: number
 }
 
 export interface IOfficialReceipt {
@@ -230,9 +250,11 @@ export interface IUser {
 
 export interface IPaperSize {
   id?: string
-  paper_name: string
-  width: number
-  height: number
+  paper_name?: string
+  width?: number
+  height?: number
+  width_str?: string
+  height_str?: string
 }
 
 export interface IOfficialReceiptProps {
@@ -341,6 +363,47 @@ export interface IUserListColumn {
   align?: 'right' | 'center' | 'left'
 }
 
+export interface ICateogryListColumn {
+  id:
+    | 'category_name'
+    | 'order_no'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
+export interface IParticularListColumn {
+  id:
+    | 'category_str'
+    | 'particular_name'
+    | 'default_amount_str'
+    | 'order_no'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
+export interface IDiscountListColumn {
+  id:
+    | 'discount_name'
+    | 'percent_str'
+    | 'requires_card_no_str'
+    | 'status'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
+export interface IPaperSizeListColumn {
+  id:
+    | 'paper_name'
+    | 'width_str'
+    | 'height_str'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
 export interface ITableListLinks {
   url: string
   label: string
@@ -367,6 +430,62 @@ export interface IOrListProps {
 
 export interface IUserListProps {
   rows: IUser[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handleShowDetails: (details: IUser) => void
+  handleShowCreate: () => void
+  handlePageChange: (url: string) => void
+}
+
+export interface ICategoryListProps {
+  rows: ICategories[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handleShowDetails: (details: IUser) => void
+  handleShowCreate: () => void
+  handlePageChange: (url: string) => void
+}
+
+export interface IParticularListProps {
+  rows: IParticular[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handleShowDetails: (details: IUser) => void
+  handleShowCreate: () => void
+  handlePageChange: (url: string) => void
+}
+
+export interface IDiscountListProps {
+  rows: IDiscount[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handleShowDetails: (details: IUser) => void
+  handleShowCreate: () => void
+  handlePageChange: (url: string) => void
+}
+
+export interface IPaperSizeListProps {
+  rows: IPaperSize[]
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
