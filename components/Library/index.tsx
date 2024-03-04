@@ -16,7 +16,7 @@ import ParticularList from './Particulars/ParticularList'
 import DiscountList from './Discounts/DiscountList'
 import PaperSizeList from './PaperSizes/PaperSizeList'
 
-const defaultCateogryFormData: ICategories = {
+const defaultCategoryFormData: ICategories = {
   id: '',
   category_name: '',
   order_no: 0
@@ -79,7 +79,7 @@ const Library = () => {
   const [currentDeleteDialog, setCurrentDeleteDialog] = useState<OpenDialogType>('delete_categories')
   const [currentFormData, setCurrentFormData] = useState<ICategories | IParticular | IDiscount | IPaperSize>()
   const [categoryFormData, setCategoryFormData] = useState<ICategories>(
-    defaultCateogryFormData
+    defaultCategoryFormData
   )
   const [particularFormData, setParticularFormData] = useState<IParticular>(
     defaultParticularFormData
@@ -547,103 +547,341 @@ const Library = () => {
     setPaperSizeFormData({ ...paperSizeFormData, [e.target.name]: e.target.value })
   }
   
-  // Handle create users
-  // const handleCreateUser = (formData: IUser) => {
-  //   setFormSaveLoading(true)
-  //   if (accessToken) {
-  //     API.createUser(accessToken, formData)
-  //       .then((response) => {
-  //         const res = response?.data.data
-  //         if (res?.error) {
-  //           toast.error(res?.message)
-  //           setFormSaveLoading(false)
-  //           return
-  //         }
+  //Handle create records
+  const handleCreateRecord = (
+    formData: ICategories | IParticular | IDiscount | IPaperSize
+  ) => {
+    setFormSaveLoading(true)
 
-  //         toast.success(res?.message)
-  //         setFormSaveLoading(false)
-  //         setUserFormData(defaultUserFormData)
-  //         fetchUsers()
-  //       })
-  //       .catch((error) => {
-  //         const res = error?.response?.data.data
-  //         toast.error(res.message)
-  //         setFormSaveLoading(false)
-  //       })
-  //   } else {
-  //     toast.error(
-  //       'An error occurred while creating user. Please try again.'
-  //     )
-  //     setFormSaveLoading(false)
-  //   }
-  // }
+    if (accessToken) {
+      switch (tabValue) {
+        case 0:
+          API.createCategories(accessToken, formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
 
-  // Handle create users
-  // const handleUpdateUser = (formData: IUser) => {
-  //   setFormSaveLoading(true)
-  //   if (accessToken) {
-  //     API.updateUser(accessToken, formData?.id ?? '', formData)
-  //       .then((response) => {
-  //         const res = response?.data.data
-  //         if (res?.error) {
-  //           toast.error(res?.message)
-  //           setFormSaveLoading(false)
-  //           return
-  //         }
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setCategoryFormData(defaultCategoryFormData)
+              fetchCategories()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 1:
+          API.createParticulars(accessToken, formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
 
-  //         toast.success(res?.message)
-  //         setFormSaveLoading(false)
-  //         setUserFormData(defaultUserFormData)
-  //         fetchUsers()
-  //       })
-  //       .catch((error) => {
-  //         const res = error?.response?.data.data
-  //         toast.error(res.message)
-  //         setFormSaveLoading(false)
-  //       })
-  //   } else {
-  //     toast.error(
-  //       'An error occurred while creating user. Please try again.'
-  //     )
-  //     setFormSaveLoading(false)
-  //   }
-  // }
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setParticularFormData(defaultParticularFormData)
+              fetchParticulars()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 2:
+          API.createDiscount(accessToken, formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
 
-  // const handleDeleteUser = (id: string) => {
-  //   setDeleteLoading(true)
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setDiscountFormData(defaultDiscountFormData)
+              fetchDiscounts()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 3:
+          break
+        case 4:
+          API.createPaperSizes(accessToken, formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
 
-  //   if (accessToken && id) {
-  //     API.deleteUser(accessToken, id)
-  //       .then((response) => {
-  //         const res = response?.data.data
-  //         if (res?.error) {
-  //           toast.error(res?.message)
-  //           setDeleteLoading(false)
-  //           return
-  //         }
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setPaperSizeFormData(defaultPaperSizeFormData)
+              fetchPaperSizes()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        default:
+          toast.error(
+            'An error occurred while creating the record. Please try again.'
+          )
+          setFormSaveLoading(false)
+          break
+      }
+    } else {
+      toast.error(
+        'An error occurred while creating the record. Please try again.'
+      )
+      setFormSaveLoading(false)
+    }
+  }
 
-  //         toast.success(res?.message)
-  //         setDeleteLoading(false)
-  //         setUserFormData(defaultUserFormData)
-  //         setDialogOpen({
-  //           create_users: false,
-  //           update_users: false,
-  //           delete_users: false
-  //         })
-  //         fetchUsers()
-  //       })
-  //       .catch((error) => {
-  //         const res = error?.response?.data.data
-  //         toast.error(res.message)
-  //         setDeleteLoading(false)
-  //       })
-  //   } else {
-  //     toast.error(
-  //       'An error occurred while creating user. Please try again.'
-  //     )
-  //     setDeleteLoading(false)
-  //   }
-  // }
+  // Handle update records
+  const handleUpdateRecord = (
+    formData: ICategories | IParticular | IDiscount | IPaperSize
+  ) => {
+    setFormSaveLoading(true)
+
+    if (accessToken) {
+      switch (tabValue) {
+        case 0:
+          API.updateCategory(accessToken, formData?.id ?? '', formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setCategoryFormData(defaultCategoryFormData)
+              fetchCategories()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 1:
+          API.updateParticular(accessToken, formData?.id ?? '', formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setParticularFormData(defaultParticularFormData)
+              fetchParticulars()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 2:
+          API.updateDiscount(accessToken, formData?.id ?? '', formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setDiscountFormData(defaultDiscountFormData)
+              fetchDiscounts()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 3:
+          break
+        case 4:
+          API.updatePaperSize(accessToken, formData?.id ?? '', formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setPaperSizeFormData(defaultPaperSizeFormData)
+              fetchPaperSizes()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        default:
+          break
+      }
+    } else {
+      toast.error(
+        'An error occurred while updating the record. Please try again.'
+      )
+      setFormSaveLoading(false)
+    }
+  }
+
+  const handleDeleteRecord = (id: string) => {
+    setDeleteLoading(true)
+
+    if (accessToken && id) {
+      switch (tabValue) {
+        case 0:
+          API.deleteCategory(accessToken, id)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setDeleteLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setDeleteLoading(false)
+              setCategoryFormData(defaultCategoryFormData)
+              setDialogOpen({
+                create_categories: false,
+                update_categories: false,
+                delete_categories: false
+              })
+              fetchCategories()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setDeleteLoading(false)
+            })
+          break
+        case 1:
+          API.deleteParticular(accessToken, id)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setDeleteLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setDeleteLoading(false)
+              setParticularFormData(defaultParticularFormData)
+              setDialogOpen({
+                create_particulars: false,
+                update_particulars: false,
+                delete_particulars: false
+              })
+              fetchParticulars()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setDeleteLoading(false)
+            })
+          break
+        case 2:
+          API.deleteDisount(accessToken, id)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setDeleteLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setDeleteLoading(false)
+              setDiscountFormData(defaultDiscountFormData)
+              setDialogOpen({
+                create_discounts: false,
+                update_discounts: false,
+                delete_discounts: false
+              })
+              fetchDiscounts()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setDeleteLoading(false)
+            })
+          break
+        case 3:
+          break
+        case 4:
+          API.deletePaperSize(accessToken, id)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setDeleteLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setDeleteLoading(false)
+              setPaperSizeFormData(defaultPaperSizeFormData)
+              setDialogOpen({
+                create_paper_sizes: false,
+                update_paper_sizes: false,
+                delete_paper_sizes: false
+              })
+              fetchPaperSizes()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setDeleteLoading(false)
+            })
+          break                   
+        default:
+          break
+      }
+    } else {
+      toast.error(
+        'An error occurred while deleting a record. Please try again.'
+      )
+      setDeleteLoading(false)
+    }
+  }
 
   const dynamicTabContents = (index: number) => {
     if (index === 0) {
@@ -800,7 +1038,7 @@ const Library = () => {
   const currentHandleClear = () => {
     switch (tabValue) {
       case 0:
-        setCategoryFormData(defaultCateogryFormData)
+        setCategoryFormData(defaultCategoryFormData)
         break
       case 1:
         setParticularFormData(defaultParticularFormData)
@@ -884,7 +1122,7 @@ const Library = () => {
         handleInputChange={currentHandleInputChange}
         handleClose={() => handleDialogClose(currentCreateDialog)}
         handleClear={currentHandleClear}
-        // handleCreate={currentHandleClear}
+        handleCreate={handleCreateRecord}
       />
       <SystemDialog
         open={dialogOpen[currentUpdateDialog] ?? false}
@@ -895,7 +1133,7 @@ const Library = () => {
         handleInputChange={currentHandleInputChange}
         handleClose={() => handleDialogClose(currentUpdateDialog)}
         handleClear={() => currentHandleClear()}
-        // handleUpdate={handleUpdateUser}
+        handleUpdate={handleUpdateRecord}
         handleShowDelete={() => handleDialogOpen(currentDeleteDialog)}
       />
       <SystemDialog
@@ -904,7 +1142,7 @@ const Library = () => {
         dialogType='delete'
         id={currentFormData?.id}
         handleClose={() => handleDialogClose(currentDeleteDialog)}
-        //handleDelete={handleDeleteUser}
+        handleDelete={handleDeleteRecord}
       />
     </MiniVariantDrawer>
   )

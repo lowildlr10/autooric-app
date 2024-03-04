@@ -14,9 +14,9 @@ const Category = ({
         margin='normal'
         required
         fullWidth
-        id='?.category_name'
+        id='category_name'
         label='Category Name'
-        name='?.category_name'
+        name='category_name'
         autoComplete=''
         size='small'
         focused

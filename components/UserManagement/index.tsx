@@ -226,7 +226,7 @@ const UserManagement = () => {
     }
   }
 
-  // Handle create users
+  // Handle update users
   const handleUpdateUser = (formData: IUser) => {
     setFormSaveLoading(true)
     if (accessToken) {
@@ -251,7 +251,7 @@ const UserManagement = () => {
         })
     } else {
       toast.error(
-        'An error occurred while creating user. Please try again.'
+        'An error occurred while updating a user. Please try again.'
       )
       setFormSaveLoading(false)
     }
@@ -287,7 +287,7 @@ const UserManagement = () => {
         })
     } else {
       toast.error(
-        'An error occurred while creating user. Please try again.'
+        'An error occurred while deleting a user. Please try again.'
       )
       setDeleteLoading(false)
     }

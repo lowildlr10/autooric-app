@@ -18,6 +18,7 @@ import { ITableListProps } from '@/Interfaces'
 import TableListPagination from './TableListPagination'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import ClassIcon from '@mui/icons-material/Class'
 import { grey } from '@mui/material/colors'
 
 const TableList = ({
@@ -60,7 +61,7 @@ const TableList = ({
   }
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: 'none' }}>
       <ActionSection
         search={search}
         hasCreateButton={hasCreateButton}
@@ -146,14 +147,16 @@ const TableList = ({
                               sx={{ 
                                 cursor: 'pointer',
                                 color,
-                                fontWeight: !!subColumns ? 'bold' : 'normal'
+                                fontWeight: !!subColumns ? 'bold' : 'normal',
+                                fontSize: !!subColumns ? '1rem' : 'initial'
                               }}
                               onClick={() =>
                                 !!subColumns === true ? handleToggleDropdown(`dd_${row.id}`) :
                                   (handleShowDetails && handleShowDetails(row?.id ?? ''))
                               }
                             >
-                              {value}
+                              {!!subColumns === true && <ClassIcon fontSize='small' />}
+                              &nbsp;{value}
                             </TableCell>
                           )}
                         </React.Fragment>
@@ -186,6 +189,17 @@ const TableList = ({
                               </TableRow>
                             </TableHead>
                             <TableBody>
+                              {(row?.sub_rows && row?.sub_rows?.length === 0) && (
+                                <TableRow hover role='checkbox' tabIndex={-1}>
+                                  <TableCell
+                                    align='center'
+                                    sx={{ cursor: 'pointer', color: 'error.main' }}
+                                    colSpan={subColumns?.length}
+                                  >
+                                    No data.
+                                  </TableCell>
+                                </TableRow>
+                              )}
                               {row?.sub_rows?.map((subRow: any) => (
                                 <TableRow key={`${row.id}-${subRow.id}`}>
                                   {subColumns.map((subColumn: any) => {

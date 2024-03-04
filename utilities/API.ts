@@ -320,7 +320,7 @@ export default class API {
     categoryId: string, 
     formData: any
   ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/categories/${categoryId}?_method=PATCH`, 
+    return axios.post(`${API.API_BASE_URL}/api/v1/categories/${categoryId}?_method=PATCH`, 
       formData, 
       {
         headers: {
@@ -335,7 +335,7 @@ export default class API {
     particularId: string, 
     formData: any
   ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/particulars/${particularId}?_method=PATCH`, 
+    return axios.post(`${API.API_BASE_URL}/api/v1/particulars/${particularId}?_method=PATCH`, 
       formData, 
       {
         headers: {
@@ -350,7 +350,7 @@ export default class API {
     discountId: string, 
     formData: any
   ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/discounts/${discountId}?_method=PATCH`, 
+    return axios.post(`${API.API_BASE_URL}/api/v1/discounts/${discountId}?_method=PATCH`, 
       formData, 
       {
         headers: {
@@ -365,7 +365,7 @@ export default class API {
     paperSizeId: string, 
     formData: any
   ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/paper-sizes/${paperSizeId}?_method=PATCH`, 
+    return axios.post(`${API.API_BASE_URL}/api/v1/paper-sizes/${paperSizeId}?_method=PATCH`, 
       formData, 
       {
         headers: {
@@ -405,7 +405,7 @@ export default class API {
     accessToken: string, 
     particularId: string
   ) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/categoriparticularses/${particularId}`, 
+    return axios.delete(`${API.API_BASE_URL}/api/v1/particulars/${particularId}`, 
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
