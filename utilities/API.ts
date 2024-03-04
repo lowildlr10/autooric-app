@@ -196,6 +196,51 @@ export default class API {
     )
   }
 
+  // Fetch all official receipts
+  static async getUsers(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/user-management/users`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all official receipts with URL
+  static async getUsersByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all positions
+  static async getPositions(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/positions`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all designations
+  static async getDesignations(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/designations`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all stations
+  static async getStations(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/stations`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // Create official receipt
   static async createOfficialReceipt(accessToken: string, formData: any) {
     return axios.post(
@@ -207,6 +252,15 @@ export default class API {
         },
       }
     )
+  }
+
+  // create categories
+  static async createCategories(accessToken: string, formData: any) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/categories`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
   }
 
   // create particulars
@@ -225,6 +279,164 @@ export default class API {
         Authorization: `Bearer ${accessToken}`,
       },
     })
+  }
+
+  // create paper sizes
+  static async createPaperSizes(accessToken: string, formData: any) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/paper-sizes`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Create users
+  static async createUser(accessToken: string, formData: any) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+  
+  // Update users
+  static async updateUser(
+    accessToken: string, 
+    userId: string, 
+    formData: any
+  ) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}?_method=PATCH`, 
+      formData, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Update categories
+  static async updateCategory(
+    accessToken: string, 
+    categoryId: string, 
+    formData: any
+  ) {
+    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/categories/${categoryId}?_method=PATCH`, 
+      formData, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Update particulars
+  static async updateParticular(
+    accessToken: string, 
+    particularId: string, 
+    formData: any
+  ) {
+    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/particulars/${particularId}?_method=PATCH`, 
+      formData, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Update discounts
+  static async updateDiscount(
+    accessToken: string, 
+    discountId: string, 
+    formData: any
+  ) {
+    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/discounts/${discountId}?_method=PATCH`, 
+      formData, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Update paper sizes
+  static async updatePaperSize(
+    accessToken: string, 
+    paperSizeId: string, 
+    formData: any
+  ) {
+    return axios.post(`${API.API_BASE_URL}/api/v1//api/v1/paper-sizes/${paperSizeId}?_method=PATCH`, 
+      formData, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Delete users
+  static async deleteUser(
+    accessToken: string, 
+    userId: string
+  ) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Delete categories
+  static async deleteCategory(
+    accessToken: string, 
+    categoryId: string
+  ) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/categories/${categoryId}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Delete particulars
+  static async deleteParticular(
+    accessToken: string, 
+    particularId: string
+  ) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/categoriparticularses/${particularId}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Delete discounts
+  static async deleteDisount(
+    accessToken: string, 
+    discountId: string
+  ) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/discounts/${discountId}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+  }
+
+  // Delete paper sizes
+  static async deletePaperSize(
+    accessToken: string, 
+    paperSizeId: string
+  ) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/paper-sizes/${paperSizeId}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
   }
 
   // Update official receipt deposit
@@ -255,87 +467,5 @@ export default class API {
         },
       }
     )
-  }
-  
-  // Fetch all official receipts
-  static async getUsers(accessToken: string) {
-    return axios.get(`${API.API_BASE_URL}/api/v1/user-management/users`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-  }
-
-  // Fetch all official receipts with URL
-  static async getUsersByUrl(accessToken: string, url: string) {
-    return axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-  }
-
-  // Create users
-  static async createUser(accessToken: string, formData: any) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users`, formData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-  }
-
-  // Update users
-  static async updateUser(
-    accessToken: string, 
-    userId: string, 
-    formData: any
-  ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}?_method=PATCH`, 
-      formData, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Delete users
-  static async deleteUser(
-    accessToken: string, 
-    userId: string
-  ) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}`, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Fetch all positions
-  static async getPositions(accessToken: string) {
-    return axios.get(`${API.API_BASE_URL}/api/v1/positions`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-  }
-
-  // Fetch all designations
-  static async getDesignations(accessToken: string) {
-    return axios.get(`${API.API_BASE_URL}/api/v1/designations`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-  }
-
-  // Fetch all stations
-  static async getStations(accessToken: string) {
-    return axios.get(`${API.API_BASE_URL}/api/v1/stations`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
   }
 }
