@@ -61,6 +61,7 @@ const SystemDialog = ({
           )}
           {dialogType === 'create' && content && handleInputChange && (
             <CreateContent
+              dialogType={dialogType}
               content={content}
               formData={formData}
               handleInputChange={handleInputChange}
@@ -69,6 +70,7 @@ const SystemDialog = ({
 
           {dialogType === 'update' && content && handleInputChange && (
             <UpdateContent
+              dialogType={dialogType}
               content={content}
               formData={formData}
               handleInputChange={handleInputChange}

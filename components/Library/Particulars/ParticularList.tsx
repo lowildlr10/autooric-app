@@ -3,10 +3,15 @@ import TableList from '@/components/TableList'
 import { IParticular, IParticularListProps, IParticularListColumn } from '@/Interfaces'
 
 const columns: readonly IParticularListColumn[] = [
+  { id: 'category_name', label: '', minWidth: 200 },
+  { id: 'dropdown', label: '', align: 'right', minWidth: 10 },
+]
+
+const subColumns: readonly IParticularListColumn[] = [
   { id: 'particular_name', label: 'Particular Name', minWidth: 200 },
   { id: 'category_str', label: 'Category', minWidth: 200 },
   { id: 'default_amount_str', label: 'Default Amount', minWidth: 150 },
-  { id: 'order_no', label: 'Order No', minWidth: 90 },
+  { id: 'order_no', label: 'Order No', minWidth: 90 }
 ]
 
 const ParticularList = ({
@@ -24,6 +29,7 @@ const ParticularList = ({
 }: IParticularListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
+  const [subRows, setSubRows] = useState<IParticular[]>([])
 
   useEffect(() => {
     if (!searchLoading) return
@@ -50,12 +56,25 @@ const ParticularList = ({
     setSearch(e.target.value ?? '')
   }
 
+  useEffect(() => {
+    const _rows: IParticular[] = []
+
+    rows?.forEach((row: any) => {
+      row?.sub_rows?.forEach((sRow: IParticular) => {
+        _rows.push(sRow)
+      })
+    })
+
+    setSubRows(_rows)
+  }, [rows])
+
   return (
     <TableList
       search={search}
       searchType='search'
       displayType='users'
       columns={columns}
+      subColumns={subColumns}
       rows={rows ?? []}
       currentPage={currentPage ?? 1}
       nextPageUrl={nextPageUrl}
@@ -70,7 +89,7 @@ const ParticularList = ({
       handlePageChange={handlePageChange}
       handleShowDetails={(id: string) =>
         handleShowDetails(
-          rows?.find((row: IParticular) => row.id === id) ?? {}
+          subRows?.find((row: IParticular) => row.id === id) ?? {}
         )
       }
       handleShowCreate={handleShowCreate}

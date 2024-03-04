@@ -5,7 +5,7 @@ import useUserInfo from '@/hooks/useUserInfo'
 import { Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
-import { IOpenDialog, ITabContents, ICategories, IParticular, OpenDialogType, IDiscount, IPaperSize } from '@/Interfaces'
+import { IOpenDialog, ITabContents, ICategories, IParticular, OpenDialogType, IDiscount, IPaperSize, DialogContent } from '@/Interfaces'
 import CardContainer from '@/components/CardContainer'
 import TabContainer, { CustomTabPanel } from '@/components/TabContainer'
 import SystemDialog from '../SystemDialog'
@@ -69,6 +69,14 @@ const Library = () => {
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
   const [tabContents, setTabContents] = useState<ITabContents[]>([])
+  const [currentCreateTitle, setCurrentCreateTitle] = useState('')
+  const [currentUpdateTitle, setCurrentUpdateTitle] = useState('')
+  const [currentDeleteTitle, setCurrentDeleteTitle] = useState('')
+  const [currentContent, setCurrentContent] = useState<DialogContent>()
+  const [currentCreateDialog, setCurrentCreateDialog] = useState<OpenDialogType>('create_categories')
+  const [currentUpdateDialog, setCurrentUpdateDialog] = useState<OpenDialogType>('update_categories')
+  const [currentDeleteDialog, setCurrentDeleteDialog] = useState<OpenDialogType>('delete_categories')
+  const [currentFormData, setCurrentFormData] = useState<ICategories | IParticular | IDiscount | IPaperSize>()
   const [categoryFormData, setCategoryFormData] = useState<ICategories>(
     defaultCateogryFormData
   )
@@ -141,22 +149,117 @@ const Library = () => {
   }, [])
 
   useEffect(() => {
-    if (!accessToken) return
     switch (tabValue) {
       case 0:
-        fetchCategories()   
+        setCurrentCreateTitle('Create Category')
+        setCurrentContent('cateogories')
+        setCurrentCreateDialog('create_categories')
+        setCurrentUpdateDialog('update_categories')
+
+        if (accessToken) {
+          fetchCategories()
+        }   
         break
       case 1:
-        fetchParticulars()   
+        setCurrentCreateTitle('Create Particular')
+        setCurrentContent('particulars')
+        setCurrentCreateDialog('create_particulars')
+        setCurrentUpdateDialog('update_particulars')
+        setCurrentDeleteDialog('delete_particulars')
+
+        if (accessToken) {
+          fetchParticulars()
+        }
         break
       case 2:
-        fetchDiscounts()
+        setCurrentCreateTitle('Create Discount')
+        setCurrentContent('discounts')
+        setCurrentCreateDialog('create_discounts')
+        setCurrentUpdateDialog('update_discounts')
+        setCurrentDeleteDialog('delete_discounts')
+
+        if (accessToken) {
+          fetchDiscounts()
+        }
+        break
+      case 3:
+        setCurrentCreateTitle('Create Signatory')
+        setCurrentDeleteTitle('Delete Signatory')
+        setCurrentContent('signatories')
+        setCurrentCreateDialog('create_signatories')
+        setCurrentUpdateDialog('update_signatories')
+        setCurrentDeleteDialog('delete_signatories')
+        break
       case 4:
-        fetchPaperSizes()
+        setCurrentCreateTitle('Create Paper Size')
+        setCurrentContent('paper_sizes')
+        setCurrentCreateDialog('create_paper_sizes')
+        setCurrentUpdateDialog('update_paper_sizes')
+        setCurrentDeleteDialog('delete_paper_sizes')
+
+        if (accessToken) {
+          fetchPaperSizes()
+        } 
+        break
       default:
         break
     }
-  }, [accessToken, tabValue])
+  }, [
+    accessToken, 
+    tabValue
+  ])
+
+  useEffect(() => {
+    switch (tabValue) {
+      case 0:
+        setCurrentUpdateTitle(
+          `Category Details (${categoryFormData?.category_name})`
+        )
+        setCurrentDeleteTitle(
+          `Delete Category (${categoryFormData?.category_name})`
+        )
+        setCurrentFormData(categoryFormData)
+        break
+      case 1:
+        setCurrentUpdateTitle(
+          `Particular Details (${particularFormData?.particular_name})`
+        )
+        setCurrentDeleteTitle(
+          `Delete Particular (${particularFormData?.particular_name})`
+        )
+        setCurrentFormData(particularFormData)
+        break
+      case 2:
+        setCurrentUpdateTitle(
+          `Discount Details (${discountFormData?.discount_name})`
+        )
+        setCurrentDeleteTitle(
+          `Delete Discount (${discountFormData?.discount_name})`
+        )
+        setCurrentFormData(discountFormData)
+        break
+      case 3:
+        setCurrentUpdateTitle('Signatory Details')
+        break
+      case 4:
+        setCurrentUpdateTitle(
+          `Paper Size Details (${[paperSizeFormData?.paper_name]})`
+        )
+        setCurrentDeleteTitle(
+          `Delete Paper Size (${[paperSizeFormData?.paper_name]})`
+        )
+        setCurrentFormData(paperSizeFormData)
+        break
+      default:
+        break
+    }
+  }, [
+    tabValue,
+    categoryFormData,
+    particularFormData,
+    discountFormData,
+    paperSizeFormData
+  ])
 
   // Handle logout using API utilities
   const handleLogout = () => {
@@ -334,10 +437,13 @@ const Library = () => {
         break
       case 1:
         fetchParticulars(url)
+        break
       case 2:
         fetchDiscounts(url)
+        break
       case 4:
         fetchPaperSizes(url)
+        break
       default:
         break
     }
@@ -354,6 +460,41 @@ const Library = () => {
         })
         handleDialogOpen('update_categories') 
         break
+      case 1:
+        setParticularFormData({
+          ...particularFormData,
+          id: details.id,
+          category_id: details.category_id,
+          particular_name: details.particular_name,
+          default_amount: details.default_amount,
+          order_no: details.order_no
+        })
+        handleDialogOpen('update_particulars') 
+        break
+      case 2:
+        setDiscountFormData({
+          ...discountFormData,
+          id: details.id,
+          discount_name: details.discount_name,
+          percent: details.percent,
+          requires_card_no: details.requires_card_no,
+          is_active: details.is_active
+        })
+        handleDialogOpen('update_discounts') 
+        break
+      case 3:
+        handleDialogOpen('update_signatories') 
+        break
+      case 4:
+        setPaperSizeFormData({
+          ...paperSizeFormData,
+          id: details.id,
+          paper_name: details.paper_name,
+          width: details.width,
+          height: details.height
+        })
+        handleDialogOpen('update_paper_sizes') 
+        break
       default:
         break
     }
@@ -362,7 +503,7 @@ const Library = () => {
   const handleInputChangeCategories = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setCategoryFormData({ ...particularFormData, [e.target.name]: e.target.value })
+    setCategoryFormData({ ...categoryFormData, [e.target.name]: e.target.value })
   }
 
   const handleInputChangeParticulars = (
@@ -389,6 +530,12 @@ const Library = () => {
       ...discountFormData,
       [elemName]: e.target.value,
     })
+  }
+
+  const handleInputChangePaperSizes = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPaperSizeFormData({ ...paperSizeFormData, [e.target.name]: e.target.value })
   }
   
   // Handle create users
@@ -518,30 +665,29 @@ const Library = () => {
           links={links}
           handlePageChange={handlePageChange}
           handleShowDetails={handleShowDetails}
-          handleShowCreate={() => handleDialogOpen('create_users')}
+          handleShowCreate={() => handleDialogOpen('create_categories')}
         />
       )
     } else if (index === 1) {
       const rows: any = [] 
       particularListData?.data?.forEach((category: any) => {
         rows.push({
-          id: `${category?.id}`,
-          particular_name: `---- Category Group: ${category?.category_name} ----`,
-          category_str: '',
-          default_amount_str: '',
-          order_no: ''
-        })
-        category?.particulars?.forEach((particular: any) => {
-          rows.push({
-            id: particular?.id,
-            particular_name: particular?.particular_name,
-            category_str: category?.category_name,
-            default_amount_str: particular?.default_amount ? 
-              particular.default_amount
-              .toFixed(2)
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/a',
-            order_no: particular.order_no
+          id: category?.id,
+          category_name: category?.category_name,
+          sub_rows: category?.particulars?.map((particular: any) => {
+            return {
+              id: particular?.id,
+              particular_name: particular?.particular_name,
+              category_id: particular?.category_id,
+              category_str: category?.category_name,
+              default_amount: particular?.default_amount ?? 0,
+              default_amount_str: particular?.default_amount ? 
+                particular.default_amount
+                .toFixed(2)
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/a',
+              order_no: particular.order_no
+            }
           })
         })
       })
@@ -565,7 +711,7 @@ const Library = () => {
           links={links}
           handlePageChange={handlePageChange}
           handleShowDetails={handleShowDetails}
-          handleShowCreate={() => handleDialogOpen('create_users')}
+          handleShowCreate={() => handleDialogOpen('create_particulars')}
         />
       )
     } else if (index === 2) {
@@ -573,7 +719,10 @@ const Library = () => {
         return {
           id: discount?.id,
           discount_name: discount?.discount_name,
-          percent_str: `${String(discount?.percent.toFixed(2))}%`,
+          percent: discount?.percent ?? 0,
+          requires_card_no: discount?.require_card_no,
+          percent_str: discount?.percent ? 
+            `${String(discount?.percent.toFixed(2))}%` : 0.00,
           requires_card_no_str: discount?.requires_card_no ? 'Yes' : 'No',
           status: discount?.is_active ? 'Active' : 'Inactive'
         }
@@ -598,7 +747,7 @@ const Library = () => {
           links={links}
           handlePageChange={handlePageChange}
           handleShowDetails={handleShowDetails}
-          handleShowCreate={() => handleDialogOpen('create_users')}
+          handleShowCreate={() => handleDialogOpen('create_discounts')}
         />
       )
     } else if (index === 4) {
@@ -632,9 +781,47 @@ const Library = () => {
           links={links}
           handlePageChange={handlePageChange}
           handleShowDetails={handleShowDetails}
-          handleShowCreate={() => handleDialogOpen('create_users')}
+          handleShowCreate={() => handleDialogOpen('create_paper_sizes')}
         />
       )
+    }
+  }
+
+  const currentHandleClear = () => {
+    switch (tabValue) {
+      case 0:
+        setCategoryFormData(defaultCateogryFormData)
+        break
+      case 1:
+        setParticularFormData(defaultParticularFormData)
+        break
+      case 2:
+        setDiscountFormData(defaultDiscountFormData)
+        break
+      case 4:
+        setPaperSizeFormData(defaultPaperSizeFormData)
+        break
+      default:
+        break
+    }
+  }
+
+  const currentHandleInputChange = (param1: any, param2: any = undefined) => {
+    switch (tabValue) {
+      case 0:
+        handleInputChangeCategories(param1)
+        break
+      case 1:
+        handleInputChangeParticulars(param1, param2)
+        break
+      case 2:
+        handleInputChangeDiscounts(param1)
+        break
+      case 4:
+        handleInputChangePaperSizes(param1)
+        break
+      default:
+        break
     }
   }
 
@@ -678,38 +865,37 @@ const Library = () => {
         handleClose={() => handleDialogClose('logout')}
         handleLogout={handleLogout}
       />
-      {/* <SystemDialog
-        open={dialogOpen.create_users ?? false}
-        title='Create User'
+      <SystemDialog
+        open={dialogOpen[currentCreateDialog] ?? false}
+        title={currentCreateTitle}
         dialogType='create'
-        content='users'
-        formData={userFormData}
-        handleInputChange={handleInputChangeUsers}
-        handleClose={() => handleDialogClose('create_users')}
-        handleClear={() => setUserFormData(defaultUserFormData)}
-        handleCreate={handleCreateUser}
+        content={currentContent}
+        formData={currentFormData}
+        handleInputChange={currentHandleInputChange}
+        handleClose={() => handleDialogClose(currentCreateDialog)}
+        handleClear={currentHandleClear}
+        // handleCreate={currentHandleClear}
       />
       <SystemDialog
-        open={dialogOpen.update_users ?? false}
-        title={`User Details (${userFormData?.first_name})`}
+        open={dialogOpen[currentUpdateDialog] ?? false}
+        title={currentUpdateTitle}
         dialogType='update'
-        content='users'
-        id={userFormData?.id}
-        formData={userFormData}
-        handleInputChange={handleInputChangeUsers}
-        handleClose={() => handleDialogClose('update_users')}
-        handleClear={() => setUserFormData(defaultUserFormData)}
-        handleUpdate={handleUpdateUser}
-        handleShowDelete={() => handleDialogOpen('delete_users')}
+        content={currentContent}
+        formData={currentFormData}
+        handleInputChange={currentHandleInputChange}
+        handleClose={() => handleDialogClose(currentUpdateDialog)}
+        handleClear={() => currentHandleClear()}
+        // handleUpdate={handleUpdateUser}
+        handleShowDelete={() => handleDialogOpen(currentDeleteDialog)}
       />
       <SystemDialog
-        open={dialogOpen.delete_users ?? false}
-        title={`Delete User ${userFormData?.first_name}?`}
+        open={dialogOpen[currentDeleteDialog] ?? false}
+        title={currentDeleteTitle}
         dialogType='delete'
-        id={userFormData?.id}
-        handleClose={() => handleDialogClose('delete_users')}
-        handleDelete={handleDeleteUser}
-      /> */}
+        id={currentFormData?.id}
+        handleClose={() => handleDialogClose(currentDeleteDialog)}
+        //handleDelete={handleDeleteUser}
+      />
     </MiniVariantDrawer>
   )
 }

@@ -9,6 +9,7 @@ import SectionLoader from '@/components/Loader/SectionLoader'
 const filter = createFilterOptions<any>()
 
 const Particulars = ({
+  dialogType,
   formData,
   handleInputChange,
 }: IParticularsSubContentProps) => {
@@ -170,6 +171,27 @@ const Particulars = ({
         }}
         onChange={(e) => handleInputChange('default_amount', e.target.value)}
       />
+
+      {dialogType === 'update' && (
+        <TextField
+          variant='outlined'
+          margin='normal'
+          required
+          fullWidth
+          id='order_no'
+          label='Order No.'
+          name='order_no'
+          autoComplete=''
+          size='small'
+          focused
+          sx={{ m: 0 }}
+          value={formData?.order_no ?? 0}
+          InputProps={{
+            type: 'number',
+          }}
+          onChange={(e) => handleInputChange('order_no', e.target.value)}
+        />
+      )}
     </>
   )
 }

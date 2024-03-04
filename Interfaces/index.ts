@@ -35,18 +35,20 @@ export type DialogContent =
   | 'paper_sizes'
   | 'print_official_receipt'
 
+export type DialogType =
+  | 'logout'
+  | 'create'
+  | 'update'
+  | 'delete'
+  | 'print'
+  | 'cancel'
+  | 'deposit'
+
 export interface ISystemDialogProps {
   open: boolean
   id?: string
   title: string
-  dialogType:
-    | 'logout'
-    | 'create'
-    | 'update'
-    | 'delete'
-    | 'print'
-    | 'cancel'
-    | 'deposit'
+  dialogType: DialogType
   content?: DialogContent
   formData?: any
   printUrl?: string
@@ -70,12 +72,14 @@ export interface IDepositContentProps {
 
 export interface ICreateContentProps {
   content: DialogContent
+  dialogType: DialogType
   formData: any
   handleInputChange: any
 }
 
 export interface IUpdateContentProps {
   content: DialogContent
+  dialogType: DialogType
   formData: any
   handleInputChange: any
 }
@@ -84,13 +88,25 @@ export interface IPrintContentProps {
   printUrl: string
 }
 
+export interface ICategoriesSubContentProps {
+  formData: ICategories
+  dialogType: DialogType
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
 export interface IParticularsSubContentProps {
+  dialogType: DialogType
   formData: IParticular
   handleInputChange: (input_name: string, value: string | number | null) => void
 }
 
 export interface IDiscountsSubContentProps {
   formData: IDiscount
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface IPaperSizesSubContentProps {
+  formData: IPaperSize
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -130,7 +146,7 @@ export type OpenDialogType =
 export interface IOpenDialog {
   logout?: boolean
   create_users?: boolean
-  create_cateogories?: boolean
+  create_categories?: boolean
   create_particulars?: boolean
   create_discounts?: boolean
   create_signatories?: boolean
@@ -184,6 +200,7 @@ export interface IDiscount {
   percent_str?: string
   requires_card_no?: boolean
   requires_card_no_str?: string
+  is_active?: boolean
   status?: string
 }
 
@@ -201,6 +218,7 @@ export interface IParticular {
   default_amount?: number
   default_amount_str?: string
   order_no?: number
+  sub_rows?: any[]
 }
 
 export interface IOfficialReceipt {
@@ -374,6 +392,8 @@ export interface ICateogryListColumn {
 
 export interface IParticularListColumn {
   id:
+    | 'dropdown'
+    | 'category_name'
     | 'category_str'
     | 'particular_name'
     | 'default_amount_str'
@@ -451,7 +471,7 @@ export interface ICategoryListProps {
   to: number
   total: number
   links: ITableListLinks[]
-  handleShowDetails: (details: IUser) => void
+  handleShowDetails: (details: ICategories) => void
   handleShowCreate: () => void
   handlePageChange: (url: string) => void
 }
@@ -465,7 +485,7 @@ export interface IParticularListProps {
   to: number
   total: number
   links: ITableListLinks[]
-  handleShowDetails: (details: IUser) => void
+  handleShowDetails: (details: IParticular) => void
   handleShowCreate: () => void
   handlePageChange: (url: string) => void
 }
@@ -479,7 +499,7 @@ export interface IDiscountListProps {
   to: number
   total: number
   links: ITableListLinks[]
-  handleShowDetails: (details: IUser) => void
+  handleShowDetails: (details: IDiscount) => void
   handleShowCreate: () => void
   handlePageChange: (url: string) => void
 }
@@ -493,7 +513,7 @@ export interface IPaperSizeListProps {
   to: number
   total: number
   links: ITableListLinks[]
-  handleShowDetails: (details: IUser) => void
+  handleShowDetails: (details: IPaperSize) => void
   handleShowCreate: () => void
   handlePageChange: (url: string) => void
 }
@@ -510,6 +530,7 @@ export interface ITableListProps {
     | 'paper_sizes'
     | 'users'
   columns: any
+  subColumns?: any
   rows: any
   currentPage: number
   nextPageUrl: string
