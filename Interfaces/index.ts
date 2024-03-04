@@ -102,6 +102,7 @@ export interface IParticularsSubContentProps {
 
 export interface IDiscountsSubContentProps {
   formData: IDiscount
+  dialogType: DialogType
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 

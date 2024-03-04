@@ -38,6 +38,7 @@ const defaultDiscountFormData: IDiscount = {
   percent: 0,
   percent_str: '',
   requires_card_no: false,
+  is_active: true,
   requires_card_no_str: '',
   status: ''
 }
@@ -526,6 +527,14 @@ const Library = () => {
       return
     }
 
+    if (elemName === 'is_active') {
+      setDiscountFormData({
+        ...discountFormData,
+        is_active: e.target.checked,
+      })
+      return
+    }
+
     setDiscountFormData({
       ...discountFormData,
       [elemName]: e.target.value,
@@ -720,10 +729,11 @@ const Library = () => {
           id: discount?.id,
           discount_name: discount?.discount_name,
           percent: discount?.percent ?? 0,
-          requires_card_no: discount?.require_card_no,
+          requires_card_no: discount?.requires_card_no,
           percent_str: discount?.percent ? 
             `${String(discount?.percent.toFixed(2))}%` : 0.00,
           requires_card_no_str: discount?.requires_card_no ? 'Yes' : 'No',
+          is_active: discount?.is_active,
           status: discount?.is_active ? 'Active' : 'Inactive'
         }
       })

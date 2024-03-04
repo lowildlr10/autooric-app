@@ -39,6 +39,7 @@ const CreateContent = ({
 
       {content === 'discounts' && (
         <Discount 
+          dialogType={dialogType}
           formData={formData} 
           handleInputChange={handleInputChange} 
         />

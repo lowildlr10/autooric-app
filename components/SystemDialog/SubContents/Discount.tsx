@@ -4,6 +4,7 @@ import { FormControl, FormControlLabel, InputAdornment, Switch, TextField } from
 
 const Discount = ({
   formData,
+  dialogType,
   handleInputChange,
 }: IDiscountsSubContentProps) => {
   return (
@@ -48,7 +49,7 @@ const Discount = ({
         <FormControlLabel
           control={
             <Switch 
-              checked={formData?.requires_card_no ?? false}
+              checked={!!formData?.requires_card_no ?? false}
               color="secondary" 
               id='requires_card_no'
               name='requires_card_no'
@@ -61,6 +62,26 @@ const Discount = ({
           labelPlacement="start"
         />
       </FormControl>
+
+      {dialogType === 'update' && (
+        <FormControl component="fieldset" variant="standard">
+          <FormControlLabel
+            control={
+              <Switch 
+                checked={!!formData?.is_active ?? false}
+                color="primary" 
+                id='is_active'
+                name='is_active'
+                required
+                inputProps={{ 'aria-label': 'controlled' }}
+                onChange={handleInputChange}
+              />
+            }
+            label="Is Active?"
+            labelPlacement="start"
+          />
+        </FormControl>
+      )}
     </>
   )
 }

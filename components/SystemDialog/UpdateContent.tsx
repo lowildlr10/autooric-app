@@ -39,6 +39,7 @@ const UpdateContent = ({
 
       {content === 'discounts' && (
         <Discount 
+          dialogType={dialogType}
           formData={formData} 
           handleInputChange={handleInputChange} 
         />
