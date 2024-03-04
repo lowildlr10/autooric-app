@@ -1,4 +1,8 @@
-import { IParticular, ISearchData, ITableListActionSectionDateRangeParticularsProps } from '@/Interfaces'
+import {
+  IParticular,
+  ISearchData,
+  ITableListActionSectionDateRangeParticularsProps,
+} from '@/Interfaces'
 import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -11,13 +15,13 @@ import API from '@/utilities/API'
 const defaultSearchData: ISearchData = {
   from: '',
   to: '',
-  particulars: '*'
+  particulars: '*',
 }
 
 const DateRangeParticulars = ({
   search,
   handleChange,
-  loading
+  loading,
 }: ITableListActionSectionDateRangeParticularsProps) => {
   const { accessToken } = useAccessToken()
   const [searchData, setSearchData] = useState<ISearchData>(defaultSearchData)
@@ -32,14 +36,14 @@ const DateRangeParticulars = ({
 
   useEffect(() => {
     if (search && init) return
-    
+
     let from = '*'
     let to = '*'
     if (searchData.from && searchData.to) {
       if (dayjs(searchData.from).isAfter(dayjs(searchData.to))) {
         handleInputChange('to', searchData.from)
       }
-      
+
       from = searchData.from
       to = searchData.to
     }
@@ -48,14 +52,14 @@ const DateRangeParticulars = ({
 
     setInit(false)
   }, [searchData, init, search])
-  
+
   useEffect(() => {
     if (search && init) {
       const searchData = search.split('|')
-      setSearchData({ 
+      setSearchData({
         from: searchData[0],
         to: searchData[1],
-        particulars: searchData[2]
+        particulars: searchData[2],
       })
       setInit(false)
     }
@@ -78,7 +82,7 @@ const DateRangeParticulars = ({
         })
     }
   }
-  
+
   const handleInputChange = (
     input_name: string,
     value: string | number | null
@@ -89,16 +93,16 @@ const DateRangeParticulars = ({
   return (
     <Stack direction='row' gap={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker 
-          label="From" 
+        <DatePicker
+          label='From'
           slotProps={{
             textField: {
               size: 'small',
               focused: true,
             },
             field: {
-              clearable: true
-            }
+              clearable: true,
+            },
           }}
           value={dayjs(searchData.from) ?? dayjs()}
           onChange={(newValue) =>
@@ -107,26 +111,26 @@ const DateRangeParticulars = ({
               newValue ? newValue.format('YYYY-MM-DD') : ''
             )
           }
-          sx={{ 
+          sx={{
             m: 0,
             flex: 1,
-            width: {xs: '100%', lg: 250},
+            width: { xs: '100%', lg: 250 },
           }}
         />
       </LocalizationProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker 
-          label="To"
+        <DatePicker
+          label='To'
           minDate={dayjs(searchData.from)}
           slotProps={{
             textField: {
               size: 'small',
-              focused: true
+              focused: true,
             },
             field: {
-              clearable: true
-            }
-          }} 
+              clearable: true,
+            },
+          }}
           value={dayjs(searchData.to) ?? dayjs()}
           onChange={(newValue) =>
             handleInputChange(
@@ -134,37 +138,41 @@ const DateRangeParticulars = ({
               newValue ? newValue.format('YYYY-MM-DD') : ''
             )
           }
-          sx={{ 
+          sx={{
             m: 0,
             flex: 1,
-            width: {xs: '100%', lg: 250},
+            width: { xs: '100%', lg: 250 },
           }}
         />
       </LocalizationProvider>
       <FormControl sx={{ flex: 1 }} focused>
-        <InputLabel id="select_particulars-label">Particulars</InputLabel>
+        <InputLabel id='select_particulars-label'>Particulars</InputLabel>
         <Select
-          labelId="select_particulars-label"
-          id="select_particulars"
-          label="Particulars"
+          labelId='select_particulars-label'
+          id='select_particulars'
+          label='Particulars'
           autoFocus
           size='small'
           value={searchData.particulars}
-          onChange={(e: any) => handleInputChange('particulars', e.target.value)}
+          onChange={(e: any) =>
+            handleInputChange('particulars', e.target.value)
+          }
           onOpen={fetchParticulars}
-          sx={{  
-            width: {xs: '100%', lg: 250},
+          sx={{
+            width: { xs: '100%', lg: 250 },
           }}
         >
-          <MenuItem value={'*'} defaultChecked>All</MenuItem>
-          {!particularsLoading ? particulars?.map((particular: IParticular) => (
-            <MenuItem key={particular.id} value={particular.id}>
-              {particular.particular_name}
-            </MenuItem>
-          )) : (
-            <MenuItem value={searchData.particulars}>
-              Loading...
-            </MenuItem>
+          <MenuItem value={'*'} defaultChecked>
+            All
+          </MenuItem>
+          {!particularsLoading ? (
+            particulars?.map((particular: IParticular) => (
+              <MenuItem key={particular.id} value={particular.id}>
+                {particular.particular_name}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem value={searchData.particulars}>Loading...</MenuItem>
           )}
         </Select>
       </FormControl>

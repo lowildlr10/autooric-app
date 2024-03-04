@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import TableList from '@/components/TableList' 
-import { IDiscount, IDiscountListProps, IDiscountListColumn } from '@/Interfaces'
+import TableList from '@/components/TableList'
+import {
+  IDiscount,
+  IDiscountListProps,
+  IDiscountListColumn,
+} from '@/Interfaces'
 
 const columns: readonly IDiscountListColumn[] = [
   { id: 'discount_name', label: 'Discount Name', minWidth: 200 },
@@ -20,7 +24,7 @@ const DiscountList = ({
   links,
   handlePageChange,
   handleShowDetails,
-  handleShowCreate
+  handleShowCreate,
 }: IDiscountListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
@@ -43,9 +47,7 @@ const DiscountList = ({
     }
   }, [search, searchLoading])
 
-  const handleSearchChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLoading(true)
     setSearch(e.target.value ?? '')
   }
@@ -69,9 +71,7 @@ const DiscountList = ({
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
       handleShowDetails={(id: string) =>
-        handleShowDetails(
-          rows?.find((row: IDiscount) => row.id === id) ?? {}
-        )
+        handleShowDetails(rows?.find((row: IDiscount) => row.id === id) ?? {})
       }
       handleShowCreate={handleShowCreate}
     />

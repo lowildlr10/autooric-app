@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import TableList from '@/components/TableList' 
-import { IParticular, IParticularListProps, IParticularListColumn } from '@/Interfaces'
+import TableList from '@/components/TableList'
+import {
+  IParticular,
+  IParticularListProps,
+  IParticularListColumn,
+} from '@/Interfaces'
 
 const columns: readonly IParticularListColumn[] = [
   { id: 'category_name', label: '', minWidth: 200 },
@@ -11,7 +15,7 @@ const subColumns: readonly IParticularListColumn[] = [
   { id: 'particular_name', label: 'Particular Name', minWidth: 200 },
   { id: 'category_str', label: 'Category', minWidth: 200 },
   { id: 'default_amount_str', label: 'Default Amount', minWidth: 150 },
-  { id: 'order_no', label: 'Order No', minWidth: 90 }
+  { id: 'order_no', label: 'Order No', minWidth: 90 },
 ]
 
 const ParticularList = ({
@@ -25,7 +29,7 @@ const ParticularList = ({
   links,
   handlePageChange,
   handleShowDetails,
-  handleShowCreate
+  handleShowCreate,
 }: IParticularListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
@@ -49,9 +53,7 @@ const ParticularList = ({
     }
   }, [search, searchLoading])
 
-  const handleSearchChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLoading(true)
     setSearch(e.target.value ?? '')
   }

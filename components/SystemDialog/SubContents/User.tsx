@@ -1,6 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { IDesignations, IPositions, IStations, IUserSubContentProps } from '@/Interfaces'
-import { Autocomplete, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField, createFilterOptions } from '@mui/material'
+import {
+  IDesignations,
+  IPositions,
+  IStations,
+  IUserSubContentProps,
+} from '@/Interfaces'
+import {
+  Autocomplete,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Switch,
+  TextField,
+  createFilterOptions,
+} from '@mui/material'
 import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
@@ -19,20 +35,23 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
   const [formattedStation, setFormattedStation] = useState<any>([])
   const positionValue = useMemo(
     () =>
-      formattedPosition.find((position: any) => position.id === formData?.position_id) ??
-      formData?.position_id,
+      formattedPosition.find(
+        (position: any) => position.id === formData?.position_id
+      ) ?? formData?.position_id,
     [formattedPosition, formData?.position_id]
   )
   const designationValue = useMemo(
     () =>
-      formattedDesignation.find((position: any) => position.id === formData?.designation_id) ??
-      formData?.designation_id,
+      formattedDesignation.find(
+        (position: any) => position.id === formData?.designation_id
+      ) ?? formData?.designation_id,
     [formattedDesignation, formData?.designation_id]
   )
   const stationValue = useMemo(
     () =>
-      formattedStation.find((position: any) => position.id === formData?.station_id) ??
-      formData?.station_id,
+      formattedStation.find(
+        (position: any) => position.id === formData?.station_id
+      ) ?? formData?.station_id,
     [formattedStation, formData?.station_id]
   )
 
@@ -162,8 +181,7 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         autoFocus
         value={formData?.first_name ?? ''}
         onChange={(e) =>
-          handleInputChange &&
-          handleInputChange(e.target.name, e.target.value)
+          handleInputChange && handleInputChange(e.target.name, e.target.value)
         }
         sx={{ m: 0 }}
       />
@@ -180,8 +198,7 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         focused
         value={formData?.middle_name ?? ''}
         onChange={(e) =>
-          handleInputChange &&
-          handleInputChange(e.target.name, e.target.value)
+          handleInputChange && handleInputChange(e.target.name, e.target.value)
         }
         sx={{ m: 0 }}
       />
@@ -199,8 +216,7 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         focused
         value={formData?.last_name ?? ''}
         onChange={(e) =>
-          handleInputChange &&
-          handleInputChange(e.target.name, e.target.value)
+          handleInputChange && handleInputChange(e.target.name, e.target.value)
         }
         sx={{ m: 0 }}
       />
@@ -217,8 +233,7 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         focused
         value={formData?.email ?? ''}
         onChange={(e) =>
-          handleInputChange &&
-          handleInputChange(e.target.name, e.target.value)
+          handleInputChange && handleInputChange(e.target.name, e.target.value)
         }
         sx={{ m: 0 }}
       />
@@ -235,8 +250,7 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         focused
         value={formData?.phone ?? ''}
         onChange={(e) =>
-          handleInputChange &&
-          handleInputChange(e.target.name, e.target.value)
+          handleInputChange && handleInputChange(e.target.name, e.target.value)
         }
         sx={{ m: 0 }}
       />
@@ -469,8 +483,7 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         required
         value={formData?.username ?? ''}
         onChange={(e) =>
-          handleInputChange &&
-          handleInputChange(e.target.name, e.target.value)
+          handleInputChange && handleInputChange(e.target.name, e.target.value)
         }
         sx={{ m: 0 }}
       />
@@ -489,22 +502,21 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         required
         value={formData?.password ?? ''}
         onChange={(e) =>
-          handleInputChange &&
-          handleInputChange(e.target.name, e.target.value)
+          handleInputChange && handleInputChange(e.target.name, e.target.value)
         }
         sx={{ m: 0 }}
       />
 
-      <FormControl focused required size="small">
-        <InputLabel id="sel-role-label">Role</InputLabel>
+      <FormControl focused required size='small'>
+        <InputLabel id='sel-role-label'>Role</InputLabel>
         <Select
-          labelId="sel-role-label"
-          id="sel-role"
+          labelId='sel-role-label'
+          id='sel-role'
           name='role'
           value={formData?.role ?? 'staff'}
-          label="Role"
+          label='Role'
           required
-          onChange={(e) => 
+          onChange={(e) =>
             handleInputChange &&
             handleInputChange(e.target.name, e.target.value)
           }
@@ -514,24 +526,24 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         </Select>
       </FormControl>
 
-      <FormControl component="fieldset" variant="standard">
+      <FormControl component='fieldset' variant='standard'>
         <FormControlLabel
           control={
-            <Switch 
+            <Switch
               checked={!!formData?.is_active ?? false}
-              color="primary" 
+              color='primary'
               id='is_active'
               name='is_active'
               required
               inputProps={{ 'aria-label': 'controlled' }}
-              onChange={(e) => 
+              onChange={(e) =>
                 handleInputChange &&
                 handleInputChange(e.target.name, e.target.checked)
               }
             />
           }
-          label="Is Active?"
-          labelPlacement="start"
+          label='Is Active?'
+          labelPlacement='start'
         />
       </FormControl>
     </>

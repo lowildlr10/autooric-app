@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import TableList from '@/components/TableList' 
-import { ICategories, ICategoryListProps, ICateogryListColumn } from '@/Interfaces'
+import TableList from '@/components/TableList'
+import {
+  ICategories,
+  ICategoryListProps,
+  ICateogryListColumn,
+} from '@/Interfaces'
 
 const columns: readonly ICateogryListColumn[] = [
   { id: 'category_name', label: 'Category Name', minWidth: 200 },
@@ -18,7 +22,7 @@ const CategoryList = ({
   links,
   handlePageChange,
   handleShowDetails,
-  handleShowCreate
+  handleShowCreate,
 }: ICategoryListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
@@ -41,9 +45,7 @@ const CategoryList = ({
     }
   }, [search, searchLoading])
 
-  const handleSearchChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLoading(true)
     setSearch(e.target.value ?? '')
   }
@@ -67,9 +69,7 @@ const CategoryList = ({
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
       handleShowDetails={(id: string) =>
-        handleShowDetails(
-          rows?.find((row: ICategories) => row.id === id) ?? {}
-        )
+        handleShowDetails(rows?.find((row: ICategories) => row.id === id) ?? {})
       }
       handleShowCreate={handleShowCreate}
     />

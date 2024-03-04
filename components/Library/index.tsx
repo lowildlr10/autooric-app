@@ -5,7 +5,16 @@ import useUserInfo from '@/hooks/useUserInfo'
 import { Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
-import { IOpenDialog, ITabContents, ICategories, IParticular, OpenDialogType, IDiscount, IPaperSize, DialogContent } from '@/Interfaces'
+import {
+  IOpenDialog,
+  ITabContents,
+  ICategories,
+  IParticular,
+  OpenDialogType,
+  IDiscount,
+  IPaperSize,
+  DialogContent,
+} from '@/Interfaces'
 import CardContainer from '@/components/CardContainer'
 import TabContainer, { CustomTabPanel } from '@/components/TabContainer'
 import SystemDialog from '../SystemDialog'
@@ -19,7 +28,7 @@ import PaperSizeList from './PaperSizes/PaperSizeList'
 const defaultCategoryFormData: ICategories = {
   id: '',
   category_name: '',
-  order_no: 0
+  order_no: 0,
 }
 
 const defaultParticularFormData: IParticular = {
@@ -29,7 +38,7 @@ const defaultParticularFormData: IParticular = {
   particular_name: '',
   default_amount: 0,
   default_amount_str: '',
-  order_no: 0
+  order_no: 0,
 }
 
 const defaultDiscountFormData: IDiscount = {
@@ -40,14 +49,14 @@ const defaultDiscountFormData: IDiscount = {
   requires_card_no: false,
   is_active: true,
   requires_card_no_str: '',
-  status: ''
+  status: '',
 }
 
 const defaultPaperSizeFormData: IPaperSize = {
   id: '',
   paper_name: '',
   width: 0,
-  height: 0
+  height: 0,
 }
 
 const Library = () => {
@@ -74,10 +83,15 @@ const Library = () => {
   const [currentUpdateTitle, setCurrentUpdateTitle] = useState('')
   const [currentDeleteTitle, setCurrentDeleteTitle] = useState('')
   const [currentContent, setCurrentContent] = useState<DialogContent>()
-  const [currentCreateDialog, setCurrentCreateDialog] = useState<OpenDialogType>('create_categories')
-  const [currentUpdateDialog, setCurrentUpdateDialog] = useState<OpenDialogType>('update_categories')
-  const [currentDeleteDialog, setCurrentDeleteDialog] = useState<OpenDialogType>('delete_categories')
-  const [currentFormData, setCurrentFormData] = useState<ICategories | IParticular | IDiscount | IPaperSize>()
+  const [currentCreateDialog, setCurrentCreateDialog] =
+    useState<OpenDialogType>('create_categories')
+  const [currentUpdateDialog, setCurrentUpdateDialog] =
+    useState<OpenDialogType>('update_categories')
+  const [currentDeleteDialog, setCurrentDeleteDialog] =
+    useState<OpenDialogType>('delete_categories')
+  const [currentFormData, setCurrentFormData] = useState<
+    ICategories | IParticular | IDiscount | IPaperSize
+  >()
   const [categoryFormData, setCategoryFormData] = useState<ICategories>(
     defaultCategoryFormData
   )
@@ -115,7 +129,7 @@ const Library = () => {
     discountListLoading,
     paperSizeListLoading,
     formSaveLoading,
-    deleteLoading
+    deleteLoading,
   ])
 
   // Check if user is already logged in
@@ -145,7 +159,7 @@ const Library = () => {
       {
         index: 4,
         label: 'PAPER SIZES',
-      }
+      },
     ])
   }, [])
 
@@ -159,7 +173,7 @@ const Library = () => {
 
         if (accessToken) {
           fetchCategories()
-        }   
+        }
         break
       case 1:
         setCurrentCreateTitle('Create Particular')
@@ -200,15 +214,12 @@ const Library = () => {
 
         if (accessToken) {
           fetchPaperSizes()
-        } 
+        }
         break
       default:
         break
     }
-  }, [
-    accessToken, 
-    tabValue
-  ])
+  }, [accessToken, tabValue])
 
   useEffect(() => {
     switch (tabValue) {
@@ -259,7 +270,7 @@ const Library = () => {
     categoryFormData,
     particularFormData,
     discountFormData,
-    paperSizeFormData
+    paperSizeFormData,
   ])
 
   // Handle logout using API utilities
@@ -298,7 +309,7 @@ const Library = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
-  
+
   // Fetch categories
   const fetchCategories = (url?: string) => {
     setCategoryListLoading(true)
@@ -434,7 +445,7 @@ const Library = () => {
   const handlePageChange = (url: string) => {
     switch (tabValue) {
       case 0:
-        fetchCategories(url)   
+        fetchCategories(url)
         break
       case 1:
         fetchParticulars(url)
@@ -457,9 +468,9 @@ const Library = () => {
           ...categoryFormData,
           id: details.id,
           category_name: details.category_name,
-          order_no: details.order_no
+          order_no: details.order_no,
         })
-        handleDialogOpen('update_categories') 
+        handleDialogOpen('update_categories')
         break
       case 1:
         setParticularFormData({
@@ -468,9 +479,9 @@ const Library = () => {
           category_id: details.category_id,
           particular_name: details.particular_name,
           default_amount: details.default_amount,
-          order_no: details.order_no
+          order_no: details.order_no,
         })
-        handleDialogOpen('update_particulars') 
+        handleDialogOpen('update_particulars')
         break
       case 2:
         setDiscountFormData({
@@ -479,12 +490,12 @@ const Library = () => {
           discount_name: details.discount_name,
           percent: details.percent,
           requires_card_no: details.requires_card_no,
-          is_active: details.is_active
+          is_active: details.is_active,
         })
-        handleDialogOpen('update_discounts') 
+        handleDialogOpen('update_discounts')
         break
       case 3:
-        handleDialogOpen('update_signatories') 
+        handleDialogOpen('update_signatories')
         break
       case 4:
         setPaperSizeFormData({
@@ -492,9 +503,9 @@ const Library = () => {
           id: details.id,
           paper_name: details.paper_name,
           width: details.width,
-          height: details.height
+          height: details.height,
         })
-        handleDialogOpen('update_paper_sizes') 
+        handleDialogOpen('update_paper_sizes')
         break
       default:
         break
@@ -504,7 +515,10 @@ const Library = () => {
   const handleInputChangeCategories = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setCategoryFormData({ ...categoryFormData, [e.target.name]: e.target.value })
+    setCategoryFormData({
+      ...categoryFormData,
+      [e.target.name]: e.target.value,
+    })
   }
 
   const handleInputChangeParticulars = (
@@ -544,9 +558,12 @@ const Library = () => {
   const handleInputChangePaperSizes = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setPaperSizeFormData({ ...paperSizeFormData, [e.target.name]: e.target.value })
+    setPaperSizeFormData({
+      ...paperSizeFormData,
+      [e.target.name]: e.target.value,
+    })
   }
-  
+
   //Handle create records
   const handleCreateRecord = (
     formData: ICategories | IParticular | IDiscount | IPaperSize
@@ -782,7 +799,7 @@ const Library = () => {
               setDialogOpen({
                 create_categories: false,
                 update_categories: false,
-                delete_categories: false
+                delete_categories: false,
               })
               fetchCategories()
             })
@@ -808,7 +825,7 @@ const Library = () => {
               setDialogOpen({
                 create_particulars: false,
                 update_particulars: false,
-                delete_particulars: false
+                delete_particulars: false,
               })
               fetchParticulars()
             })
@@ -834,7 +851,7 @@ const Library = () => {
               setDialogOpen({
                 create_discounts: false,
                 update_discounts: false,
-                delete_discounts: false
+                delete_discounts: false,
               })
               fetchDiscounts()
             })
@@ -862,7 +879,7 @@ const Library = () => {
               setDialogOpen({
                 create_paper_sizes: false,
                 update_paper_sizes: false,
-                delete_paper_sizes: false
+                delete_paper_sizes: false,
               })
               fetchPaperSizes()
             })
@@ -871,7 +888,7 @@ const Library = () => {
               toast.error(res.message)
               setDeleteLoading(false)
             })
-          break                   
+          break
         default:
           break
       }
@@ -889,7 +906,7 @@ const Library = () => {
         return {
           id: category?.id,
           category_name: category?.category_name,
-          order_no: category?.order_no
+          order_no: category?.order_no,
         }
       })
       const currentPage = categoryListData?.current_page
@@ -916,7 +933,7 @@ const Library = () => {
         />
       )
     } else if (index === 1) {
-      const rows: any = [] 
+      const rows: any = []
       particularListData?.data?.forEach((category: any) => {
         rows.push({
           id: category?.id,
@@ -928,14 +945,15 @@ const Library = () => {
               category_id: particular?.category_id,
               category_str: category?.category_name,
               default_amount: particular?.default_amount ?? 0,
-              default_amount_str: particular?.default_amount ? 
-                particular.default_amount
-                .toFixed(2)
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/a',
-              order_no: particular.order_no
+              default_amount_str: particular?.default_amount
+                ? particular.default_amount
+                    .toFixed(2)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                : 'N/a',
+              order_no: particular.order_no,
             }
-          })
+          }),
         })
       })
       const currentPage = particularListData?.current_page
@@ -968,11 +986,12 @@ const Library = () => {
           discount_name: discount?.discount_name,
           percent: discount?.percent ?? 0,
           requires_card_no: discount?.requires_card_no,
-          percent_str: discount?.percent ? 
-            `${String(discount?.percent.toFixed(2))}%` : 0.00,
+          percent_str: discount?.percent
+            ? `${String(discount?.percent.toFixed(2))}%`
+            : 0.0,
           requires_card_no_str: discount?.requires_card_no ? 'Yes' : 'No',
           is_active: discount?.is_active,
-          status: discount?.is_active ? 'Active' : 'Inactive'
+          status: discount?.is_active ? 'Active' : 'Inactive',
         }
       })
       const currentPage = discountListData?.current_page

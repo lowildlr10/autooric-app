@@ -1,9 +1,7 @@
 import React from 'react'
 import { IPrintContentProps } from '@/Interfaces'
 
-const PrintContent = ({ 
-  printUrl
-}: IPrintContentProps) => {
+const PrintContent = ({ printUrl }: IPrintContentProps) => {
   return (
     <iframe
       src={printUrl}

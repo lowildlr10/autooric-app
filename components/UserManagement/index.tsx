@@ -26,7 +26,7 @@ const defaultUserFormData: IUser = {
   username: '',
   password: '',
   role: 'staff',
-  is_active: false
+  is_active: false,
 }
 
 const UserManagement = () => {
@@ -43,9 +43,7 @@ const UserManagement = () => {
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
   const [tabContents, setTabContents] = useState<ITabContents[]>([])
-  const [userFormData, setUserFormData] = useState<IUser>(
-    defaultUserFormData
-  )
+  const [userFormData, setUserFormData] = useState<IUser>(defaultUserFormData)
 
   // Handle global loading
   useEffect(() => {
@@ -65,7 +63,7 @@ const UserManagement = () => {
     logoutLoading,
     userListLoading,
     formSaveLoading,
-    deleteLoading
+    deleteLoading,
   ])
 
   // Check if user is already logged in
@@ -79,7 +77,7 @@ const UserManagement = () => {
       {
         index: 0,
         label: 'USERS',
-      }
+      },
     ])
   }, [])
 
@@ -87,7 +85,7 @@ const UserManagement = () => {
     if (!accessToken) return
     switch (tabValue) {
       case 0:
-        fetchUsers()   
+        fetchUsers()
         break
       default:
         break
@@ -130,7 +128,7 @@ const UserManagement = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
-  
+
   // Fetch users
   const fetchUsers = (url?: string) => {
     setUserListLoading(true)
@@ -194,7 +192,7 @@ const UserManagement = () => {
   ) => {
     setUserFormData({ ...userFormData, [input_name]: value })
   }
-  
+
   // Handle create users
   const handleCreateUser = (formData: IUser) => {
     setFormSaveLoading(true)
@@ -219,9 +217,7 @@ const UserManagement = () => {
           setFormSaveLoading(false)
         })
     } else {
-      toast.error(
-        'An error occurred while creating user. Please try again.'
-      )
+      toast.error('An error occurred while creating user. Please try again.')
       setFormSaveLoading(false)
     }
   }
@@ -250,9 +246,7 @@ const UserManagement = () => {
           setFormSaveLoading(false)
         })
     } else {
-      toast.error(
-        'An error occurred while updating a user. Please try again.'
-      )
+      toast.error('An error occurred while updating a user. Please try again.')
       setFormSaveLoading(false)
     }
   }
@@ -276,7 +270,7 @@ const UserManagement = () => {
           setDialogOpen({
             create_users: false,
             update_users: false,
-            delete_users: false
+            delete_users: false,
           })
           fetchUsers()
         })
@@ -286,9 +280,7 @@ const UserManagement = () => {
           setDeleteLoading(false)
         })
     } else {
-      toast.error(
-        'An error occurred while deleting a user. Please try again.'
-      )
+      toast.error('An error occurred while deleting a user. Please try again.')
       setDeleteLoading(false)
     }
   }
@@ -298,7 +290,10 @@ const UserManagement = () => {
       const rows = userListData?.data?.map((user: any) => {
         return {
           id: user.id,
-          fullname: user.first_name + `${user.middle_name ? ` ${user.middle_name[0]}. ` : ' '}` + user.last_name,
+          fullname:
+            user.first_name +
+            `${user.middle_name ? ` ${user.middle_name[0]}. ` : ' '}` +
+            user.last_name,
           first_name: user.first_name,
           middle_name: user.middle_name,
           last_name: user.last_name,
@@ -315,7 +310,7 @@ const UserManagement = () => {
           is_active: user.is_active,
           username: user.username,
           role_str: user.role === 'admin' ? 'Admin' : 'Staff',
-          status: user.is_active ? 'Active' : 'Inactive'
+          status: user.is_active ? 'Active' : 'Inactive',
         }
       })
       const currentPage = userListData?.current_page

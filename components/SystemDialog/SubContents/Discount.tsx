@@ -1,6 +1,12 @@
 import React from 'react'
 import { IDiscountsSubContentProps } from '@/Interfaces'
-import { FormControl, FormControlLabel, InputAdornment, Switch, TextField } from '@mui/material'
+import {
+  FormControl,
+  FormControlLabel,
+  InputAdornment,
+  Switch,
+  TextField,
+} from '@mui/material'
 
 const Discount = ({
   formData,
@@ -45,12 +51,12 @@ const Discount = ({
         onChange={handleInputChange}
       />
 
-      <FormControl component="fieldset" variant="standard">
+      <FormControl component='fieldset' variant='standard'>
         <FormControlLabel
           control={
-            <Switch 
+            <Switch
               checked={!!formData?.requires_card_no ?? false}
-              color="secondary" 
+              color='secondary'
               id='requires_card_no'
               name='requires_card_no'
               required
@@ -58,18 +64,18 @@ const Discount = ({
               onChange={handleInputChange}
             />
           }
-          label="Requires ID/Card Number?"
-          labelPlacement="start"
+          label='Requires ID/Card Number?'
+          labelPlacement='start'
         />
       </FormControl>
 
       {dialogType === 'update' && (
-        <FormControl component="fieldset" variant="standard">
+        <FormControl component='fieldset' variant='standard'>
           <FormControlLabel
             control={
-              <Switch 
+              <Switch
                 checked={!!formData?.is_active ?? false}
-                color="primary" 
+                color='primary'
                 id='is_active'
                 name='is_active'
                 required
@@ -77,8 +83,8 @@ const Discount = ({
                 onChange={handleInputChange}
               />
             }
-            label="Is Active?"
-            labelPlacement="start"
+            label='Is Active?'
+            labelPlacement='start'
           />
         </FormControl>
       )}

@@ -25,18 +25,12 @@ const Report = () => {
 
   // Handle global loading
   useEffect(() => {
-    if (
-      userLoading ||
-      logoutLoading
-    ) {
+    if (userLoading || logoutLoading) {
       setLoading(true)
     } else {
       setLoading(false)
     }
-  }, [
-    userLoading,
-    logoutLoading
-  ])
+  }, [userLoading, logoutLoading])
 
   useEffect(() => {
     setTabContents([
@@ -55,7 +49,7 @@ const Report = () => {
       {
         index: 3,
         label: 'PRINT E-RECEIPTS',
-      }
+      },
     ])
   }, [])
 
@@ -98,9 +92,7 @@ const Report = () => {
 
   const dynamicTabContents = (index: number) => {
     if (index === 0) {
-      return (
-        <></>
-      )
+      return <></>
     }
 
     return <></>

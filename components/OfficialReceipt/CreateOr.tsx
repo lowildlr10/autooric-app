@@ -85,7 +85,7 @@ const CreateOrFields = ({
         particulars.map((particular) => ({
           id: particular.id,
           label: particular.particular_name,
-          default_amount: particular.default_amount ?? 0
+          default_amount: particular.default_amount ?? 0,
         }))
       )
     }
@@ -97,7 +97,7 @@ const CreateOrFields = ({
         discounts.map((discount) => ({
           id: discount.id,
           label: discount.discount_name,
-          requires_card_no: discount.requires_card_no
+          requires_card_no: discount.requires_card_no,
         }))
       )
     }
@@ -174,9 +174,9 @@ const CreateOrFields = ({
                 handleInputChange &&
                 handleInputChange(e.target.name, e.target.value)
               }
-              inputProps={{ 
-                maxLength: 10
-               }}
+              inputProps={{
+                maxLength: 10,
+              }}
               sx={{ m: 0 }}
             />
           ) : (
@@ -316,11 +316,11 @@ const CreateOrFields = ({
                       newValue?.id ?? ''
                     )
                 }}
-                onInputChange={(e: any, newValue: any) => {                  
+                onInputChange={(e: any, newValue: any) => {
                   setDefaultAmount(
-                    formattedParticulars.find((particular: any) => 
-                        particular?.label === newValue
-                      )?.default_amount ?? 0
+                    formattedParticulars.find(
+                      (particular: any) => particular?.label === newValue
+                    )?.default_amount ?? 0
                   )
                 }}
                 autoFocus
@@ -453,11 +453,11 @@ const CreateOrFields = ({
                   handleInputChange &&
                     handleInputChange('discount_id', newValue?.id ?? '')
                 }}
-                onInputChange={(e: any, newValue: any) => {                  
+                onInputChange={(e: any, newValue: any) => {
                   setCardNoRequired(
-                    formattedDiscounts.find((discount: any) => 
-                        discount?.label === newValue
-                      )?.requires_card_no ?? false
+                    formattedDiscounts.find(
+                      (discount: any) => discount?.label === newValue
+                    )?.requires_card_no ?? false
                   )
                 }}
                 autoFocus
@@ -498,7 +498,7 @@ const CreateOrFields = ({
           />
         )}
       </Stack>
-      
+
       {(formData?.discount_id || formData?.discount) && (
         <>
           {!readOnly ? (
@@ -791,9 +791,9 @@ const ActionButtons = ({
   }
 
   return (
-    <Stack 
-      spacing={2} 
-      px={4} 
+    <Stack
+      spacing={2}
+      px={4}
       width={{ xs: '74%', lg: 'calc(25vw - 1em)', xl: 350 }}
       position={{ xs: 'relative', lg: 'absolute' }}
       bottom={{ xs: 'unset', lg: '86px' }}
@@ -851,8 +851,8 @@ const CreateOr = ({
             fetchPayor={fetchPayor}
           />
         </Stack>
-        <Stack 
-          justifyContent='end' 
+        <Stack
+          justifyContent='end'
           alignItems={{ xs: 'center', lg: 'start' }}
           width={{ xs: '100%', lg: 350 }}
         >

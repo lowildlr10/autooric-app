@@ -148,7 +148,7 @@ const SystemDialog = ({
           </Button>
         )}
 
-        {(dialogType === 'delete') && (
+        {dialogType === 'delete' && (
           <Button
             onClick={() => {
               handleDelete && handleDelete(id ?? '')
@@ -165,7 +165,6 @@ const SystemDialog = ({
 
         {dialogType === 'update' && (
           <>
-            
             <Button
               onClick={() => {
                 handleShowDelete && handleShowDelete()

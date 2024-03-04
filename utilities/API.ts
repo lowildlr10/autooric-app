@@ -292,151 +292,150 @@ export default class API {
 
   // Create users
   static async createUser(accessToken: string, formData: any) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users`, formData, {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/user-management/users`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Update users
+  static async updateUser(accessToken: string, userId: string, formData: any) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/user-management/users/${userId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Update categories
+  static async updateCategory(
+    accessToken: string,
+    categoryId: string,
+    formData: any
+  ) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/categories/${categoryId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Update particulars
+  static async updateParticular(
+    accessToken: string,
+    particularId: string,
+    formData: any
+  ) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/particulars/${particularId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Update discounts
+  static async updateDiscount(
+    accessToken: string,
+    discountId: string,
+    formData: any
+  ) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/discounts/${discountId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Update paper sizes
+  static async updatePaperSize(
+    accessToken: string,
+    paperSizeId: string,
+    formData: any
+  ) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/paper-sizes/${paperSizeId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Delete users
+  static async deleteUser(accessToken: string, userId: string) {
+    return axios.delete(
+      `${API.API_BASE_URL}/api/v1/user-management/users/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Delete categories
+  static async deleteCategory(accessToken: string, categoryId: string) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/categories/${categoryId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     })
   }
-  
-  // Update users
-  static async updateUser(
-    accessToken: string, 
-    userId: string, 
-    formData: any
-  ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}?_method=PATCH`, 
-      formData, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Update categories
-  static async updateCategory(
-    accessToken: string, 
-    categoryId: string, 
-    formData: any
-  ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/categories/${categoryId}?_method=PATCH`, 
-      formData, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Update particulars
-  static async updateParticular(
-    accessToken: string, 
-    particularId: string, 
-    formData: any
-  ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/particulars/${particularId}?_method=PATCH`, 
-      formData, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Update discounts
-  static async updateDiscount(
-    accessToken: string, 
-    discountId: string, 
-    formData: any
-  ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/discounts/${discountId}?_method=PATCH`, 
-      formData, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Update paper sizes
-  static async updatePaperSize(
-    accessToken: string, 
-    paperSizeId: string, 
-    formData: any
-  ) {
-    return axios.post(`${API.API_BASE_URL}/api/v1/paper-sizes/${paperSizeId}?_method=PATCH`, 
-      formData, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Delete users
-  static async deleteUser(
-    accessToken: string, 
-    userId: string
-  ) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/user-management/users/${userId}`, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
-
-  // Delete categories
-  static async deleteCategory(
-    accessToken: string, 
-    categoryId: string
-  ) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/categories/${categoryId}`, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-  }
 
   // Delete particulars
-  static async deleteParticular(
-    accessToken: string, 
-    particularId: string
-  ) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/particulars/${particularId}`, 
+  static async deleteParticular(accessToken: string, particularId: string) {
+    return axios.delete(
+      `${API.API_BASE_URL}/api/v1/particulars/${particularId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      })
+      }
+    )
   }
 
   // Delete discounts
-  static async deleteDisount(
-    accessToken: string, 
-    discountId: string
-  ) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/discounts/${discountId}`, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+  static async deleteDisount(accessToken: string, discountId: string) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/discounts/${discountId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
   }
 
   // Delete paper sizes
-  static async deletePaperSize(
-    accessToken: string, 
-    paperSizeId: string
-  ) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/paper-sizes/${paperSizeId}`, 
+  static async deletePaperSize(accessToken: string, paperSizeId: string) {
+    return axios.delete(
+      `${API.API_BASE_URL}/api/v1/paper-sizes/${paperSizeId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      })
+      }
+    )
   }
 
   // Update official receipt deposit

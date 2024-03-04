@@ -118,7 +118,10 @@ export interface IDepositSubContentProps {
 
 export interface IUserSubContentProps {
   formData: IUser
-  handleInputChange: (input_name: string, value: string | number | boolean | null) => void
+  handleInputChange: (
+    input_name: string,
+    value: string | number | boolean | null
+  ) => void
 }
 
 export type OpenDialogType =
@@ -383,9 +386,7 @@ export interface IUserListColumn {
 }
 
 export interface ICateogryListColumn {
-  id:
-    | 'category_name'
-    | 'order_no'
+  id: 'category_name' | 'order_no'
   label: string
   minWidth?: number
   align?: 'right' | 'center' | 'left'
@@ -405,21 +406,14 @@ export interface IParticularListColumn {
 }
 
 export interface IDiscountListColumn {
-  id:
-    | 'discount_name'
-    | 'percent_str'
-    | 'requires_card_no_str'
-    | 'status'
+  id: 'discount_name' | 'percent_str' | 'requires_card_no_str' | 'status'
   label: string
   minWidth?: number
   align?: 'right' | 'center' | 'left'
 }
 
 export interface IPaperSizeListColumn {
-  id:
-    | 'paper_name'
-    | 'width_str'
-    | 'height_str'
+  id: 'paper_name' | 'width_str' | 'height_str'
   label: string
   minWidth?: number
   align?: 'right' | 'center' | 'left'

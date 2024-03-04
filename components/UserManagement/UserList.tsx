@@ -24,7 +24,7 @@ const UserList = ({
   links,
   handlePageChange,
   handleShowDetails,
-  handleShowCreate
+  handleShowCreate,
 }: IUserListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
@@ -47,9 +47,7 @@ const UserList = ({
     }
   }, [search, searchLoading])
 
-  const handleSearchChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLoading(true)
     setSearch(e.target.value ?? '')
   }
@@ -73,9 +71,7 @@ const UserList = ({
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
       handleShowDetails={(id: string) =>
-        handleShowDetails(
-          rows?.find((row: IUser) => row.id === id) ?? {}
-        )
+        handleShowDetails(rows?.find((row: IUser) => row.id === id) ?? {})
       }
       handleShowCreate={handleShowCreate}
     />

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import TableList from '@/components/TableList' 
-import { IPaperSize, IPaperSizeListProps, IPaperSizeListColumn } from '@/Interfaces'
+import TableList from '@/components/TableList'
+import {
+  IPaperSize,
+  IPaperSizeListProps,
+  IPaperSizeListColumn,
+} from '@/Interfaces'
 
 const columns: readonly IPaperSizeListColumn[] = [
   { id: 'paper_name', label: 'Paper Name', minWidth: 200 },
@@ -19,7 +23,7 @@ const PapeSizeList = ({
   links,
   handlePageChange,
   handleShowDetails,
-  handleShowCreate
+  handleShowCreate,
 }: IPaperSizeListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
@@ -42,9 +46,7 @@ const PapeSizeList = ({
     }
   }, [search, searchLoading])
 
-  const handleSearchChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLoading(true)
     setSearch(e.target.value ?? '')
   }
@@ -68,9 +70,7 @@ const PapeSizeList = ({
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
       handleShowDetails={(id: string) =>
-        handleShowDetails(
-          rows?.find((row: IPaperSize) => row.id === id) ?? {}
-        )
+        handleShowDetails(rows?.find((row: IPaperSize) => row.id === id) ?? {})
       }
       handleShowCreate={handleShowCreate}
     />

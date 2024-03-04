@@ -51,9 +51,7 @@ const OrList = ({
     }
   }, [search, searchLoading])
 
-  const handleSearchDateParticularsChange = (
-    value: string | null
-  ) => {
+  const handleSearchDateParticularsChange = (value: string | null) => {
     setSearchLoading(true)
     setSearch(value ?? '')
   }

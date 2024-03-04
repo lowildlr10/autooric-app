@@ -15,8 +15,8 @@ const ActionSection = ({
   return (
     <Stack direction='row' justifyContent='space-between' my={2}>
       {hasCreateButton && (
-        <Button 
-          variant='contained' 
+        <Button
+          variant='contained'
           size='small'
           onClick={handleShowCreate}
           sx={{ px: 2 }}
@@ -33,9 +33,9 @@ const ActionSection = ({
           handleChange={handleSearchChange}
         />
       )}
-      
+
       {searchType === 'date_particulars' && (
-        <DateRangeParticulars 
+        <DateRangeParticulars
           search={search}
           loading={searchLoading}
           handleChange={handleSearchChange}

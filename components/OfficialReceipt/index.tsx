@@ -41,13 +41,13 @@ const defaultCreateOrFormData: IOfficialReceipt = {
 const defaultParticularFormData: IParticular = {
   particular_name: '',
   category_id: '',
-  default_amount: 0
+  default_amount: 0,
 }
 
 const defaultDiscountFormData: IDiscount = {
   discount_name: '',
   percent: 0,
-  requires_card_no: false
+  requires_card_no: false,
 }
 
 const defaultDepositFormData: IDeposit = {
@@ -182,7 +182,7 @@ const OfficialReceipt = () => {
     paperSizeLoading,
     logoutLoading,
     formSaveLoading,
-    printDownloadLoading
+    printDownloadLoading,
   ])
 
   // Check if user is already logged in
@@ -231,7 +231,9 @@ const OfficialReceipt = () => {
             handleInputChange(input_name, value)
           }
           handleCreate={(data, print) => handleCreateOr(data, print)}
-          handlePrint={(orId, paperSizeId) => handlePrintDownloadOr(orId, paperSizeId, true)}
+          handlePrint={(orId, paperSizeId) =>
+            handlePrintDownloadOr(orId, paperSizeId, true)
+          }
           handleClear={handleClear}
           fetchPayor={() => fetchPayors()}
           fetchParticular={() => fetchParticulars()}
@@ -531,7 +533,7 @@ const OfficialReceipt = () => {
           } else {
             handlePrintDownloadOr(res?.data?.id, paperSize, false)
           }
-          
+
           setTempPrintId(res?.data?.id)
           setCreateOrFormData(defaultCreateOrFormData)
         })
@@ -729,8 +731,8 @@ const OfficialReceipt = () => {
 
   // Handle print official receipt
   const handlePrintDownloadOr = (
-    orId: string, 
-    paperSizeId: string, 
+    orId: string,
+    paperSizeId: string,
     print = false
   ) => {
     setPrintDownloadLoading(true)
@@ -744,10 +746,7 @@ const OfficialReceipt = () => {
             setPrintUrl(pdfUrl)
             handleDialogOpen('print')
           } else {
-            handleDownloadPdf(
-              response.data.data.filename, 
-              pdfUrl
-            )
+            handleDownloadPdf(response.data.data.filename, pdfUrl)
           }
 
           setPrintDownloadLoading(false)
@@ -820,7 +819,9 @@ const OfficialReceipt = () => {
         dialogType='print'
         printUrl={printUrl}
         handleClose={() => handleDialogClose('print')}
-        handleDownload={() => handlePrintDownloadOr(tempPrintId, paperSize, false)}
+        handleDownload={() =>
+          handlePrintDownloadOr(tempPrintId, paperSize, false)
+        }
         handleClear={() => setPrintUrl('')}
       />
       <SystemDialog

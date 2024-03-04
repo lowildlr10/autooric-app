@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { ICategories, IParticularsSubContentProps } from '@/Interfaces'
-import { Autocomplete, InputAdornment, TextField, createFilterOptions } from '@mui/material'
+import {
+  Autocomplete,
+  InputAdornment,
+  TextField,
+  createFilterOptions,
+} from '@mui/material'
 import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
@@ -19,8 +24,9 @@ const Particulars = ({
   const [loading, setLoading] = useState<boolean>(true)
   const categoryValue = useMemo(
     () =>
-      formattedCategories.find((category: any) => category.id === formData?.category_id) ??
-      formData?.category_id,
+      formattedCategories.find(
+        (category: any) => category.id === formData?.category_id
+      ) ?? formData?.category_id,
     [formattedCategories, formData?.category_id]
   )
 
@@ -165,9 +171,7 @@ const Particulars = ({
         value={formData?.default_amount ?? ''}
         InputProps={{
           type: 'number',
-          startAdornment: (
-            <InputAdornment position='start'>₱</InputAdornment>
-          ),
+          startAdornment: <InputAdornment position='start'>₱</InputAdornment>,
         }}
         onChange={(e) => handleInputChange('default_amount', e.target.value)}
       />

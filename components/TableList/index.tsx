@@ -39,24 +39,23 @@ const TableList = ({
   handleSearchChange,
   handlePageChange,
   handleShowDetails,
-  handleShowCreate
+  handleShowCreate,
 }: ITableListProps) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [open, setOpen] = useState<any>({})
-  
+
   useEffect(() => {
     setOpen({
       ...open,
-      [`dd_${rows[0]?.id}`]: true
+      [`dd_${rows[0]?.id}`]: true,
     })
-    
   }, [rows])
-  
+
   const handleToggleDropdown = (dropdownName: string) => {
     setOpen({
       ...open,
-      [dropdownName]: !!open[dropdownName] === true ? false : true
+      [dropdownName]: !!open[dropdownName] === true ? false : true,
     })
   }
 
@@ -82,9 +81,9 @@ const TableList = ({
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ 
+                  style={{
                     minWidth: column.minWidth,
-                    width: column.minWidth 
+                    width: column.minWidth,
                   }}
                 >
                   {column.label}
@@ -126,36 +125,46 @@ const TableList = ({
                             <TableCell
                               key={`${row.id}-${column.id}`}
                               align={column.align}
-                              sx={{ 
+                              sx={{
                                 cursor: 'pointer',
                                 color,
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
                               }}
                             >
                               <IconButton
-                                aria-label="expand row"
-                                size="small"
-                                onClick={() => handleToggleDropdown(`dd_${row.id}`)}
+                                aria-label='expand row'
+                                size='small'
+                                onClick={() =>
+                                  handleToggleDropdown(`dd_${row.id}`)
+                                }
                               >
-                                {open[`dd_${row.id}`] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                {open[`dd_${row.id}`] ? (
+                                  <KeyboardArrowUpIcon />
+                                ) : (
+                                  <KeyboardArrowDownIcon />
+                                )}
                               </IconButton>
                             </TableCell>
                           ) : (
                             <TableCell
                               key={`${row.id}-${column.id}`}
                               align={column.align}
-                              sx={{ 
+                              sx={{
                                 cursor: 'pointer',
                                 color,
                                 fontWeight: !!subColumns ? 'bold' : 'normal',
-                                fontSize: !!subColumns ? '1rem' : 'initial'
+                                fontSize: !!subColumns ? '1rem' : 'initial',
                               }}
                               onClick={() =>
-                                !!subColumns === true ? handleToggleDropdown(`dd_${row.id}`) :
-                                  (handleShowDetails && handleShowDetails(row?.id ?? ''))
+                                !!subColumns === true
+                                  ? handleToggleDropdown(`dd_${row.id}`)
+                                  : handleShowDetails &&
+                                    handleShowDetails(row?.id ?? '')
                               }
                             >
-                              {!!subColumns === true && <ClassIcon fontSize='small' />}
+                              {!!subColumns === true && (
+                                <ClassIcon fontSize='small' />
+                              )}
                               &nbsp;{value}
                             </TableCell>
                           )}
@@ -166,21 +175,26 @@ const TableList = ({
 
                   {!!subColumns === true && (
                     <TableRow key={`subrow_${row.id}`}>
-                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                        <Collapse in={open[`dd_${row.id}`]} timeout="auto" unmountOnExit>
-                          <Table
-                            size={isMobile ? 'small' : 'medium'}
-                          >
+                      <TableCell
+                        style={{ paddingBottom: 0, paddingTop: 0 }}
+                        colSpan={6}
+                      >
+                        <Collapse
+                          in={open[`dd_${row.id}`]}
+                          timeout='auto'
+                          unmountOnExit
+                        >
+                          <Table size={isMobile ? 'small' : 'medium'}>
                             <TableHead>
                               <TableRow>
                                 {subColumns.map((subColumn: any) => (
                                   <TableCell
                                     key={subColumn.id}
                                     align={subColumn.align}
-                                    style={{ 
+                                    style={{
                                       minWidth: subColumn.minWidth,
                                       width: subColumn.minWidth,
-                                      background: grey[100]
+                                      background: grey[100],
                                     }}
                                   >
                                     {subColumn.label}
@@ -189,11 +203,14 @@ const TableList = ({
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {(row?.sub_rows && row?.sub_rows?.length === 0) && (
+                              {row?.sub_rows && row?.sub_rows?.length === 0 && (
                                 <TableRow hover role='checkbox' tabIndex={-1}>
                                   <TableCell
                                     align='center'
-                                    sx={{ cursor: 'pointer', color: 'error.main' }}
+                                    sx={{
+                                      cursor: 'pointer',
+                                      color: 'error.main',
+                                    }}
                                     colSpan={subColumns?.length}
                                   >
                                     No data.
@@ -209,9 +226,10 @@ const TableList = ({
                                       <TableCell
                                         key={`${subRow.id}-${subColumn.id}`}
                                         align={subColumn.align}
-                                        sx={{ cursor: 'pointer'}}
+                                        sx={{ cursor: 'pointer' }}
                                         onClick={() =>
-                                          handleShowDetails && handleShowDetails(subRow?.id ?? '')
+                                          handleShowDetails &&
+                                          handleShowDetails(subRow?.id ?? '')
                                         }
                                       >
                                         {value}

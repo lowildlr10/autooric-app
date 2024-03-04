@@ -15,10 +15,7 @@ const UpdateContent = ({
   return (
     <>
       {content === 'users' && (
-        <User 
-          formData={formData}
-          handleInputChange={handleInputChange}
-        />
+        <User formData={formData} handleInputChange={handleInputChange} />
       )}
 
       {content === 'cateogories' && (
@@ -38,18 +35,15 @@ const UpdateContent = ({
       )}
 
       {content === 'discounts' && (
-        <Discount 
+        <Discount
           dialogType={dialogType}
-          formData={formData} 
-          handleInputChange={handleInputChange} 
+          formData={formData}
+          handleInputChange={handleInputChange}
         />
       )}
 
       {content === 'paper_sizes' && (
-        <PaperSize
-          formData={formData}
-          handleInputChange={handleInputChange}
-        />
+        <PaperSize formData={formData} handleInputChange={handleInputChange} />
       )}
     </>
   )
