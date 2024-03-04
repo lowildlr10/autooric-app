@@ -192,7 +192,7 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         required
         fullWidth
         id='last_name'
-        label='Middle Name'
+        label='Last Name'
         name='last_name'
         autoComplete=''
         size='small'
