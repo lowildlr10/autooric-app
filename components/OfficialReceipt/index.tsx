@@ -247,6 +247,7 @@ const OfficialReceipt = () => {
         return {
           id: or.id,
           accountable_personnel: `${or.accountable_personnel.first_name} ${or.accountable_personnel.last_name}`,
+          deposited_by: `${or?.deposited_by?.first_name} ${or?.deposited_by?.last_name}`,
           receipt_date: dayjs(or.receipt_date).format('MM/DD/YYYY'),
           cancelled_date:
             !!or.cancelled_date === true
@@ -276,6 +277,9 @@ const OfficialReceipt = () => {
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
             : 0,
           payment_mode: or.payment_mode,
+          drawee_bank: or?.payment_mode,
+          check_no: or?.check_no,
+          check_date: or?.check_date ? dayjs(or.check_date).format('MM/DD/YYYY') : '',
           is_cancelled: or.is_cancelled,
           status: or.is_cancelled
             ? 'Cancelled'
@@ -513,6 +517,28 @@ const OfficialReceipt = () => {
   // Handle create official receipt
   const handleCreateOr = (formData: IOfficialReceipt, print = false) => {
     setFormSaveLoading(true)
+
+    if (formData?.discount_id) {
+      const requiresCardNo = discounts?.find(
+        (discount: IDiscount) => discount.id === formData?.discount_id
+      )?.requires_card_no ?? false
+
+      if (requiresCardNo && !formData?.card_no) {
+        toast.error('ID/Card Number field is required.')
+        setFormSaveLoading(false)
+        return 
+      }
+    }
+
+    if (formData?.payment_mode === 'check' && (!formData?.drawee_bank || !formData?.check_no || !formData?.check_date)) {
+      if (!formData?.drawee_bank) toast.error('Drawee Bank field is required.')
+      if (!formData?.check_no) toast.error('Check Number field is required.')
+      if (!formData?.check_date) toast.error('Check Date field is required.')
+
+      setFormSaveLoading(false)
+      return
+    }
+
     if (accessToken && changedAmountDiscount === false) {
       API.createOfficialReceipt(accessToken, formData)
         .then((response) => {

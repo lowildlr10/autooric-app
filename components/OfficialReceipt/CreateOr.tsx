@@ -510,11 +510,12 @@ const CreateOrFields = ({
                     margin='normal'
                     fullWidth
                     id='card_no'
-                    label='ID/Card Number (Optional)'
+                    label='ID/Card Number'
                     name='card_no'
                     autoComplete=''
                     size='small'
                     focused
+                    required
                     value={formData?.card_no ?? ''}
                     onChange={(e) =>
                       handleInputChange &&
@@ -618,6 +619,116 @@ const CreateOrFields = ({
                   '& .MuiSvgIcon-root': { fontSize: '1rem' },
                 }}
               />
+              {formData?.payment_mode === 'check' && (
+                <Stack 
+                  gap={2} 
+                  p={2} 
+                  border={1}
+                  mb={2}
+                  borderColor='divider'
+                  borderRadius={3}
+                >
+                  <>
+                    {!readOnly ? (
+                      <>
+                        <TextField
+                          variant='outlined'
+                          margin='normal'
+                          required
+                          fullWidth
+                          id='drawee_bank'
+                          label='Drawee Bank'
+                          name='drawee_bank'
+                          autoComplete=''
+                          size='small'
+                          focused
+                          sx={{ m: 0 }}
+                          value={formData?.drawee_bank ?? ''}
+                          onChange={(e) =>
+                            handleInputChange &&
+                            handleInputChange(e.target.name, e.target.value)
+                          }
+                        />
+                        <TextField
+                          variant='outlined'
+                          margin='normal'
+                          required
+                          fullWidth
+                          id='check_no'
+                          label='Number'
+                          name='check_no'
+                          autoComplete=''
+                          size='small'
+                          focused
+                          sx={{ m: 0 }}
+                          value={formData?.check_no ?? ''}
+                          onChange={(e) =>
+                            handleInputChange &&
+                            handleInputChange(e.target.name, e.target.value)
+                          }
+                        />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            name='check_date'
+                            label='Check Date *'
+                            value={formData?.check_date ? dayjs(formData?.check_date) : undefined}
+                            slotProps={{
+                              textField: {
+                                size: 'small',
+                                focused: true,
+                              },
+                            }}
+                            onChange={(newValue) =>
+                              handleInputChange &&
+                              handleInputChange(
+                                'check_date',
+                                newValue ? newValue.format('YYYY-MM-DD') : ''
+                              )
+                            }
+                            sx={{ m: 0 }}
+                          />
+                        </LocalizationProvider>
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          variant='outlined'
+                          margin='normal'
+                          fullWidth
+                          label='Drawee Bank'
+                          size='small'
+                          focused
+                          value={formData?.drawee_bank}
+                          disabled
+                          sx={{ m: 0 }}
+                        />
+                        <TextField
+                          variant='outlined'
+                          margin='normal'
+                          fullWidth
+                          label='Number'
+                          size='small'
+                          focused
+                          value={formData?.check_no}
+                          disabled
+                          sx={{ m: 0 }}
+                        />
+                        <TextField
+                          variant='outlined'
+                          margin='normal'
+                          fullWidth
+                          label='Date'
+                          size='small'
+                          focused
+                          value={formData?.check_date}
+                          disabled
+                          sx={{ m: 0 }}
+                        />
+                      </>
+                    )}
+                  </>
+                </Stack>
+              )}
               <FormControlLabel
                 value='money_order'
                 control={<Radio size='small' />}
@@ -685,9 +796,14 @@ const ActionButtons = ({
       return (
         <>
           {formData?.deposited_date !== '' && (
-            <Typography variant='body2' fontWeight={500} color='secondary'>
-              Deposited on: {formData?.deposited_date}
-            </Typography>
+            <>
+              <Typography variant='body2' fontWeight={500} color='secondary'>
+                Deposited on: {formData?.deposited_date}
+              </Typography>
+              <Typography variant='body2' fontWeight={500} color='secondary'>
+                Deposited by: {formData?.deposited_by}
+              </Typography>
+            </>
           )}
 
           {formData?.cancelled_date !== '' && (

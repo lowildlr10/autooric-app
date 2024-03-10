@@ -13,8 +13,8 @@ import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 
 const defaultSearchData: ISearchData = {
-  from: '',
-  to: '',
+  from: undefined,
+  to: undefined,
   particulars: '*',
 }
 
@@ -57,8 +57,8 @@ const DateRangeParticulars = ({
     if (search && init) {
       const searchData = search.split('|')
       setSearchData({
-        from: searchData[0],
-        to: searchData[1],
+        from: searchData[0] === '*' ? undefined : searchData[0],
+        to: searchData[1] === '*' ? undefined : searchData[1],
         particulars: searchData[2],
       })
       setInit(false)
@@ -104,7 +104,7 @@ const DateRangeParticulars = ({
               clearable: true,
             },
           }}
-          value={dayjs(searchData.from) ?? dayjs()}
+          value={searchData.from ? dayjs(searchData.from) : undefined}
           onChange={(newValue) =>
             handleInputChange(
               'from',
@@ -131,7 +131,7 @@ const DateRangeParticulars = ({
               clearable: true,
             },
           }}
-          value={dayjs(searchData.to) ?? dayjs()}
+          value={searchData.to ? dayjs(searchData.to) : undefined}
           onChange={(newValue) =>
             handleInputChange(
               'to',

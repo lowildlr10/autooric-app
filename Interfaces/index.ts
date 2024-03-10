@@ -228,7 +228,9 @@ export interface IParticular {
 export interface IOfficialReceipt {
   id?: string
   accountable_personnel_id?: string
+  deposited_by_id?: string
   accountable_personnel?: string
+  deposited_by?: string
   receipt_date?: string
   deposited_date?: string
   cancelled_date?: string
@@ -247,6 +249,9 @@ export interface IOfficialReceipt {
   discount?: string
   discount_percent?: number
   payment_mode?: '' | 'cash' | 'check' | 'money_order'
+  drawee_bank?: string
+  check_no?: string
+  check_date?: string
   is_cancelled?: boolean
   status?: string
 }
@@ -587,7 +592,7 @@ export interface IDeposit {
 }
 
 export interface ISearchData {
-  from: string
-  to: string
+  from: string | undefined
+  to: string | undefined
   particulars: string
 }
