@@ -14,6 +14,7 @@ import {
   IDiscount,
   IPaperSize,
   DialogContent,
+  ISignatory,
 } from '@/Interfaces'
 import CardContainer from '@/components/CardContainer'
 import TabContainer, { CustomTabPanel } from '@/components/TabContainer'
@@ -24,6 +25,7 @@ import CategoryList from './Categories/CategoryList'
 import ParticularList from './Particulars/ParticularList'
 import DiscountList from './Discounts/DiscountList'
 import PaperSizeList from './PaperSizes/PaperSizeList'
+import SignatoryList from './Signatories/SignatoryList'
 
 const defaultCategoryFormData: ICategories = {
   id: '',
@@ -52,6 +54,30 @@ const defaultDiscountFormData: IDiscount = {
   status: '',
 }
 
+const defaultSignatoryFormData: ISignatory = {
+  id: '',
+  signatory_name: '',
+  report_module: [
+    {
+      report: 'cash_receipts_record',
+      position_id: '',
+      designation_id: '',
+      station_id: ''
+    }, {
+      report: 'report_collection',
+      position_id: '',
+      designation_id: '',
+      station_id: ''
+    }, {
+      report: 'summary_fees',
+      position_id: '',
+      designation_id: '',
+      station_id: ''
+    }
+  ],
+  is_active: true
+}
+
 const defaultPaperSizeFormData: IPaperSize = {
   id: '',
   paper_name: '',
@@ -69,12 +95,14 @@ const Library = () => {
   const [categoryListLoading, setCategoryListLoading] = useState(false)
   const [particularListLoading, setParticularListLoading] = useState(false)
   const [discountListLoading, setDiscountListLoading] = useState(false)
+  const [signatoryListLoading, setSignatoryListLoading] = useState(false)
   const [paperSizeListLoading, setPaperSizeListLoading] = useState(false)
   const [formSaveLoading, setFormSaveLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [categoryListData, setCategoryListData] = useState<any>()
   const [particularListData, setParticularListData] = useState<any>()
   const [discountListData, setDiscountListData] = useState<any>()
+  const [signatoryListData, setSignatoryListData] = useState<any>()
   const [paperSizeListData, setPaperSizeListData] = useState<any>()
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
@@ -101,6 +129,9 @@ const Library = () => {
   const [discountFormData, setDiscountFormData] = useState<IDiscount>(
     defaultDiscountFormData
   )
+  const [signatoryFormData, setSignatoryFormData] = useState<ISignatory>(
+    defaultSignatoryFormData
+  )
   const [paperSizeFormData, setPaperSizeFormData] = useState<IPaperSize>(
     defaultPaperSizeFormData
   )
@@ -113,6 +144,7 @@ const Library = () => {
       categoryListLoading ||
       particularListLoading ||
       discountListLoading ||
+      signatoryListLoading ||
       paperSizeListLoading ||
       formSaveLoading ||
       deleteLoading
@@ -127,6 +159,7 @@ const Library = () => {
     categoryListLoading,
     particularListLoading,
     discountListLoading,
+    signatoryListLoading,
     paperSizeListLoading,
     formSaveLoading,
     deleteLoading,
@@ -204,6 +237,10 @@ const Library = () => {
         setCurrentCreateDialog('create_signatories')
         setCurrentUpdateDialog('update_signatories')
         setCurrentDeleteDialog('delete_signatories')
+
+        if (accessToken) {
+          fetchSignatories()
+        }
         break
       case 4:
         setCurrentCreateTitle('Create Paper Size')
@@ -251,7 +288,13 @@ const Library = () => {
         setCurrentFormData(discountFormData)
         break
       case 3:
-        setCurrentUpdateTitle('Signatory Details')
+        setCurrentUpdateTitle(
+          `Signatory Details (${signatoryFormData?.signatory_name})`
+        )
+        setCurrentDeleteTitle(
+          `Delete Discount (${signatoryFormData?.signatory_name})`
+        )
+        setCurrentFormData(signatoryFormData)
         break
       case 4:
         setCurrentUpdateTitle(
@@ -270,6 +313,7 @@ const Library = () => {
     categoryFormData,
     particularFormData,
     discountFormData,
+    signatoryFormData,
     paperSizeFormData,
   ])
 
@@ -409,6 +453,39 @@ const Library = () => {
     }
   }
 
+  // Fetch signatories
+  const fetchSignatories = (url?: string) => {
+    setSignatoryListLoading(true)
+    if (accessToken) {
+      const errorMessage =
+        'An error occurred while fetching lists. Please try again.'
+
+      if (url) {
+        API.getSignatoriesByUrl(accessToken, url)
+          .then((response) => {
+            const res = response?.data.data
+            setSignatoryListData(res)
+            setSignatoryListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setSignatoryListLoading(false)
+          })
+      } else {
+        API.getPaginatedSignatories(accessToken)
+          .then((response) => {
+            const res = response?.data.data
+            setSignatoryListData(res)
+            setSignatoryListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setSignatoryListLoading(false)
+          })
+      }
+    }
+  }
+
   // Fetch paper sizes
   const fetchPaperSizes = (url?: string) => {
     setPaperSizeListLoading(true)
@@ -453,6 +530,9 @@ const Library = () => {
       case 2:
         fetchDiscounts(url)
         break
+      case 3:
+        fetchSignatories(url)
+        break
       case 4:
         fetchPaperSizes(url)
         break
@@ -495,6 +575,13 @@ const Library = () => {
         handleDialogOpen('update_discounts')
         break
       case 3:
+        setSignatoryFormData({
+          ...signatoryFormData,
+          id: details.id,
+          signatory_name: details.signatory_name,
+          report_module: details.report_module,
+          is_active: details.is_active,
+        })
         handleDialogOpen('update_signatories')
         break
       case 4:
@@ -555,6 +642,13 @@ const Library = () => {
     })
   }
 
+  const handleInputChangeSignatories = (
+    input_name: string,
+    value: string | number | boolean | any[] | null
+  ) => {
+    setSignatoryFormData({ ...signatoryFormData, [input_name]: value })
+  }
+
   const handleInputChangePaperSizes = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -566,7 +660,7 @@ const Library = () => {
 
   //Handle create records
   const handleCreateRecord = (
-    formData: ICategories | IParticular | IDiscount | IPaperSize
+    formData: ICategories | IParticular | IDiscount | ISignatory | IPaperSize
   ) => {
     setFormSaveLoading(true)
 
@@ -636,6 +730,25 @@ const Library = () => {
             })
           break
         case 3:
+          API.createSignatory(accessToken, formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setSignatoryFormData(defaultSignatoryFormData)
+              fetchSignatories()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
           break
         case 4:
           API.createPaperSizes(accessToken, formData)
@@ -675,7 +788,7 @@ const Library = () => {
 
   // Handle update records
   const handleUpdateRecord = (
-    formData: ICategories | IParticular | IDiscount | IPaperSize
+    formData: ICategories | IParticular | IDiscount | ISignatory | IPaperSize
   ) => {
     setFormSaveLoading(true)
 
@@ -745,6 +858,25 @@ const Library = () => {
             })
           break
         case 3:
+          API.updateSignatory(accessToken, formData?.id ?? '', formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setSignatoryFormData(defaultSignatoryFormData)
+              fetchSignatories()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
           break
         case 4:
           API.updatePaperSize(accessToken, formData?.id ?? '', formData)
@@ -862,6 +994,30 @@ const Library = () => {
             })
           break
         case 3:
+          API.deleteSignatory(accessToken, id)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setDeleteLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setDeleteLoading(false)
+              setSignatoryFormData(defaultSignatoryFormData)
+              setDialogOpen({
+                create_signatories: false,
+                update_signatories: false,
+                delete_signatories: false,
+              })
+              fetchSignatories()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setDeleteLoading(false)
+            })
           break
         case 4:
           API.deletePaperSize(accessToken, id)
@@ -1017,6 +1173,39 @@ const Library = () => {
           handleShowCreate={() => handleDialogOpen('create_discounts')}
         />
       )
+    } else if (index === 3) {
+      const rows = signatoryListData?.data?.map((signatory: any) => {
+        return {
+          id: signatory.id,
+          signatory_name: signatory?.signatory_name,
+          report_module: JSON.parse(signatory?.report_module),
+          is_active: signatory?.is_active,
+          status: signatory?.is_active ? 'Active' : 'Inactive',
+        }
+      })
+      const currentPage = signatoryListData?.current_page
+      const nextPageUrl = signatoryListData?.next_page_url
+      const prevPageUrl = signatoryListData?.prev_page_url
+      const from = signatoryListData?.from
+      const to = signatoryListData?.to
+      const total = signatoryListData?.total
+      const links = signatoryListData?.links
+
+      return (
+        <SignatoryList
+          rows={rows ?? []}
+          currentPage={currentPage}
+          nextPageUrl={nextPageUrl}
+          prevPageUrl={prevPageUrl}
+          from={from}
+          to={to}
+          total={total}
+          links={links}
+          handlePageChange={handlePageChange}
+          handleShowDetails={handleShowDetails}
+          handleShowCreate={() => handleDialogOpen('create_signatories')}
+        />
+      )
     } else if (index === 4) {
       const rows = paperSizeListData?.data?.map((paper: any) => {
         return {
@@ -1065,6 +1254,9 @@ const Library = () => {
       case 2:
         setDiscountFormData(defaultDiscountFormData)
         break
+      case 3:
+        setSignatoryFormData(defaultSignatoryFormData)
+        break
       case 4:
         setPaperSizeFormData(defaultPaperSizeFormData)
         break
@@ -1083,6 +1275,9 @@ const Library = () => {
         break
       case 2:
         handleInputChangeDiscounts(param1)
+        break
+      case 3:
+        handleInputChangeSignatories(param1, param2)
         break
       case 4:
         handleInputChangePaperSizes(param1)

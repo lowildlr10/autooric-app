@@ -151,6 +151,33 @@ export default class API {
     })
   }
 
+  // Fetch all signatories
+  static async getSignatories(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/signatories`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all signatories
+  static async getPaginatedSignatories(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/signatories-paginated`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all signatories with URL
+  static async getSignatoriesByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // Fetch all paper sizes
   static async getPaperSizes(accessToken: string) {
     return axios.get(`${API.API_BASE_URL}/api/v1/paper-sizes`, {
@@ -281,6 +308,15 @@ export default class API {
     })
   }
 
+  // Create signatories
+  static async createSignatory(accessToken: string, formData: any) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/signatories`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // create paper sizes
   static async createPaperSizes(accessToken: string, formData: any) {
     return axios.post(`${API.API_BASE_URL}/api/v1/paper-sizes`, formData, {
@@ -367,6 +403,23 @@ export default class API {
     )
   }
 
+  // Update signatories
+  static async updateSignatory(
+    accessToken: string,
+    discountId: string,
+    formData: any
+  ) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/signatories/${discountId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
   // Update paper sizes
   static async updatePaperSize(
     accessToken: string,
@@ -420,6 +473,15 @@ export default class API {
   // Delete discounts
   static async deleteDisount(accessToken: string, discountId: string) {
     return axios.delete(`${API.API_BASE_URL}/api/v1/discounts/${discountId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Delete signatories
+  static async deleteSignatory(accessToken: string, discountId: string) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/signatories/${discountId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

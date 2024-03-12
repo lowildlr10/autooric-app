@@ -106,6 +106,12 @@ export interface IDiscountsSubContentProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
+export interface ISignatoriesSubContentProps {
+  formData: ISignatory
+  dialogType: DialogType
+  handleInputChange: (input_name: string, value: string | number | any[] | boolean | null) => void
+}
+
 export interface IPaperSizesSubContentProps {
   formData: IPaperSize
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -275,6 +281,23 @@ export interface IUser {
   is_active?: boolean
 }
 
+export type ReportTypes = 'cash_receipts_record' | 'report_collection' | 'summary_fees'
+
+export interface IReportModule {
+  report: ReportTypes,
+  position_id: string,
+  designation_id: string,
+  station_id: string
+}
+
+export interface ISignatory {
+  id?: string
+  signatory_name?: string
+  report_module?: IReportModule[]
+  is_active?: boolean
+  status?: string
+}
+
 export interface IPaperSize {
   id?: string
   paper_name?: string
@@ -417,6 +440,13 @@ export interface IDiscountListColumn {
   align?: 'right' | 'center' | 'left'
 }
 
+export interface ISignatoryListColumn {
+  id: 'signatory_name' | 'status'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
 export interface IPaperSizeListColumn {
   id: 'paper_name' | 'width_str' | 'height_str'
   label: string
@@ -500,6 +530,20 @@ export interface IDiscountListProps {
   total: number
   links: ITableListLinks[]
   handleShowDetails: (details: IDiscount) => void
+  handleShowCreate: () => void
+  handlePageChange: (url: string) => void
+}
+
+export interface ISignatoryListProps {
+  rows: ISignatory[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handleShowDetails: (details: ISignatory) => void
   handleShowCreate: () => void
   handlePageChange: (url: string) => void
 }

@@ -5,6 +5,7 @@ import Discount from './SubContents/Discount'
 import User from './SubContents/User'
 import Category from './SubContents/Category'
 import PaperSize from './SubContents/PaperSize'
+import Signatory from './SubContents/Signatory'
 
 const UpdateContent = ({
   content,
@@ -36,6 +37,14 @@ const UpdateContent = ({
 
       {content === 'discounts' && (
         <Discount
+          dialogType={dialogType}
+          formData={formData}
+          handleInputChange={handleInputChange}
+        />
+      )}
+
+      {content === 'signatories' && (
+        <Signatory
           dialogType={dialogType}
           formData={formData}
           handleInputChange={handleInputChange}
