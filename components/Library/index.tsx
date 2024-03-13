@@ -59,12 +59,20 @@ const defaultSignatoryFormData: ISignatory = {
   signatory_name: '',
   report_module: [
     {
-      report: 'cash_receipts_record',
+      report: 'crr_certified_correct',
+      is_enabled: false,
       position_id: '',
       designation_id: '',
       station_id: ''
     }, {
-      report: 'report_collection',
+      report: 'roc_certified_correct',
+      is_enabled: false,
+      position_id: '',
+      designation_id: '',
+      station_id: ''
+    }, {
+      report: 'roc_noted_by',
+      is_enabled: false,
       position_id: '',
       designation_id: '',
       station_id: ''

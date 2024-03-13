@@ -281,10 +281,11 @@ export interface IUser {
   is_active?: boolean
 }
 
-export type ReportTypes = 'cash_receipts_record' | 'report_collection'
+export type SignatoryTypes = 'crr_certified_correct' | 'roc_certified_correct' | 'roc_noted_by'
 
 export interface IReportModule {
-  report: ReportTypes,
+  report: SignatoryTypes,
+  is_enabled: boolean
   position_id: string,
   designation_id: string,
   station_id: string

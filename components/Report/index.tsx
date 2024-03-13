@@ -138,6 +138,17 @@ const Report = () => {
         handleClose={() => handleDialogClose('logout')}
         handleLogout={handleLogout}
       />
+      <SystemDialog
+        open={dialogOpen.print ?? false}
+        title='Print Official Receipt'
+        dialogType='print'
+        //printUrl={printUrl}
+        handleClose={() => handleDialogClose('print')}
+        // handleDownload={() =>
+        //   handlePrintDownloadOr(tempPrintId, paperSize, false)
+        // }
+        // handleClear={() => setPrintUrl('')}
+      />
     </MiniVariantDrawer>
   )
 }
