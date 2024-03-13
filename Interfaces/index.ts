@@ -281,7 +281,7 @@ export interface IUser {
   is_active?: boolean
 }
 
-export type ReportTypes = 'cash_receipts_record' | 'report_collection' | 'summary_fees'
+export type ReportTypes = 'cash_receipts_record' | 'report_collection'
 
 export interface IReportModule {
   report: ReportTypes,
@@ -339,6 +339,9 @@ export interface ICreateOrProps {
   computingDiscount?: boolean
   formData: IOfficialReceipt
   readOnly?: boolean
+  payorLoading?: boolean
+  particularLoading?: boolean
+  discountLoading?: boolean
   handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
   handleInputChange?: (
     input_name: string,
@@ -374,6 +377,9 @@ export interface ICreateOrFieldsProps {
   computingDiscount?: boolean
   formData: IOfficialReceipt
   readOnly?: boolean
+  payorLoading?: boolean
+  particularLoading?: boolean
+  discountLoading?: boolean
   handleInputChange?: (
     input_name: string,
     value: string | number | null

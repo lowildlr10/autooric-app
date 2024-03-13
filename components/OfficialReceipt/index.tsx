@@ -160,9 +160,6 @@ const OfficialReceipt = () => {
   useEffect(() => {
     if (
       userLoading ||
-      payorLoading ||
-      particularLoading ||
-      discountLoading ||
       orListLoading ||
       paperSizeLoading ||
       logoutLoading ||
@@ -175,9 +172,6 @@ const OfficialReceipt = () => {
     }
   }, [
     userLoading,
-    payorLoading,
-    particularLoading,
-    discountLoading,
     orListLoading,
     paperSizeLoading,
     logoutLoading,
@@ -239,6 +233,9 @@ const OfficialReceipt = () => {
           fetchParticular={() => fetchParticulars()}
           fetchDiscount={() => fetchDiscounts()}
           handleDialogOpen={(dialogType) => handleDialogOpen(dialogType)}
+          payorLoading={payorLoading}
+          particularLoading={particularLoading}
+          discountLoading={discountLoading}
         />
       )
 

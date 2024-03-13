@@ -68,11 +68,6 @@ const defaultSignatoryFormData: ISignatory = {
       position_id: '',
       designation_id: '',
       station_id: ''
-    }, {
-      report: 'summary_fees',
-      position_id: '',
-      designation_id: '',
-      station_id: ''
     }
   ],
   is_active: true

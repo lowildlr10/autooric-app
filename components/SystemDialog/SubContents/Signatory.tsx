@@ -46,12 +46,6 @@ const Signatory = ({
     designation_id: '',
     station_id: ''
   })
-  const [sofReportData, setSofReportData] = useState<IReportModule>({
-    report: 'summary_fees',
-    position_id: '',
-    designation_id: '',
-    station_id: ''
-  })
   const [formattedPositions, setFormattedPositions] = useState<any>([])
   const [formattedDesignations, setFormattedDesignations] = useState<any>([])
   const [formattedStations, setFormattedStations] = useState<any>([])
@@ -67,10 +61,6 @@ const Signatory = ({
     {
       id: 'report_collection',
       label: 'Report of Collection'
-    },
-    {
-      id: 'summary_fees',
-      label: 'Summary of Fees'
     }
   ])
   const positionCrrValue = useMemo(
@@ -87,13 +77,6 @@ const Signatory = ({
       ) ?? rocReportData?.position_id,
     [formattedPositions, rocReportData]
   )
-  const positionSofValue = useMemo(
-    () =>
-      formattedPositions.find(
-        (position: IPositions) => position.id === sofReportData?.position_id
-      ) ?? sofReportData?.position_id,
-    [formattedPositions, sofReportData]
-  )
   const designationCrrValue = useMemo(
     () =>
       formattedDesignations.find(
@@ -108,13 +91,6 @@ const Signatory = ({
       ) ?? rocReportData?.designation_id,
     [formattedDesignations, rocReportData]
   )
-  const designationSofValue = useMemo(
-    () =>
-      formattedDesignations.find(
-        (designation: IDesignations) => designation.id === sofReportData?.designation_id
-      ) ?? sofReportData?.designation_id,
-    [formattedDesignations, sofReportData]
-  )
   const stationCrrValue = useMemo(
     () =>
       formattedStations.find(
@@ -128,13 +104,6 @@ const Signatory = ({
         (station: IStations) => station.id === rocReportData?.station_id
       ) ?? rocReportData?.station_id,
     [formattedStations, rocReportData]
-  )
-  const stationSofValue = useMemo(
-    () =>
-      formattedStations.find(
-        (station: IStations) => station.id === sofReportData?.station_id
-      ) ?? sofReportData?.station_id,
-    [formattedStations, sofReportData]
   )
 
   useEffect(() => {
@@ -204,8 +173,6 @@ const Signatory = ({
         setCrrReportData(report)
       } else if (report.report === 'report_collection') {
         setRocReportData(report)
-      } else if (report.report === 'summary_fees') {
-        setSofReportData(report)
       }
     })
   }, [formData])
@@ -353,10 +320,6 @@ const Signatory = ({
             positionValue = positionRocValue
             designationValue = designationRocValue
             stationValue = stationRocValue
-          } else if (reportInput.id === 'summary_fees') {
-            positionValue = positionSofValue
-            designationValue = designationSofValue
-            stationValue = stationSofValue
           }
 
           return (

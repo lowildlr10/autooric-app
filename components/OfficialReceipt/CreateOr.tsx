@@ -41,6 +41,9 @@ const CreateOrFields = ({
   fetchPayor,
   fetchParticular,
   fetchDiscount,
+  payorLoading,
+  particularLoading,
+  discountLoading
 }: ICreateOrFieldsProps) => {
   const [formattedPayors, setFormattedPayors] = useState<any>([])
   const [formattedParticulars, setFormattedParticulars] = useState<any>([])
@@ -207,7 +210,7 @@ const CreateOrFields = ({
             renderInput={(params) => (
               <TextField
                 {...params}
-                label='Payor'
+                label={`Payor${payorLoading ? ' (fetching)' : ''}`}
                 name='payor_id'
                 id='payor_id'
                 size='small'
@@ -299,7 +302,7 @@ const CreateOrFields = ({
                     {...params}
                     name='nature_collection_id'
                     id='nature_collection_id'
-                    label='Nature of Collection'
+                    label={`Nature of Collection${particularLoading ? ' (fetching)' : ''}`}
                     size='small'
                     focused
                     required
@@ -440,7 +443,7 @@ const CreateOrFields = ({
                     {...params}
                     name='discount_id'
                     id='discount_id'
-                    label='Discount'
+                    label={`Discount${discountLoading ? ' (fetching)' : ''}`}
                     size='small'
                     focused
                     fullWidth
@@ -927,6 +930,9 @@ const CreateOr = ({
   computingDiscount,
   formData,
   readOnly,
+  payorLoading,
+  particularLoading,
+  discountLoading,
   handleCreate,
   handleInputChange,
   handlePrint,
@@ -961,6 +967,9 @@ const CreateOr = ({
             computingDiscount={computingDiscount}
             formData={formData}
             readOnly={readOnly}
+            payorLoading={payorLoading}
+            particularLoading={particularLoading}
+            discountLoading={discountLoading}
             handleDialogOpen={handleDialogOpen}
             fetchDiscount={fetchDiscount}
             fetchParticular={fetchParticular}
