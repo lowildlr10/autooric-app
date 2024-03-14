@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { ICashReceiptsRecordProps, IPaperSize, IParticular, ISignatory } from '@/Interfaces'
+import React from 'react'
+import { IPaperSize, IParticular, IPrintEReceiptsProps } from '@/Interfaces'
 import { Button, Checkbox, Divider, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material'
 import DateRangePicker from '@/components/Common/DateRangePicker'
 
@@ -13,15 +13,14 @@ const MenuProps = {
   },
 }
 
-const CashReceiptsRecord = ({
+const PrintEReceipts = ({
   particulars,
-  signatories,
   paperSizes,
   inputData,
   handleInputChange,
   handlePrint
-}: ICashReceiptsRecordProps) => {
-
+}: IPrintEReceiptsProps) => {
+  
   return (
     <Stack 
       justifyItems='center' 
@@ -87,37 +86,6 @@ const CashReceiptsRecord = ({
           </Select>
         </FormControl>
         <FormControl required focused>
-          <InputLabel id="select_certified_corrected_by-label">Certified Corrected By</InputLabel>
-          <Select
-            labelId='select_certified_corrected_by-label'
-            id='select_certified_corrected_by'
-            label='Certified Corrected By'
-            autoFocus
-            size='small'
-            required
-            value={inputData.certified_correct_id}
-            onChange={(e: SelectChangeEvent<typeof inputData.certified_correct_id>) => {
-              handleInputChange && handleInputChange(
-                'certified_correct_id', 
-                e.target.value
-              )
-            }}
-            MenuProps={MenuProps}
-          >
-            {signatories?.map((signatory: ISignatory) => {
-              const isEnabled = signatory.report_module?.some(
-                report => report.is_enabled && report.report === 'crr_certified_correct'
-              )
-
-              if (isEnabled) return (
-                <MenuItem key={signatory.id} value={signatory.id}>
-                  <ListItemText primary={signatory.signatory_name} />
-                </MenuItem>
-              )
-            })}
-          </Select>
-        </FormControl>
-        <FormControl required focused>
           <InputLabel id="select_paper_size-label">Paper Size</InputLabel>
           <Select
             labelId='select_paper_size-label'
@@ -153,4 +121,4 @@ const CashReceiptsRecord = ({
   )
 }
 
-export default CashReceiptsRecord
+export default PrintEReceipts

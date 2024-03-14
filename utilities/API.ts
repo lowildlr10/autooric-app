@@ -223,6 +223,100 @@ export default class API {
     )
   }
 
+  // Fetch printable cash receipts record
+  static async getPrintableCrr(
+    accessToken: string,
+    from: string,
+    to: string,
+    particulars: string,
+    certifiedCorrectedBy: string,
+    paperSizeId: string,
+  ) {
+    return axios.get(
+      `${API.API_BASE_URL}/api/v1/print/cash-receipts-record?from=${from}` + 
+      `&to=${to}` +
+      `&particulars=${particulars}` +
+      `&certified_corrected_by=${certifiedCorrectedBy}` +
+      `&paper_size_id=${paperSizeId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    )
+  }
+
+   // Fetch printable report of collection
+  static async getPrintableRoc(
+    accessToken: string,
+    from: string,
+    to: string,
+    categories: string,
+    certifiedCorrectedBy: string,
+    notedBy: string,
+    paperSizeId: string,
+  ) {
+    return axios.get(
+      `${API.API_BASE_URL}/api/v1/print/report-collection?from=${from}` + 
+      `&to=${to}` +
+      `&categories=${categories}` +
+      `&certified_corrected_by=${certifiedCorrectedBy}` +
+      `&noted_by=${notedBy}` +
+      `&paper_size_id=${paperSizeId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    )
+  }
+
+   // Fetch printable summary of fees
+  static async getPrintableSof(
+    accessToken: string,
+    from: string,
+    to: string,
+    categories: string,
+    paperSizeId: string,
+  ) {
+    return axios.get(
+      `${API.API_BASE_URL}/api/v1/print/summary-fees?from=${from}` + 
+      `&to=${to}` +
+      `&categories=${categories}` +
+      `&paper_size_id=${paperSizeId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    )
+  }
+
+   // Fetch printable e-receipts
+  static async getPrintableEReceipts(
+    accessToken: string,
+    from: string,
+    to: string,
+    particulars: string,
+    paperSizeId: string,
+  ) {
+    return axios.get(
+      `${API.API_BASE_URL}/api/v1/print/e-receipts?from=${from}` + 
+      `&to=${to}` +
+      `&particulars=${particulars}` +
+      `&paper_size_id=${paperSizeId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    )
+  }
+
   // Fetch all official receipts
   static async getUsers(accessToken: string) {
     return axios.get(`${API.API_BASE_URL}/api/v1/user-management/users`, {

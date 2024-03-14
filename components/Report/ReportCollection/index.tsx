@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import { ICashReceiptsRecordProps, IPaperSize, IParticular, ISignatory } from '@/Interfaces'
-import { Button, Checkbox, Divider, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material'
+import React from 'react'
+import { ICategories, IPaperSize, IReportCollectionProps, ISignatory } from '@/Interfaces'
+import { Button, Checkbox, Divider, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack } from '@mui/material'
 import DateRangePicker from '@/components/Common/DateRangePicker'
 
 const ITEM_HEIGHT = 48
@@ -13,14 +13,14 @@ const MenuProps = {
   },
 }
 
-const CashReceiptsRecord = ({
-  particulars,
+const ReportCollection = ({
+  categories,
   signatories,
   paperSizes,
   inputData,
   handleInputChange,
   handlePrint
-}: ICashReceiptsRecordProps) => {
+}: IReportCollectionProps) => {
 
   return (
     <Stack 
@@ -40,48 +40,48 @@ const CashReceiptsRecord = ({
         />
         <Divider />
         <FormControl required focused>
-          <InputLabel id="select_particulars-label">Nature of Collection</InputLabel>
+          <InputLabel id="select_categories-label">Categories</InputLabel>
           <Select
-            labelId='select_particulars-label'
-            id='select_particulars'
-            label='Nature of Collection'
+            labelId='select_categories-label'
+            id='select_categories'
+            label='Categories'
             autoFocus
             size='small'
             multiple
             required
             renderValue={(selected) => {
               const selectedNames = selected?.map(sel => {
-                const particular = particulars?.find(
-                  (par: IParticular) => par.id === sel
+                const category = categories?.find(
+                  (par: ICategories) => par.id === sel
                 )
 
-                if (particular?.particular_name) return particular.particular_name
+                if (category?.category_name) return category.category_name
               })
               return selectedNames.join(', ')
             }}
-            value={inputData.particulars_ids}
-            onChange={(e: SelectChangeEvent<typeof inputData.particulars_ids>) => {
+            value={inputData.category_ids}
+            onChange={(e: SelectChangeEvent<typeof inputData.category_ids>) => {
               const {
                 target: { value },
               } = e
               handleInputChange && handleInputChange(
-                'particulars_ids', 
+                'category_ids', 
                 typeof value === 'string' ? value.split(',') : value
               )
             }}
             MenuProps={MenuProps}
           >
-            {particulars?.map((particular: IParticular) => (
-              <MenuItem key={particular.id} value={particular.id}>
+            {categories?.map((category: ICategories) => (
+              <MenuItem key={category.id} value={category.id}>
                 <Checkbox 
                   size='small' 
                   checked={
                     inputData
-                      .particulars_ids
-                      .indexOf(particular.id ?? '') > -1
+                      .category_ids
+                      .indexOf(category.id ?? '') > -1
                     } 
                   />
-                <ListItemText primary={particular.particular_name} />
+                <ListItemText primary={category.category_name} />
               </MenuItem>
             ))}
           </Select>
@@ -106,7 +106,38 @@ const CashReceiptsRecord = ({
           >
             {signatories?.map((signatory: ISignatory) => {
               const isEnabled = signatory.report_module?.some(
-                report => report.is_enabled && report.report === 'crr_certified_correct'
+                report => report.is_enabled && report.report === 'roc_certified_correct'
+              )
+
+              if (isEnabled) return (
+                <MenuItem key={signatory.id} value={signatory.id}>
+                  <ListItemText primary={signatory.signatory_name} />
+                </MenuItem>
+              )
+            })}
+          </Select>
+        </FormControl>
+        <FormControl required focused>
+          <InputLabel id="select_noted_by-label">Noted By</InputLabel>
+          <Select
+            labelId='select_noted_by-label'
+            id='select_noted_by'
+            label='Noted By'
+            autoFocus
+            size='small'
+            required
+            value={inputData.noted_by_id}
+            onChange={(e: SelectChangeEvent<typeof inputData.noted_by_id>) => {
+              handleInputChange && handleInputChange(
+                'noted_by_id', 
+                e.target.value
+              )
+            }}
+            MenuProps={MenuProps}
+          >
+            {signatories?.map((signatory: ISignatory) => {
+              const isEnabled = signatory.report_module?.some(
+                report => report.is_enabled && report.report === 'roc_noted_by'
               )
 
               if (isEnabled) return (
@@ -153,4 +184,4 @@ const CashReceiptsRecord = ({
   )
 }
 
-export default CashReceiptsRecord
+export default ReportCollection

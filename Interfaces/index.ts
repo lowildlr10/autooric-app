@@ -183,6 +183,37 @@ export interface ICardContainerProps {
   children?: React.ReactNode
 }
 
+export interface ICashReceiptsRecord {
+  from: string | undefined
+  to: string | undefined
+  particulars_ids: string[]
+  certified_correct_id: string
+  paper_size_id: string
+}
+
+export interface IReportCollection {
+  from: string | undefined
+  to: string | undefined
+  category_ids: string[]
+  certified_correct_id: string
+  noted_by_id: string
+  paper_size_id: string
+}
+
+export interface ISummaryFees {
+  from: string | undefined
+  to: string | undefined
+  category_ids: string[]
+  paper_size_id: string
+}
+
+export interface IPrintEReceipts {
+  from: string | undefined
+  to: string | undefined
+  particulars_ids: string[]
+  paper_size_id: string
+}
+
 export interface IPositions {
   id?: string
   position_name?: string
@@ -330,6 +361,61 @@ export interface ITabPanelProps {
   children?: React.ReactNode
   index: number
   value: number
+}
+
+export interface IDateRangePicker {
+  from: string | undefined
+  to: string | undefined
+  handleChange?: (
+    input_name: string,
+    value: string | string[] | undefined | null
+  ) => void
+}
+
+export interface ICashReceiptsRecordProps {
+  particulars: IParticular[]
+  signatories: ISignatory[]
+  paperSizes: IPaperSize[]
+  inputData: ICashReceiptsRecord
+  handleInputChange?: (
+    input_name: string,
+    value: string | string[] | undefined | null
+  ) => void
+  handlePrint?: () => void
+}
+
+export interface IReportCollectionProps {
+  categories: ICategories[]
+  signatories: ISignatory[]
+  paperSizes: IPaperSize[]
+  inputData: IReportCollection
+  handleInputChange?: (
+    input_name: string,
+    value: string | string[] | undefined | null
+  ) => void
+  handlePrint?: () => void
+}
+
+export interface ISummaryFeesProps {
+  categories: ICategories[]
+  paperSizes: IPaperSize[]
+  inputData: ISummaryFees
+  handleInputChange?: (
+    input_name: string,
+    value: string | string[] | undefined | null
+  ) => void
+  handlePrint?: () => void
+}
+
+export interface IPrintEReceiptsProps {
+  particulars: IParticular[]
+  paperSizes: IPaperSize[]
+  inputData: IPrintEReceipts
+  handleInputChange?: (
+    input_name: string,
+    value: string | string[] | undefined | null
+  ) => void
+  handlePrint?: () => void
 }
 
 export interface ICreateOrProps {
