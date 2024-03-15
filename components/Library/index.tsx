@@ -63,22 +63,24 @@ const defaultSignatoryFormData: ISignatory = {
       is_enabled: false,
       position_id: '',
       designation_id: '',
-      station_id: ''
-    }, {
+      station_id: '',
+    },
+    {
       report: 'roc_certified_correct',
       is_enabled: false,
       position_id: '',
       designation_id: '',
-      station_id: ''
-    }, {
+      station_id: '',
+    },
+    {
       report: 'roc_noted_by',
       is_enabled: false,
       position_id: '',
       designation_id: '',
-      station_id: ''
-    }
+      station_id: '',
+    },
   ],
-  is_active: true
+  is_active: true,
 }
 
 const defaultPaperSizeFormData: IPaperSize = {

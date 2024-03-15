@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  Autocomplete,
   Button,
   CircularProgress,
   Divider,
@@ -14,7 +13,6 @@ import {
   Stack,
   TextField,
   Typography,
-  createFilterOptions,
 } from '@mui/material'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
@@ -25,8 +23,8 @@ import {
   ICreateOrProps,
 } from '@/Interfaces'
 import dayjs from 'dayjs'
-
-const filter = createFilterOptions<any>()
+import StaticAutocomplete from '../Common/StaticAutocomplete'
+import DynamicAutocomplete from '../Common/DynamicAutocomplete'
 
 const CreateOrFields = ({
   handleInputChange,
@@ -43,33 +41,13 @@ const CreateOrFields = ({
   fetchDiscount,
   payorLoading,
   particularLoading,
-  discountLoading
+  discountLoading,
 }: ICreateOrFieldsProps) => {
   const [formattedPayors, setFormattedPayors] = useState<any>([])
   const [formattedParticulars, setFormattedParticulars] = useState<any>([])
   const [formattedDiscounts, setFormattedDiscounts] = useState<any>([])
   const [defaultAmount, setDefaultAmount] = useState(0)
   const [cardNoRequired, setCardNoRequired] = useState(false)
-  const payorValue = useMemo(
-    () =>
-      formattedPayors.find((payor: any) => payor.id === formData?.payor_id) ??
-      formData?.payor_id,
-    [formattedPayors, formData?.payor_id]
-  )
-  const particularValue = useMemo(
-    () =>
-      formattedParticulars.find(
-        (particular: any) => particular.id === formData?.nature_collection_id
-      ) ?? '',
-    [formattedParticulars, formData?.nature_collection_id]
-  )
-  const discountValue = useMemo(
-    () =>
-      formattedDiscounts.find(
-        (discount: any) => discount.id === formData?.discount_id
-      ) ?? '',
-    [formattedDiscounts, formData?.discount_id]
-  )
 
   useEffect(() => {
     if (payors) {
@@ -200,75 +178,22 @@ const CreateOrFields = ({
 
       <Stack direction='row'>
         {!readOnly ? (
-          <Autocomplete
-            onFocus={() => fetchPayor && fetchPayor()}
-            freeSolo
-            id='sel-payor'
-            options={formattedPayors}
-            fullWidth
-            clearOnBlur
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={`Payor${payorLoading ? ' (fetching)' : ''}`}
-                name='payor_id'
-                id='payor_id'
-                size='small'
-                focused
-                required
-                fullWidth
-              />
-            )}
-            autoFocus
-            autoHighlight
-            isOptionEqualToValue={(option: any, value: any) =>
-              option.id === value.id
-            }
-            getOptionLabel={(option: any) => {
-              // Value selected with enter, right from the input
-              if (typeof option === 'string') {
-                return option
-              }
-              // Add "xxx" option created dynamically
-              if (option.inputValue) {
-                return option.inputValue
-              }
-              // Regular option
-              return option.label
-            }}
-            renderOption={(props: any, option: any) => {
-              delete props['key']
-              return (
-                <li key={option.label} {...props}>
-                  {option.label}
-                </li>
-              )
-            }}
-            filterOptions={(options, params) => {
-              const filtered = filter(options, params)
-
-              const { inputValue } = params
-              // Suggest the creation of a new value
-              const isExisting = options.some(
-                (option) => inputValue === option.label
-              )
-              if (inputValue !== '' && !isExisting) {
-                filtered.push({
-                  inputValue,
-                  label: `Add "${inputValue}"`,
-                })
-              }
-
-              return filtered
-            }}
-            value={payorValue}
-            onChange={(e: any, newValue: any) => {
+          <DynamicAutocomplete
+            id='payor_id'
+            name='payor_id'
+            label='Payor'
+            loading={payorLoading}
+            data={formattedPayors}
+            value={formData?.payor_id}
+            handleFetchData={fetchPayor}
+            handleChange={(e: any, newValue: any) => {
               handleInputChange &&
                 handleInputChange(
                   'payor_id',
                   newValue?.id ?? newValue?.inputValue ?? ''
                 )
             }}
+            required
           />
         ) : (
           <TextField
@@ -289,47 +214,29 @@ const CreateOrFields = ({
         {!readOnly ? (
           <>
             <Stack flex={1}>
-              <Autocomplete
-                onFocus={() => fetchParticular && fetchParticular()}
-                freeSolo
-                clearOnBlur
-                handleHomeEndKeys={false}
-                id='sel-particulars'
-                options={formattedParticulars}
-                fullWidth
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    name='nature_collection_id'
-                    id='nature_collection_id'
-                    label={`Nature of Collection${particularLoading ? ' (fetching)' : ''}`}
-                    size='small'
-                    focused
-                    required
-                    fullWidth
-                  />
-                )}
-                isOptionEqualToValue={(option: any, value: any) =>
-                  option?.id === value?.id
-                }
-                onChange={(e: any, newValue: any) => {
+              <StaticAutocomplete
+                id='nature_collection_id'
+                name='nature_collection_id'
+                label='Nature of Collection'
+                loading={particularLoading ?? false}
+                data={formattedParticulars}
+                value={formData?.nature_collection_id}
+                handleFetchData={fetchParticular}
+                handleChange={(e: any, newValue: any) => {
                   handleInputChange &&
                     handleInputChange(
                       'nature_collection_id',
-                      newValue?.id ?? ''
+                      newValue?.id ?? newValue?.inputValue ?? ''
                     )
                 }}
-                onInputChange={(e: any, newValue: any) => {
+                handleInputChange={(e: any, newValue: any) => {
                   setDefaultAmount(
                     formattedParticulars.find(
                       (particular: any) => particular?.label === newValue
                     )?.default_amount ?? 0
                   )
                 }}
-                autoFocus
-                autoComplete
-                autoHighlight
-                value={particularValue}
+                required
               />
             </Stack>
             <Stack>
@@ -430,43 +337,29 @@ const CreateOrFields = ({
         {!readOnly ? (
           <>
             <Stack flex={1}>
-              <Autocomplete
-                onFocus={() => fetchDiscount && fetchDiscount()}
-                freeSolo
-                clearOnBlur
-                handleHomeEndKeys={false}
-                id='sel-discounts'
-                options={formattedDiscounts}
-                fullWidth
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    name='discount_id'
-                    id='discount_id'
-                    label={`Discount${discountLoading ? ' (fetching)' : ''}`}
-                    size='small'
-                    focused
-                    fullWidth
-                  />
-                )}
-                isOptionEqualToValue={(option: any, value: any) =>
-                  option?.id === value?.id
-                }
-                onChange={(e: any, newValue: any) => {
+              <StaticAutocomplete
+                id='discount_id'
+                name='discount_id'
+                label='Discount'
+                loading={discountLoading}
+                data={formattedDiscounts}
+                value={formData?.discount_id}
+                handleFetchData={fetchDiscount}
+                handleChange={(e: any, newValue: any) => {
                   handleInputChange &&
-                    handleInputChange('discount_id', newValue?.id ?? '')
+                    handleInputChange(
+                      'discount_id',
+                      newValue?.id ?? newValue?.inputValue ?? ''
+                    )
                 }}
-                onInputChange={(e: any, newValue: any) => {
+                handleInputChange={(e: any, newValue: any) => {
                   setCardNoRequired(
                     formattedDiscounts.find(
                       (discount: any) => discount?.label === newValue
                     )?.requires_card_no ?? false
                   )
                 }}
-                autoFocus
-                autoComplete
-                autoHighlight
-                value={discountValue}
+                required
               />
             </Stack>
             <Stack>
@@ -623,9 +516,9 @@ const CreateOrFields = ({
                 }}
               />
               {formData?.payment_mode === 'check' && (
-                <Stack 
-                  gap={2} 
-                  p={2} 
+                <Stack
+                  gap={2}
+                  p={2}
                   border={1}
                   mb={2}
                   borderColor='divider'
@@ -674,7 +567,11 @@ const CreateOrFields = ({
                           <DatePicker
                             name='check_date'
                             label='Check Date *'
-                            value={formData?.check_date ? dayjs(formData?.check_date) : undefined}
+                            value={
+                              formData?.check_date
+                                ? dayjs(formData?.check_date)
+                                : undefined
+                            }
                             slotProps={{
                               textField: {
                                 size: 'small',

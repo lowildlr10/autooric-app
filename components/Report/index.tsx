@@ -5,7 +5,15 @@ import useUserInfo from '@/hooks/useUserInfo'
 import { Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
-import { ICashReceiptsRecord, IOpenDialog, IPrintEReceipts, IReportCollection, ISummaryFees, ITabContents, OpenDialogType } from '@/Interfaces'
+import {
+  ICashReceiptsRecord,
+  IOpenDialog,
+  IPrintEReceipts,
+  IReportCollection,
+  ISummaryFees,
+  ITabContents,
+  OpenDialogType,
+} from '@/Interfaces'
 import CardContainer from '@/components/CardContainer'
 import TabContainer, { CustomTabPanel } from '@/components/TabContainer'
 import toast from 'react-hot-toast'
@@ -21,7 +29,7 @@ const defaultCashReceiptData: ICashReceiptsRecord = {
   to: undefined,
   particulars_ids: [],
   certified_correct_id: '',
-  paper_size_id: ''
+  paper_size_id: '',
 }
 
 const defaultReportCollectionData: IReportCollection = {
@@ -30,21 +38,21 @@ const defaultReportCollectionData: IReportCollection = {
   category_ids: [],
   certified_correct_id: '',
   noted_by_id: '',
-  paper_size_id: ''
+  paper_size_id: '',
 }
 
 const defaultSummaryFeesData: ISummaryFees = {
   from: undefined,
   to: undefined,
   category_ids: [],
-  paper_size_id: ''
+  paper_size_id: '',
 }
 
 const defaultPrintEReceiptsData: IPrintEReceipts = {
   from: undefined,
   to: undefined,
   particulars_ids: [],
-  paper_size_id: ''
+  paper_size_id: '',
 }
 
 const Report = () => {
@@ -68,9 +76,8 @@ const Report = () => {
   const [cashReceiptData, setCashReceiptData] = useState<ICashReceiptsRecord>(
     defaultCashReceiptData
   )
-  const [reportCollectionData, setReportCollectionData] = useState<IReportCollection>(
-    defaultReportCollectionData
-  )
+  const [reportCollectionData, setReportCollectionData] =
+    useState<IReportCollection>(defaultReportCollectionData)
   const [summaryFeesData, setSummaryFeesData] = useState<ISummaryFees>(
     defaultSummaryFeesData
   )
@@ -103,7 +110,7 @@ const Report = () => {
     particularListLoading,
     signatoryListLoading,
     paperSizeListLoading,
-    printDownloadLoading
+    printDownloadLoading,
   ])
 
   useEffect(() => {
@@ -210,34 +217,34 @@ const Report = () => {
   }
 
   const handleReportDataChange = (
-    name: string, 
+    name: string,
     value: string | string[] | null | undefined
   ) => {
     switch (tabValue) {
       case 0:
         setCashReceiptData({
           ...cashReceiptData,
-          [name]: value
+          [name]: value,
         })
         break
       case 1:
         setReportCollectionData({
           ...reportCollectionData,
-          [name]: value
+          [name]: value,
         })
         break
       case 2:
         setSummaryFeesData({
           ...summaryFeesData,
-          [name]: value
+          [name]: value,
         })
         break
       case 3:
         setPrintEReceiptsData({
           ...printEReceiptsData,
-          [name]: value
+          [name]: value,
         })
-        break    
+        break
       default:
         break
     }
@@ -252,7 +259,7 @@ const Report = () => {
 
   //Handle print report
   const handlePrint = () => {
-    setPrintDownloadLoading(true)
+    //setPrintDownloadLoading(true)
 
     if (!handleValidate()) {
       setPrintDownloadLoading(false)
@@ -263,7 +270,7 @@ const Report = () => {
       switch (tabValue) {
         case 0:
           API.getPrintableCrr(
-            accessToken, 
+            accessToken,
             cashReceiptData.from ?? '',
             cashReceiptData.to ?? '',
             JSON.stringify(cashReceiptData.particulars_ids),
@@ -271,10 +278,11 @@ const Report = () => {
             cashReceiptData.paper_size_id
           )
             .then((response) => {
-              const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
-              setPrintUrl(pdfUrl)
-              handleDialogOpen('print')
-              setPrintDownloadLoading(false)
+              // const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+              // setPrintUrl(pdfUrl)
+              // handleDialogOpen('print')
+              // setPrintDownloadLoading(false)
+              console.log(response)
             })
             .catch((error) => {
               toast.error(error.message)
@@ -283,7 +291,7 @@ const Report = () => {
           break
         case 1:
           API.getPrintableRoc(
-            accessToken, 
+            accessToken,
             reportCollectionData.from ?? '',
             reportCollectionData.to ?? '',
             JSON.stringify(reportCollectionData.category_ids),
@@ -304,7 +312,7 @@ const Report = () => {
           break
         case 2:
           API.getPrintableSof(
-            accessToken, 
+            accessToken,
             summaryFeesData.from ?? '',
             summaryFeesData.to ?? '',
             JSON.stringify(summaryFeesData.category_ids),
@@ -323,7 +331,7 @@ const Report = () => {
           break
         case 3:
           API.getPrintableEReceipts(
-            accessToken, 
+            accessToken,
             printEReceiptsData.from ?? '',
             printEReceiptsData.to ?? '',
             JSON.stringify(printEReceiptsData.particulars_ids),
@@ -355,56 +363,48 @@ const Report = () => {
     switch (tabValue) {
       case 0:
         if (
-          !!cashReceiptData.from === false || 
+          !!cashReceiptData.from === false ||
           !!cashReceiptData.to === false ||
-          cashReceiptData.particulars_ids.length === 0 || 
+          cashReceiptData.particulars_ids.length === 0 ||
           !!cashReceiptData.certified_correct_id === false ||
           !!cashReceiptData.paper_size_id === false
         ) {
-          toast.error(
-            'Input all required fields.'
-          )
+          toast.error('Input all required fields.')
           return false
         }
         break
       case 1:
         if (
-          !!reportCollectionData.from === false || 
+          !!reportCollectionData.from === false ||
           !!reportCollectionData.to === false ||
-          reportCollectionData.category_ids.length === 0 || 
+          reportCollectionData.category_ids.length === 0 ||
           !!reportCollectionData.certified_correct_id === false ||
           !!reportCollectionData.noted_by_id === false ||
           !!reportCollectionData.paper_size_id === false
         ) {
-          toast.error(
-            'Input all required fields.'
-          )
+          toast.error('Input all required fields.')
           return false
         }
         break
       case 2:
         if (
-          !!summaryFeesData.from === false || 
+          !!summaryFeesData.from === false ||
           !!summaryFeesData.to === false ||
-          summaryFeesData.category_ids.length === 0 || 
+          summaryFeesData.category_ids.length === 0 ||
           !!summaryFeesData.paper_size_id === false
         ) {
-          toast.error(
-            'Input all required fields.'
-          )
+          toast.error('Input all required fields.')
           return false
         }
         break
       case 3:
         if (
-          !!printEReceiptsData.from === false || 
+          !!printEReceiptsData.from === false ||
           !!printEReceiptsData.to === false ||
-          printEReceiptsData.particulars_ids.length === 0 || 
+          printEReceiptsData.particulars_ids.length === 0 ||
           !!printEReceiptsData.paper_size_id === false
         ) {
-          toast.error(
-            'Input all required fields.'
-          )
+          toast.error('Input all required fields.')
           return false
         }
         break
@@ -418,7 +418,7 @@ const Report = () => {
   const dynamicTabContents = (index: number) => {
     if (index === 0) {
       return (
-        <CashReceiptsRecord 
+        <CashReceiptsRecord
           particulars={particularListData}
           signatories={signatoryListData}
           paperSizes={paperSizeListData}
@@ -429,7 +429,7 @@ const Report = () => {
       )
     } else if (index === 1) {
       return (
-        <ReportCollection 
+        <ReportCollection
           categories={categoryListData}
           signatories={signatoryListData}
           paperSizes={paperSizeListData}
@@ -440,7 +440,7 @@ const Report = () => {
       )
     } else if (index === 2) {
       return (
-        <SummaryFees 
+        <SummaryFees
           categories={categoryListData}
           paperSizes={paperSizeListData}
           inputData={summaryFeesData}
@@ -450,11 +450,11 @@ const Report = () => {
       )
     } else if (index === 3) {
       return (
-        <PrintEReceipts 
+        <PrintEReceipts
           particulars={particularListData}
           paperSizes={paperSizeListData}
           inputData={printEReceiptsData}
-          handleInputChange={handleReportDataChange} 
+          handleInputChange={handleReportDataChange}
           handlePrint={handlePrint}
         />
       )

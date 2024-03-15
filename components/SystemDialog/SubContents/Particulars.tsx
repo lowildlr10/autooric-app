@@ -10,6 +10,7 @@ import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
 import SectionLoader from '@/components/Loader/SectionLoader'
+import DynamicAutocomplete from '@/components/Common/DynamicAutocomplete'
 
 const filter = createFilterOptions<any>()
 
@@ -22,13 +23,6 @@ const Particulars = ({
   const [categories, setCategories] = useState<ICategories[]>()
   const [formattedCategories, setFormattedCategories] = useState<any>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const categoryValue = useMemo(
-    () =>
-      formattedCategories.find(
-        (category: any) => category.id === formData?.category_id
-      ) ?? formData?.category_id,
-    [formattedCategories, formData?.category_id]
-  )
 
   useEffect(() => {
     fetchCategories()
@@ -70,73 +64,20 @@ const Particulars = ({
 
   return (
     <>
-      <Autocomplete
-        freeSolo
-        id='sel-category'
-        options={formattedCategories}
-        fullWidth
-        clearOnBlur
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Category'
-            name='category_id'
-            id='category_id'
-            size='small'
-            focused
-            required
-            fullWidth
-          />
-        )}
-        autoFocus
-        autoHighlight
-        isOptionEqualToValue={(option: any, value: any) =>
-          option.id === value.id
-        }
-        getOptionLabel={(option: any) => {
-          // Value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option
-          }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue
-          }
-          // Regular option
-          return option.label
+      <DynamicAutocomplete
+        id='category_id'
+        name='category_id'
+        label='Category'
+        data={formattedCategories}
+        value={formData?.category_id}
+        handleChange={(e: any, newValue: any) => {
+          handleInputChange &&
+            handleInputChange(
+              'category_id',
+              newValue?.id ?? newValue?.inputValue ?? ''
+            )
         }}
-        renderOption={(props: any, option: any) => {
-          delete props['key']
-          return (
-            <li key={option.label} {...props}>
-              {option.label}
-            </li>
-          )
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params)
-
-          const { inputValue } = params
-          // Suggest the creation of a new value
-          const isExisting = options.some(
-            (option) => inputValue === option.label
-          )
-          if (inputValue !== '' && !isExisting) {
-            filtered.push({
-              inputValue,
-              label: `Add "${inputValue}"`,
-            })
-          }
-
-          return filtered
-        }}
-        value={categoryValue}
-        onChange={(e: any, newValue: any) => {
-          handleInputChange(
-            'category_id',
-            newValue?.id ?? newValue?.inputValue ?? ''
-          )
-        }}
+        required
       />
 
       <TextField

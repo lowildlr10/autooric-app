@@ -230,14 +230,14 @@ export default class API {
     to: string,
     particulars: string,
     certifiedCorrectedBy: string,
-    paperSizeId: string,
+    paperSizeId: string
   ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/cash-receipts-record?from=${from}` + 
-      `&to=${to}` +
-      `&particulars=${particulars}` +
-      `&certified_corrected_by=${certifiedCorrectedBy}` +
-      `&paper_size_id=${paperSizeId}`,
+      `${API.API_BASE_URL}/api/v1/print/cash-receipts-record?from=${from}` +
+        `&to=${to}` +
+        `&particulars_ids=${particulars}` +
+        `&certified_correct_id=${certifiedCorrectedBy}` +
+        `&paper_size_id=${paperSizeId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -247,7 +247,7 @@ export default class API {
     )
   }
 
-   // Fetch printable report of collection
+  // Fetch printable report of collection
   static async getPrintableRoc(
     accessToken: string,
     from: string,
@@ -255,15 +255,15 @@ export default class API {
     categories: string,
     certifiedCorrectedBy: string,
     notedBy: string,
-    paperSizeId: string,
+    paperSizeId: string
   ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/report-collection?from=${from}` + 
-      `&to=${to}` +
-      `&categories=${categories}` +
-      `&certified_corrected_by=${certifiedCorrectedBy}` +
-      `&noted_by=${notedBy}` +
-      `&paper_size_id=${paperSizeId}`,
+      `${API.API_BASE_URL}/api/v1/print/report-collection?from=${from}` +
+        `&to=${to}` +
+        `&category_ids=${categories}` +
+        `&certified_correct_id=${certifiedCorrectedBy}` +
+        `&noted_by_id=${notedBy}` +
+        `&paper_size_id=${paperSizeId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -273,19 +273,19 @@ export default class API {
     )
   }
 
-   // Fetch printable summary of fees
+  // Fetch printable summary of fees
   static async getPrintableSof(
     accessToken: string,
     from: string,
     to: string,
     categories: string,
-    paperSizeId: string,
+    paperSizeId: string
   ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/summary-fees?from=${from}` + 
-      `&to=${to}` +
-      `&categories=${categories}` +
-      `&paper_size_id=${paperSizeId}`,
+      `${API.API_BASE_URL}/api/v1/print/summary-fees?from=${from}` +
+        `&to=${to}` +
+        `&category_ids=${categories}` +
+        `&paper_size_id=${paperSizeId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -295,19 +295,19 @@ export default class API {
     )
   }
 
-   // Fetch printable e-receipts
+  // Fetch printable e-receipts
   static async getPrintableEReceipts(
     accessToken: string,
     from: string,
     to: string,
     particulars: string,
-    paperSizeId: string,
+    paperSizeId: string
   ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/e-receipts?from=${from}` + 
-      `&to=${to}` +
-      `&particulars=${particulars}` +
-      `&paper_size_id=${paperSizeId}`,
+      `${API.API_BASE_URL}/api/v1/print/e-receipts?from=${from}` +
+        `&to=${to}` +
+        `&particulars_ids=${particulars}` +
+        `&paper_size_id=${paperSizeId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -575,11 +575,14 @@ export default class API {
 
   // Delete signatories
   static async deleteSignatory(accessToken: string, discountId: string) {
-    return axios.delete(`${API.API_BASE_URL}/api/v1/signatories/${discountId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+    return axios.delete(
+      `${API.API_BASE_URL}/api/v1/signatories/${discountId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
   }
 
   // Delete paper sizes

@@ -276,7 +276,9 @@ const OfficialReceipt = () => {
           payment_mode: or.payment_mode,
           drawee_bank: or?.payment_mode,
           check_no: or?.check_no,
-          check_date: or?.check_date ? dayjs(or.check_date).format('MM/DD/YYYY') : '',
+          check_date: or?.check_date
+            ? dayjs(or.check_date).format('MM/DD/YYYY')
+            : '',
           is_cancelled: or.is_cancelled,
           status: or.is_cancelled
             ? 'Cancelled'
@@ -516,18 +518,22 @@ const OfficialReceipt = () => {
     setFormSaveLoading(true)
 
     if (formData?.discount_id) {
-      const requiresCardNo = discounts?.find(
-        (discount: IDiscount) => discount.id === formData?.discount_id
-      )?.requires_card_no ?? false
+      const requiresCardNo =
+        discounts?.find(
+          (discount: IDiscount) => discount.id === formData?.discount_id
+        )?.requires_card_no ?? false
 
       if (requiresCardNo && !formData?.card_no) {
         toast.error('ID/Card Number field is required.')
         setFormSaveLoading(false)
-        return 
+        return
       }
     }
 
-    if (formData?.payment_mode === 'check' && (!formData?.drawee_bank || !formData?.check_no || !formData?.check_date)) {
+    if (
+      formData?.payment_mode === 'check' &&
+      (!formData?.drawee_bank || !formData?.check_no || !formData?.check_date)
+    ) {
       if (!formData?.drawee_bank) toast.error('Drawee Bank field is required.')
       if (!formData?.check_no) toast.error('Check Number field is required.')
       if (!formData?.check_date) toast.error('Check Date field is required.')

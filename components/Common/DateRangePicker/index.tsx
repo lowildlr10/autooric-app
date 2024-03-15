@@ -8,9 +8,9 @@ import dayjs from 'dayjs'
 const DateRangePicker = ({
   from,
   to,
-  handleChange
+  required = false,
+  handleChange,
 }: IDateRangePicker) => {
-  
   useEffect(() => {
     if (from && to) {
       if (dayjs(from).isAfter(dayjs(to))) {
@@ -21,9 +21,11 @@ const DateRangePicker = ({
 
   return (
     <Stack>
-      <Typography variant='body2' fontWeight={500}>Select Date Range</Typography>
-      <Stack 
-        direction={{ xs: 'column', md: 'row' }} 
+      <Typography variant='body2' fontWeight={500}>
+        Select Date Range
+      </Typography>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
         gap={2}
         sx={{ marginTop: `1em !important` }}
       >
@@ -34,6 +36,7 @@ const DateRangePicker = ({
               textField: {
                 size: 'small',
                 focused: true,
+                required,
               },
               field: {
                 clearable: true,
@@ -41,7 +44,8 @@ const DateRangePicker = ({
             }}
             value={from ? dayjs(from) : undefined}
             onChange={(newValue) =>
-              handleChange && handleChange(
+              handleChange &&
+              handleChange(
                 'from',
                 newValue ? newValue.format('YYYY-MM-DD') : undefined
               )
@@ -61,6 +65,7 @@ const DateRangePicker = ({
               textField: {
                 size: 'small',
                 focused: true,
+                required,
               },
               field: {
                 clearable: true,
@@ -68,10 +73,8 @@ const DateRangePicker = ({
             }}
             value={to ? dayjs(to) : undefined}
             onChange={(newValue) =>
-              handleChange && handleChange(
-                'to',
-                newValue ? newValue.format('YYYY-MM-DD') : ''
-              )
+              handleChange &&
+              handleChange('to', newValue ? newValue.format('YYYY-MM-DD') : '')
             }
             sx={{
               m: 0,

@@ -1,121 +1,100 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ICategories, IPaperSize, ISummaryFeesProps } from '@/Interfaces'
-import { Button, Checkbox, Divider, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material'
+import { Button, Divider, SelectChangeEvent, Stack } from '@mui/material'
 import DateRangePicker from '@/components/Common/DateRangePicker'
-
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    },
-  },
-}
+import MultiSelect from '@/components/Common/MultiSelect'
+import SingleSelect from '@/components/Common/SingleSelect'
 
 const SummaryFees = ({
   categories,
   paperSizes,
   inputData,
   handleInputChange,
-  handlePrint
+  handlePrint,
 }: ISummaryFeesProps) => {
-  
+  const [formattedCategories, setFormattedCategories] = useState<ICategories[]>(
+    []
+  )
+  const [formattedPaperSizes, setFormattedPaperSizes] = useState<IPaperSize[]>(
+    []
+  )
+
+  useEffect(() => {
+    if (categories) {
+      setFormattedCategories(
+        categories.map((category) => ({
+          id: category.id,
+          label: category.category_name,
+        }))
+      )
+    }
+  }, [categories])
+
+  useEffect(() => {
+    if (paperSizes) {
+      setFormattedPaperSizes(
+        paperSizes.map((paper) => ({
+          id: paper.id,
+          label: paper.paper_name,
+        }))
+      )
+    }
+  }, [paperSizes])
+
   return (
-    <Stack 
-      justifyItems='center' 
-      alignItems='center'
-    >
+    <Stack justifyItems='center' alignItems='center'>
       <Stack
         spacing={4}
         maxWidth={{ xs: '50vw', lg: 400 }}
         width={{ xs: '50vw', lg: 400 }}
         p={4}
       >
-        <DateRangePicker 
+        <DateRangePicker
           from={inputData.from}
           to={inputData.to}
           handleChange={handleInputChange}
+          required
         />
-        <Divider />
-        <FormControl required focused>
-          <InputLabel id="select_categories-label">Categories</InputLabel>
-          <Select
-            labelId='select_categories-label'
-            id='select_categories'
-            label='Categories'
-            autoFocus
-            size='small'
-            multiple
-            required
-            renderValue={(selected) => {
-              const selectedNames = selected?.map(sel => {
-                const category = categories?.find(
-                  (par: ICategories) => par.id === sel
-                )
 
-                if (category?.category_name) return category.category_name
-              })
-              return selectedNames.join(', ')
-            }}
-            value={inputData.category_ids}
-            onChange={(e: SelectChangeEvent<typeof inputData.category_ids>) => {
-              const {
-                target: { value },
-              } = e
-              handleInputChange && handleInputChange(
-                'category_ids', 
+        <Divider />
+
+        <MultiSelect
+          id='categories'
+          label='Categories'
+          data={formattedCategories}
+          value={inputData.category_ids}
+          handleChange={(
+            e: SelectChangeEvent<typeof inputData.category_ids>
+          ) => {
+            const {
+              target: { value },
+            } = e
+            handleInputChange &&
+              handleInputChange(
+                'category_ids',
                 typeof value === 'string' ? value.split(',') : value
               )
-            }}
-            MenuProps={MenuProps}
-          >
-            {categories?.map((category: ICategories) => (
-              <MenuItem key={category.id} value={category.id}>
-                <Checkbox 
-                  size='small' 
-                  checked={
-                    inputData
-                      .category_ids
-                      .indexOf(category.id ?? '') > -1
-                    } 
-                  />
-                <ListItemText primary={category.category_name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl required focused>
-          <InputLabel id="select_paper_size-label">Paper Size</InputLabel>
-          <Select
-            labelId='select_paper_size-label'
-            id='select_paper_size'
-            label='Paper Size'
-            autoFocus
-            size='small'
-            required
-            value={inputData.paper_size_id}
-            onChange={(e: SelectChangeEvent<typeof inputData.paper_size_id>) => {
-              handleInputChange && handleInputChange(
-                'paper_size_id', 
-                e.target.value
-              )
-            }}
-            MenuProps={MenuProps}
-          >
-            {paperSizes?.map((paperSize: IPaperSize) => (
-              <MenuItem key={paperSize.id} value={paperSize.id}>
-                <ListItemText primary={paperSize.paper_name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          }}
+          required
+        />
 
-        <Button 
-          variant='contained' 
-          size='large'
-          onClick={handlePrint}
-        >Print</Button>
+        <SingleSelect
+          id='paper_size'
+          label='Paper Size'
+          data={formattedPaperSizes}
+          value={inputData.paper_size_id}
+          handleChange={(
+            e: SelectChangeEvent<typeof inputData.paper_size_id>
+          ) => {
+            handleInputChange &&
+              handleInputChange('paper_size_id', e.target.value)
+          }}
+          required
+        />
+
+        <Button variant='contained' size='large' onClick={handlePrint}>
+          Print
+        </Button>
       </Stack>
     </Stack>
   )

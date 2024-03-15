@@ -1,17 +1,14 @@
-import React, { useEffect } from 'react'
-import { ICashReceiptsRecordProps, IPaperSize, IParticular, ISignatory } from '@/Interfaces'
-import { Button, Checkbox, Divider, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import {
+  ICashReceiptsRecordProps,
+  IPaperSize,
+  IParticular,
+  ISignatory,
+} from '@/Interfaces'
+import { Button, Divider, SelectChangeEvent, Stack } from '@mui/material'
 import DateRangePicker from '@/components/Common/DateRangePicker'
-
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    },
-  },
-}
+import SingleSelect from '@/components/Common/SingleSelect'
+import MultiSelect from '@/components/Common/MultiSelect'
 
 const CashReceiptsRecord = ({
   particulars,
@@ -19,135 +16,122 @@ const CashReceiptsRecord = ({
   paperSizes,
   inputData,
   handleInputChange,
-  handlePrint
+  handlePrint,
 }: ICashReceiptsRecordProps) => {
+  const [formattedParticulars, setFormattedParticulars] = useState<
+    IParticular[]
+  >([])
+  const [formattedSignatories, setFormattedSignatories] = useState<
+    ISignatory[]
+  >([])
+  const [formattedPaperSizes, setFormattedPaperSizes] = useState<IPaperSize[]>(
+    []
+  )
+
+  useEffect(() => {
+    if (particulars) {
+      setFormattedParticulars(
+        particulars.map((particular) => ({
+          id: particular.id,
+          label: particular.particular_name,
+        }))
+      )
+    }
+  }, [particulars])
+
+  useEffect(() => {
+    if (signatories) {
+      setFormattedSignatories(
+        signatories.map((signatory) => ({
+          id: signatory.id,
+          label: signatory.signatory_name,
+          report_module: signatory.report_module ?? [],
+        }))
+      )
+    }
+  }, [signatories])
+
+  useEffect(() => {
+    if (paperSizes) {
+      setFormattedPaperSizes(
+        paperSizes.map((paper) => ({
+          id: paper.id,
+          label: paper.paper_name,
+        }))
+      )
+    }
+  }, [paperSizes])
 
   return (
-    <Stack 
-      justifyItems='center' 
-      alignItems='center'
-    >
+    <Stack justifyItems='center' alignItems='center'>
       <Stack
         spacing={4}
         maxWidth={{ xs: '50vw', lg: 400 }}
         width={{ xs: '50vw', lg: 400 }}
         p={4}
       >
-        <DateRangePicker 
+        <DateRangePicker
           from={inputData.from}
           to={inputData.to}
           handleChange={handleInputChange}
+          required
         />
-        <Divider />
-        <FormControl required focused>
-          <InputLabel id="select_particulars-label">Nature of Collection</InputLabel>
-          <Select
-            labelId='select_particulars-label'
-            id='select_particulars'
-            label='Nature of Collection'
-            autoFocus
-            size='small'
-            multiple
-            required
-            renderValue={(selected) => {
-              const selectedNames = selected?.map(sel => {
-                const particular = particulars?.find(
-                  (par: IParticular) => par.id === sel
-                )
 
-                if (particular?.particular_name) return particular.particular_name
-              })
-              return selectedNames.join(', ')
-            }}
-            value={inputData.particulars_ids}
-            onChange={(e: SelectChangeEvent<typeof inputData.particulars_ids>) => {
-              const {
-                target: { value },
-              } = e
-              handleInputChange && handleInputChange(
-                'particulars_ids', 
+        <Divider />
+
+        <MultiSelect
+          id='particular'
+          label='Nature of Collection'
+          data={formattedParticulars}
+          value={inputData.particulars_ids}
+          handleChange={(
+            e: SelectChangeEvent<typeof inputData.particulars_ids>
+          ) => {
+            const {
+              target: { value },
+            } = e
+            handleInputChange &&
+              handleInputChange(
+                'particulars_ids',
                 typeof value === 'string' ? value.split(',') : value
               )
-            }}
-            MenuProps={MenuProps}
-          >
-            {particulars?.map((particular: IParticular) => (
-              <MenuItem key={particular.id} value={particular.id}>
-                <Checkbox 
-                  size='small' 
-                  checked={
-                    inputData
-                      .particulars_ids
-                      .indexOf(particular.id ?? '') > -1
-                    } 
-                  />
-                <ListItemText primary={particular.particular_name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl required focused>
-          <InputLabel id="select_certified_corrected_by-label">Certified Corrected By</InputLabel>
-          <Select
-            labelId='select_certified_corrected_by-label'
-            id='select_certified_corrected_by'
-            label='Certified Corrected By'
-            autoFocus
-            size='small'
-            required
-            value={inputData.certified_correct_id}
-            onChange={(e: SelectChangeEvent<typeof inputData.certified_correct_id>) => {
-              handleInputChange && handleInputChange(
-                'certified_correct_id', 
-                e.target.value
-              )
-            }}
-            MenuProps={MenuProps}
-          >
-            {signatories?.map((signatory: ISignatory) => {
-              const isEnabled = signatory.report_module?.some(
-                report => report.is_enabled && report.report === 'crr_certified_correct'
-              )
+          }}
+          required
+        />
 
-              if (isEnabled) return (
-                <MenuItem key={signatory.id} value={signatory.id}>
-                  <ListItemText primary={signatory.signatory_name} />
-                </MenuItem>
-              )
-            })}
-          </Select>
-        </FormControl>
-        <FormControl required focused>
-          <InputLabel id="select_paper_size-label">Paper Size</InputLabel>
-          <Select
-            labelId='select_paper_size-label'
-            id='select_paper_size'
-            label='Paper Size'
-            autoFocus
-            size='small'
-            required
-            value={inputData.paper_size_id}
-            onChange={(e: SelectChangeEvent<typeof inputData.paper_size_id>) => {
-              handleInputChange && handleInputChange(
-                'paper_size_id', 
-                e.target.value
-              )
-            }}
-            MenuProps={MenuProps}
-          >
-            {paperSizes?.map((paperSize: IPaperSize) => (
-              <MenuItem key={paperSize.id} value={paperSize.id}>
-                <ListItemText primary={paperSize.paper_name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <SingleSelect
+          id='certified_corrected_by'
+          label='Certified Corrected By'
+          data={formattedSignatories}
+          value={inputData.certified_correct_id}
+          handleChange={(
+            e: SelectChangeEvent<typeof inputData.certified_correct_id>
+          ) => {
+            handleInputChange &&
+              handleInputChange('certified_correct_id', e.target.value)
+          }}
+          signatoryType='crr_certified_correct'
+          isSignatories
+          required
+        />
 
-        <Button 
-          variant='contained' 
-          size='large'
-          onClick={handlePrint}
-        >Print</Button>
+        <SingleSelect
+          id='paper_size'
+          label='Paper Size'
+          data={formattedPaperSizes}
+          value={inputData.paper_size_id}
+          handleChange={(
+            e: SelectChangeEvent<typeof inputData.paper_size_id>
+          ) => {
+            handleInputChange &&
+              handleInputChange('paper_size_id', e.target.value)
+          }}
+          required
+        />
+
+        <Button variant='contained' size='large' onClick={handlePrint}>
+          Print
+        </Button>
       </Stack>
     </Stack>
   )

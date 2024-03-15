@@ -21,6 +21,7 @@ import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
 import SectionLoader from '@/components/Loader/SectionLoader'
+import DynamicAutocomplete from '@/components/Common/DynamicAutocomplete'
 
 const filter = createFilterOptions<any>()
 
@@ -255,217 +256,52 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
         sx={{ m: 0 }}
       />
 
-      <Autocomplete
-        // onFocus={() => fetchPositions()}
-        freeSolo
-        id='sel-position'
-        options={formattedPosition}
-        fullWidth
-        clearOnBlur
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Position'
-            name='position_id'
-            id='position_id'
-            size='small'
-            focused
-            required
-            fullWidth
-          />
-        )}
-        autoFocus
-        autoHighlight
-        isOptionEqualToValue={(option: any, value: any) =>
-          option.id === value.id
-        }
-        getOptionLabel={(option: any) => {
-          // Value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option
-          }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue
-          }
-          // Regular option
-          return option.label
-        }}
-        renderOption={(props: any, option: any) => {
-          delete props['key']
-          return (
-            <li key={option.label} {...props}>
-              {option.label}
-            </li>
-          )
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params)
-
-          const { inputValue } = params
-          // Suggest the creation of a new value
-          const isExisting = options.some(
-            (option) => inputValue === option.label
-          )
-          if (inputValue !== '' && !isExisting) {
-            filtered.push({
-              inputValue,
-              label: `Add "${inputValue}"`,
-            })
-          }
-
-          return filtered
-        }}
-        value={positionValue}
-        onChange={(e: any, newValue: any) => {
+      <DynamicAutocomplete
+        id='position_id'
+        name='position_id'
+        label='Position'
+        data={formattedPosition}
+        value={formData?.position_id}
+        handleChange={(e: any, newValue: any) => {
           handleInputChange &&
             handleInputChange(
               'position_id',
               newValue?.id ?? newValue?.inputValue ?? ''
             )
         }}
+        required
       />
 
-      <Autocomplete
-        // onFocus={() => fetchDesignations()}
-        freeSolo
-        id='sel-designation'
-        options={formattedDesignation}
-        fullWidth
-        clearOnBlur
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Designation'
-            name='designation_id'
-            id='designation_id'
-            size='small'
-            focused
-            required
-            fullWidth
-          />
-        )}
-        autoFocus
-        autoHighlight
-        isOptionEqualToValue={(option: any, value: any) =>
-          option.id === value.id
-        }
-        getOptionLabel={(option: any) => {
-          // Value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option
-          }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue
-          }
-          // Regular option
-          return option.label
-        }}
-        renderOption={(props: any, option: any) => {
-          delete props['key']
-          return (
-            <li key={option.label} {...props}>
-              {option.label}
-            </li>
-          )
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params)
-
-          const { inputValue } = params
-          // Suggest the creation of a new value
-          const isExisting = options.some(
-            (option) => inputValue === option.label
-          )
-          if (inputValue !== '' && !isExisting) {
-            filtered.push({
-              inputValue,
-              label: `Add "${inputValue}"`,
-            })
-          }
-
-          return filtered
-        }}
-        value={designationValue}
-        onChange={(e: any, newValue: any) => {
+      <DynamicAutocomplete
+        id='designation_id'
+        name='designation_id'
+        label='Designation'
+        data={formattedDesignation}
+        value={formData?.designation_id}
+        handleChange={(e: any, newValue: any) => {
           handleInputChange &&
             handleInputChange(
               'designation_id',
               newValue?.id ?? newValue?.inputValue ?? ''
             )
         }}
+        required
       />
 
-      <Autocomplete
-        // onFocus={() => fetchStations()}
-        freeSolo
-        id='sel-station'
-        options={formattedStation}
-        fullWidth
-        clearOnBlur
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Station'
-            name='station_id'
-            id='station_id'
-            size='small'
-            focused
-            required
-            fullWidth
-          />
-        )}
-        autoFocus
-        autoHighlight
-        isOptionEqualToValue={(option: any, value: any) =>
-          option.id === value.id
-        }
-        getOptionLabel={(option: any) => {
-          // Value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option
-          }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue
-          }
-          // Regular option
-          return option.label
-        }}
-        renderOption={(props: any, option: any) => {
-          delete props['key']
-          return (
-            <li key={option.label} {...props}>
-              {option.label}
-            </li>
-          )
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params)
-
-          const { inputValue } = params
-          // Suggest the creation of a new value
-          const isExisting = options.some(
-            (option) => inputValue === option.label
-          )
-          if (inputValue !== '' && !isExisting) {
-            filtered.push({
-              inputValue,
-              label: `Add "${inputValue}"`,
-            })
-          }
-
-          return filtered
-        }}
-        value={stationValue}
-        onChange={(e: any, newValue: any) => {
+      <DynamicAutocomplete
+        id='station_id'
+        name='station_id'
+        label='Station'
+        data={formattedStation}
+        value={formData?.station_id}
+        handleChange={(e: any, newValue: any) => {
           handleInputChange &&
             handleInputChange(
               'station_id',
               newValue?.id ?? newValue?.inputValue ?? ''
             )
         }}
+        required
       />
 
       <Divider />

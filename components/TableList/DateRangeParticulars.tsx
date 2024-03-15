@@ -3,7 +3,7 @@ import {
   ISearchData,
   ITableListActionSectionDateRangeParticularsProps,
 } from '@/Interfaces'
-import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
+import { SelectChangeEvent, Stack } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
+import SingleSelect from '../Common/SingleSelect'
 
 const defaultSearchData: ISearchData = {
   from: undefined,
@@ -26,6 +27,12 @@ const DateRangeParticulars = ({
   const { accessToken } = useAccessToken()
   const [searchData, setSearchData] = useState<ISearchData>(defaultSearchData)
   const [particulars, setParticulars] = useState<IParticular[]>([])
+  const [formattedParticulars, setFormattedParticulars] = useState<any[]>([
+    {
+      id: '*',
+      label: 'All',
+    },
+  ])
   const [particularsLoading, setParticularsLoading] = useState(true)
   const [init, setInit] = useState(true)
 
@@ -64,6 +71,21 @@ const DateRangeParticulars = ({
       setInit(false)
     }
   }, [search, init])
+
+  useEffect(() => {
+    if (particulars) {
+      particulars.unshift({
+        id: '*',
+        particular_name: 'All',
+      })
+      setFormattedParticulars(
+        particulars.map((particular) => ({
+          id: particular.id,
+          label: particular.particular_name,
+        }))
+      )
+    }
+  }, [particulars])
 
   // Fetch particulars
   const fetchParticulars = () => {
@@ -118,6 +140,7 @@ const DateRangeParticulars = ({
           }}
         />
       </LocalizationProvider>
+
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label='To'
@@ -145,37 +168,20 @@ const DateRangeParticulars = ({
           }}
         />
       </LocalizationProvider>
-      <FormControl sx={{ flex: 1 }} focused>
-        <InputLabel id='select_particulars-label'>Particulars</InputLabel>
-        <Select
-          labelId='select_particulars-label'
-          id='select_particulars'
-          label='Particulars'
-          autoFocus
-          size='small'
-          value={searchData.particulars}
-          onChange={(e: any) =>
-            handleInputChange('particulars', e.target.value)
-          }
-          onOpen={fetchParticulars}
-          sx={{
-            width: { xs: '100%', lg: 250 },
-          }}
-        >
-          <MenuItem value={'*'} defaultChecked>
-            All
-          </MenuItem>
-          {!particularsLoading ? (
-            particulars?.map((particular: IParticular) => (
-              <MenuItem key={particular.id} value={particular.id}>
-                {particular.particular_name}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem value={searchData.particulars}>Loading...</MenuItem>
-          )}
-        </Select>
-      </FormControl>
+
+      <SingleSelect
+        id='particulars'
+        label='Nature of Collection'
+        data={formattedParticulars}
+        value={searchData.particulars ?? '*'}
+        loading={particularsLoading}
+        handleChange={(e: SelectChangeEvent<typeof searchData.particulars>) => {
+          handleInputChange && handleInputChange('particulars', e.target.value)
+        }}
+        width={{ xs: '100%', lg: 250 }}
+        height='40.5px'
+        required
+      />
     </Stack>
   )
 }

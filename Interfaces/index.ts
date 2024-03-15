@@ -1,4 +1,5 @@
 import { SvgIconComponent } from '@mui/icons-material'
+import { SelectChangeEvent } from '@mui/material'
 
 export interface ILoginProps {
   username: string
@@ -109,7 +110,10 @@ export interface IDiscountsSubContentProps {
 export interface ISignatoriesSubContentProps {
   formData: ISignatory
   dialogType: DialogType
-  handleInputChange: (input_name: string, value: string | number | any[] | boolean | null) => void
+  handleInputChange: (
+    input_name: string,
+    value: string | number | any[] | boolean | null
+  ) => void
 }
 
 export interface IPaperSizesSubContentProps {
@@ -312,13 +316,16 @@ export interface IUser {
   is_active?: boolean
 }
 
-export type SignatoryTypes = 'crr_certified_correct' | 'roc_certified_correct' | 'roc_noted_by'
+export type SignatoryTypes =
+  | 'crr_certified_correct'
+  | 'roc_certified_correct'
+  | 'roc_noted_by'
 
 export interface IReportModule {
-  report: SignatoryTypes,
+  report: SignatoryTypes
   is_enabled: boolean
-  position_id: string,
-  designation_id: string,
+  position_id: string
+  designation_id: string
   station_id: string
 }
 
@@ -366,6 +373,7 @@ export interface ITabPanelProps {
 export interface IDateRangePicker {
   from: string | undefined
   to: string | undefined
+  required?: boolean
   handleChange?: (
     input_name: string,
     value: string | string[] | undefined | null
@@ -732,4 +740,31 @@ export interface ISearchData {
   from: string | undefined
   to: string | undefined
   particulars: string
+}
+
+export interface IAutocomplete {
+  id?: string
+  name: string
+  label: string
+  loading?: boolean
+  data: any[]
+  value?: string
+  required?: boolean
+  handleFetchData?: () => void
+  handleChange?: (e: any, newValue: any) => void
+  handleInputChange?: (e: any, newValue: any) => void
+}
+
+export interface ISelect {
+  id: string
+  label: string
+  loading?: boolean
+  data: any[]
+  value: string | string[]
+  isSignatories?: boolean
+  signatoryType?: SignatoryTypes
+  width?: string | number | Object
+  height?: string | number | Object
+  required?: boolean
+  handleChange?: (e: SelectChangeEvent<any>) => void
 }
