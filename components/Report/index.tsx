@@ -113,6 +113,12 @@ const Report = () => {
     printDownloadLoading,
   ])
 
+  // Check if user is already logged in
+  useEffect(() => {
+    if (loading) return
+    if (!userLoading && !isAuthenticated) forceRelogin()
+  }, [isAuthenticated, loading, userLoading])
+
   useEffect(() => {
     setTabContents([
       {
@@ -278,11 +284,10 @@ const Report = () => {
             cashReceiptData.paper_size_id
           )
             .then((response) => {
-              // const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
-              // setPrintUrl(pdfUrl)
-              // handleDialogOpen('print')
-              // setPrintDownloadLoading(false)
-              console.log(response)
+              const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+              setPrintUrl(pdfUrl)
+              handleDialogOpen('print')
+              setPrintDownloadLoading(false)
             })
             .catch((error) => {
               toast.error(error.message)
