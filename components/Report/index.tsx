@@ -265,7 +265,7 @@ const Report = () => {
 
   //Handle print report
   const handlePrint = () => {
-    //setPrintDownloadLoading(true)
+    setPrintDownloadLoading(true)
 
     if (!handleValidate()) {
       setPrintDownloadLoading(false)
