@@ -245,6 +245,7 @@ const OfficialReceipt = () => {
           id: or.id,
           accountable_personnel: `${or.accountable_personnel.first_name} ${or.accountable_personnel.last_name}`,
           deposited_by: `${or?.deposited_by?.first_name} ${or?.deposited_by?.last_name}`,
+          cancelled_by: `${or?.cancelled_by?.first_name} ${or?.cancelled_by?.last_name}`,
           receipt_date: dayjs(or.receipt_date).format('MM/DD/YYYY'),
           cancelled_date:
             !!or.cancelled_date === true

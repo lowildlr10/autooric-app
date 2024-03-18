@@ -270,8 +270,10 @@ export interface IOfficialReceipt {
   id?: string
   accountable_personnel_id?: string
   deposited_by_id?: string
+  cancelled_by_id?: string
   accountable_personnel?: string
   deposited_by?: string
+  cancelled_by?: string
   receipt_date?: string
   deposited_date?: string
   cancelled_date?: string

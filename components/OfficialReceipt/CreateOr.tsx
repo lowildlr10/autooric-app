@@ -707,9 +707,14 @@ const ActionButtons = ({
           )}
 
           {formData?.cancelled_date !== '' && (
-            <Typography variant='body2' fontWeight={500} color='error'>
-              Cancelled on: {formData?.cancelled_date}
-            </Typography>
+            <>
+              <Typography variant='body2' fontWeight={500} color='error'>
+                Cancelled on: {formData?.cancelled_date}
+              </Typography>
+              <Typography variant='body2' fontWeight={500} color='error'>
+                Cancelled by: {formData?.cancelled_by}
+              </Typography>
+            </>
           )}
 
           {!formData?.deposit && !formData?.is_cancelled && (
