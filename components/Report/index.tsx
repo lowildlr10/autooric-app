@@ -309,6 +309,8 @@ const Report = () => {
           )
             .then((response) => {
               const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+              const filename = response.data.data.filename
+              setPrintFilename(filename)
               setPrintUrl(pdfUrl)
               handleDialogOpen('print')
               setPrintDownloadLoading(false)
@@ -328,6 +330,8 @@ const Report = () => {
           )
             .then((response) => {
               const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+              const filename = response.data.data.filename
+              setPrintFilename(filename)
               setPrintUrl(pdfUrl)
               handleDialogOpen('print')
               setPrintDownloadLoading(false)
@@ -347,6 +351,8 @@ const Report = () => {
           )
             .then((response) => {
               const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+              const filename = response.data.data.filename
+              setPrintFilename(filename)
               setPrintUrl(pdfUrl)
               handleDialogOpen('print')
               setPrintDownloadLoading(false)
