@@ -68,6 +68,7 @@ const Report = () => {
   const [paperSizeListLoading, setPaperSizeListLoading] = useState(false)
   const [printDownloadLoading, setPrintDownloadLoading] = useState(false)
   const [printUrl, setPrintUrl] = useState('')
+  const [printFilename, setPrintFilename] = useState('')
   const [currentPrintTitle, setCurrentPrintTitle] = useState('')
   const [categoryListData, setCategoryListData] = useState<any>()
   const [particularListData, setParticularListData] = useState<any>()
@@ -285,6 +286,8 @@ const Report = () => {
           )
             .then((response) => {
               const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+              const filename = response.data.data.filename
+              setPrintFilename(filename)
               setPrintUrl(pdfUrl)
               handleDialogOpen('print')
               setPrintDownloadLoading(false)
@@ -592,7 +595,7 @@ const Report = () => {
         dialogType='print'
         printUrl={printUrl}
         handleClose={() => handleDialogClose('print')}
-        handleDownload={() => handleDownloadPdf('report', printUrl)}
+        handleDownload={() => handleDownloadPdf(printFilename, printUrl)}
         handleClear={() => setPrintUrl('')}
       />
     </MiniVariantDrawer>
