@@ -359,7 +359,6 @@ const CreateOrFields = ({
                     )?.requires_card_no ?? false
                   )
                 }}
-                required
               />
             </Stack>
             <Stack>
