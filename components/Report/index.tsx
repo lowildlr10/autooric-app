@@ -228,9 +228,9 @@ const Report = () => {
   const handleRocInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     const nameArr = name.split('_')
-    const updatedData = {...rocPrintPreviewData}
-    updatedData.categories[nameArr[1]].particulars[nameArr[2]].remarks = value;
-    setRocPrintPreviewData(updatedData);
+    const updatedData = { ...rocPrintPreviewData }
+    updatedData.categories[nameArr[1]].particulars[nameArr[2]].remarks = value
+    setRocPrintPreviewData(updatedData)
   }
 
   const handleReportDataChange = (
@@ -319,7 +319,7 @@ const Report = () => {
               reportCollectionData.paper_size_id
             )
               .then((response) => {
-                const data = response.data.data;
+                const data = response.data.data
                 setRocPrintPreviewData(data.data)
                 handleDialogOpen('print_preview')
                 setPrintDownloadLoading(false)

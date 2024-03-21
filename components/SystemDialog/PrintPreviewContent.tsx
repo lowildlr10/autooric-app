@@ -2,10 +2,10 @@ import React from 'react'
 import { IPrintPreviewContentProps } from '@/Interfaces'
 import PreviewReportCollection from './SubContents/PreviewReportCollection'
 
-const PrintPreviewContent = ({ 
+const PrintPreviewContent = ({
   content,
   printPreviewData,
-  handleInputChange
+  handleInputChange,
 }: IPrintPreviewContentProps) => {
   return (
     <>

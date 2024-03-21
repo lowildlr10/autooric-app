@@ -43,26 +43,37 @@ const SystemDialog = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <Dialog fullScreen={fullScreen || dialogType === 'print' || dialogType === 'print_preview'} open={open}>
+    <Dialog
+      fullScreen={
+        fullScreen || dialogType === 'print' || dialogType === 'print_preview'
+      }
+      open={open}
+    >
       <DialogTitle fontWeight={600} my={1}>
         {title}
       </DialogTitle>
 
-      <DialogContent 
-        sx={{ 
-          width: { 
-            xs: 'initial', 
-            sm: fullScreen || dialogType === 'print' || dialogType === 'print_preview' ? 'initial' : 500,
-          }, 
-          my: 1 
-        }}>
+      <DialogContent
+        sx={{
+          width: {
+            xs: 'initial',
+            sm:
+              fullScreen ||
+              dialogType === 'print' ||
+              dialogType === 'print_preview'
+                ? 'initial'
+                : 500,
+          },
+          my: 1,
+        }}
+      >
         <Stack py={2} px={3} gap={4}>
           {dialogType === 'logout' && <LogoutContent />}
           {dialogType === 'print' && printUrl && (
             <PrintContent printUrl={printUrl} />
           )}
           {dialogType === 'print_preview' && (
-            <PrintPreviewContent 
+            <PrintPreviewContent
               content={content ?? 'print_report_collection'}
               printPreviewData={formData}
               handleInputChange={handleInputChange}

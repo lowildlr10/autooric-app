@@ -274,10 +274,7 @@ export default class API {
   }
 
   // Fetch printable report of collection
-  static async getPrintableRoc(
-    accessToken: string,
-    printData: string
-  ) {
+  static async getPrintableRoc(accessToken: string, printData: string) {
     return axios.get(
       `${API.API_BASE_URL}/api/v1/print/report-collection?print_data=${printData}`,
       {
