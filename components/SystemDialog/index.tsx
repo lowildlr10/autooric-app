@@ -16,6 +16,7 @@ import CreateContent from './CreateContent'
 import CancelContent from './CancelContent'
 import DepositContent from './DepositContent'
 import UpdateContent from './UpdateContent'
+import PrintPreviewContent from './PrintPreviewContent'
 
 const SystemDialog = ({
   open,
@@ -35,22 +36,37 @@ const SystemDialog = ({
   handleDeposit,
   handleClear,
   handleDownload,
+  handlePrint,
   handleInputChange,
 }: ISystemDialogProps) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <Dialog fullScreen={fullScreen || dialogType === 'print'} open={open}>
+    <Dialog fullScreen={fullScreen || dialogType === 'print' || dialogType === 'print_preview'} open={open}>
       <DialogTitle fontWeight={600} my={1}>
         {title}
       </DialogTitle>
 
-      <DialogContent sx={{ width: { xs: 'initial', sm: 500 }, my: 1 }}>
+      <DialogContent 
+        sx={{ 
+          width: { 
+            xs: 'initial', 
+            sm: fullScreen || dialogType === 'print' || dialogType === 'print_preview' ? 'initial' : 500,
+          }, 
+          my: 1 
+        }}>
         <Stack py={2} px={3} gap={4}>
           {dialogType === 'logout' && <LogoutContent />}
           {dialogType === 'print' && printUrl && (
             <PrintContent printUrl={printUrl} />
+          )}
+          {dialogType === 'print_preview' && (
+            <PrintPreviewContent 
+              content={content ?? 'print_report_collection'}
+              printPreviewData={formData}
+              handleInputChange={handleInputChange}
+            />
           )}
           {dialogType === 'cancel' && <CancelContent />}
           {dialogType === 'deposit' && (
@@ -115,6 +131,16 @@ const SystemDialog = ({
             autoFocus
           >
             Download
+          </Button>
+        )}
+
+        {dialogType === 'print_preview' && (
+          <Button
+            sx={(theme) => ({ color: theme.palette.primary.main })}
+            onClick={() => handlePrint && handlePrint()}
+            autoFocus
+          >
+            Print
           </Button>
         )}
 

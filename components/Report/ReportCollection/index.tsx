@@ -146,7 +146,7 @@ const ReportCollection = ({
         />
 
         <Button variant='contained' size='large' onClick={handlePrint}>
-          Print
+          Preview
         </Button>
       </Stack>
     </Stack>

@@ -247,8 +247,8 @@ export default class API {
     )
   }
 
-  // Fetch printable report of collection
-  static async getPrintableRoc(
+  // Fetch printable report of collection preview data
+  static async getPrintableRocPreviewData(
     accessToken: string,
     from: string,
     to: string,
@@ -258,12 +258,28 @@ export default class API {
     paperSizeId: string
   ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/report-collection?from=${from}` +
+      `${API.API_BASE_URL}/api/v1/print/preview-report-collection?from=${from}` +
         `&to=${to}` +
         `&category_ids=${categories}` +
         `&certified_correct_id=${certifiedCorrectedBy}` +
         `&noted_by_id=${notedBy}` +
         `&paper_size_id=${paperSizeId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    )
+  }
+
+  // Fetch printable report of collection
+  static async getPrintableRoc(
+    accessToken: string,
+    printData: string
+  ) {
+    return axios.get(
+      `${API.API_BASE_URL}/api/v1/print/report-collection?print_data=${printData}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

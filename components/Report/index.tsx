@@ -74,6 +74,7 @@ const Report = () => {
   const [particularListData, setParticularListData] = useState<any>()
   const [signatoryListData, setSignatoryListData] = useState<any>()
   const [paperSizeListData, setPaperSizeListData] = useState<any>()
+  const [rocPrintPreviewData, setRocPrintPreviewData] = useState<any>(null)
   const [cashReceiptData, setCashReceiptData] = useState<ICashReceiptsRecord>(
     defaultCashReceiptData
   )
@@ -221,6 +222,15 @@ const Report = () => {
     setReportCollectionData(defaultReportCollectionData)
     setSummaryFeesData(defaultSummaryFeesData)
     setPrintEReceiptsData(defaultPrintEReceiptsData)
+    setRocPrintPreviewData(null)
+  }
+
+  const handleRocInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    const nameArr = name.split('_')
+    const updatedData = {...rocPrintPreviewData}
+    updatedData.categories[nameArr[1]].particulars[nameArr[2]].remarks = value;
+    setRocPrintPreviewData(updatedData);
   }
 
   const handleReportDataChange = (
@@ -298,27 +308,44 @@ const Report = () => {
             })
           break
         case 1:
-          API.getPrintableRoc(
-            accessToken,
-            reportCollectionData.from ?? '',
-            reportCollectionData.to ?? '',
-            JSON.stringify(reportCollectionData.category_ids),
-            reportCollectionData.certified_correct_id,
-            reportCollectionData.noted_by_id,
-            reportCollectionData.paper_size_id
-          )
-            .then((response) => {
-              const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
-              const filename = response.data.data.filename
-              setPrintFilename(filename)
-              setPrintUrl(pdfUrl)
-              handleDialogOpen('print')
-              setPrintDownloadLoading(false)
-            })
-            .catch((error) => {
-              toast.error(error.data.message)
-              setPrintDownloadLoading(false)
-            })
+          if (!rocPrintPreviewData) {
+            API.getPrintableRocPreviewData(
+              accessToken,
+              reportCollectionData.from ?? '',
+              reportCollectionData.to ?? '',
+              JSON.stringify(reportCollectionData.category_ids),
+              reportCollectionData.certified_correct_id,
+              reportCollectionData.noted_by_id,
+              reportCollectionData.paper_size_id
+            )
+              .then((response) => {
+                const data = response.data.data;
+                setRocPrintPreviewData(data.data)
+                handleDialogOpen('print_preview')
+                setPrintDownloadLoading(false)
+              })
+              .catch((error) => {
+                toast.error(error.data.message)
+                setPrintDownloadLoading(false)
+              })
+          } else {
+            API.getPrintableRoc(
+              accessToken,
+              JSON.stringify(rocPrintPreviewData)
+            )
+              .then((response) => {
+                const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+                const filename = response.data.data.filename
+                setPrintFilename(filename)
+                setPrintUrl(pdfUrl)
+                handleDialogOpen('print')
+                setPrintDownloadLoading(false)
+              })
+              .catch((error) => {
+                toast.error(error.data.message)
+                setPrintDownloadLoading(false)
+              })
+          }
           break
         case 2:
           API.getPrintableSof(
@@ -603,6 +630,17 @@ const Report = () => {
         handleClose={() => handleDialogClose('print')}
         handleDownload={() => handleDownloadPdf(printFilename, printUrl)}
         handleClear={() => setPrintUrl('')}
+      />
+      <SystemDialog
+        open={dialogOpen.print_preview ?? false}
+        title={'Report Collection Preview'}
+        dialogType='print_preview'
+        content='print_report_collection'
+        handleClose={() => handleDialogClose('print_preview')}
+        handlePrint={handlePrint}
+        formData={rocPrintPreviewData}
+        handleClear={() => setRocPrintPreviewData(null)}
+        handleInputChange={handleRocInputChange}
       />
     </MiniVariantDrawer>
   )

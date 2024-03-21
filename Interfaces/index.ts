@@ -35,6 +35,7 @@ export type DialogContent =
   | 'signatories'
   | 'paper_sizes'
   | 'print_official_receipt'
+  | 'print_report_collection'
 
 export type DialogType =
   | 'logout'
@@ -42,6 +43,7 @@ export type DialogType =
   | 'update'
   | 'delete'
   | 'print'
+  | 'print_preview'
   | 'cancel'
   | 'deposit'
 
@@ -63,6 +65,7 @@ export interface ISystemDialogProps {
   handleDelete?: (id: string) => void
   handleClear?: () => void
   handleDownload?: () => void
+  handlePrint?: () => void
   handleInputChange?: any
 }
 
@@ -87,6 +90,17 @@ export interface IUpdateContentProps {
 
 export interface IPrintContentProps {
   printUrl: string
+}
+
+export interface IPrintPreviewContentProps {
+  content: DialogContent
+  printPreviewData: any
+  handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface IPreviewReportCollectionSubContentProps {
+  printPreviewData: any
+  handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export interface ICategoriesSubContentProps {
@@ -155,6 +169,7 @@ export type OpenDialogType =
   | 'delete_signatories'
   | 'delete_paper_sizes'
   | 'print'
+  | 'print_preview'
   | 'deposit_or'
   | 'cancel_or'
 export interface IOpenDialog {
@@ -180,6 +195,7 @@ export interface IOpenDialog {
   deposit_or?: boolean
   cancel_or?: boolean
   print?: boolean
+  print_preview?: boolean
 }
 
 export interface ICardContainerProps {
