@@ -126,7 +126,7 @@ const ReportCollection = ({
             handleInputChange &&
               handleInputChange('noted_by_id', e.target.value)
           }}
-          signatoryType='roc_certified_correct'
+          signatoryType='roc_noted_by'
           isSignatories
           required
         />
