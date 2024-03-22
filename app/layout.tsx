@@ -8,7 +8,7 @@ import '@/styles/globals.css'
 export const metadata: Metadata = {
   title: 'Automated Official Receipt Issuance and Collection System (AutoORIC)',
   description:
-    'RFSO 15 AUTOMATED OFFICIAL RECEIPT ISSUANCE AND COLLECTION REPORTING',
+    'RFU-COR AUTOMATED OFFICIAL RECEIPT ISSUANCE AND COLLECTION REPORTING',
 }
 
 export default function RootLayout({

@@ -1,18 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ICategories, IParticularsSubContentProps } from '@/Interfaces'
 import {
-  Autocomplete,
+  Divider,
+  FormControl,
+  FormControlLabel,
   InputAdornment,
+  Stack,
+  Switch,
   TextField,
-  createFilterOptions,
+  Typography,
 } from '@mui/material'
 import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
 import SectionLoader from '@/components/Loader/SectionLoader'
 import DynamicAutocomplete from '@/components/Common/DynamicAutocomplete'
-
-const filter = createFilterOptions<any>()
 
 const Particulars = ({
   dialogType,
@@ -137,6 +139,102 @@ const Particulars = ({
           onChange={(e) => handleInputChange('order_no', e.target.value)}
         />
       )}
+
+      <Stack
+        border={1}
+        borderRadius={3}
+        p={2}
+        borderColor='divider'
+      >
+        <Typography variant='h6' fontWeight={500}>
+          Report of Collection
+        </Typography>
+        <Divider sx={{ my: 2 }} />
+        <Stack>
+          <Typography variant='body2' fontWeight={500} mb={1}>
+            Displayed in:
+          </Typography>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formData?.coa_accounting ?? false}
+                color='primary'
+                name='coa_accounting'
+                size='small'
+                inputProps={{ 'aria-label': 'controlled' }}
+                onChange={(e) =>
+                  handleInputChange(
+                    'coa_accounting',
+                    e.target.checked
+                  )
+                }
+              />
+            }
+            label='COA/Accounting Template'
+            labelPlacement='end'
+            sx={{
+              mb: 1,
+              '&>span': {
+                fontSize: '0.9rem',
+                fontWeight: 500,
+              },
+            }}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formData?.pnp_crame ?? false}
+                color='primary'
+                name='pnp_crame'
+                size='small'
+                inputProps={{ 'aria-label': 'controlled' }}
+                onChange={(e) =>
+                  handleInputChange(
+                    'pnp_crame',
+                    e.target.checked
+                  )
+                }
+              />
+            }
+            label='CRAME Template'
+            labelPlacement='end'
+            sx={{
+              mb: 1,
+              '&>span': {
+                fontSize: '0.9rem',
+                fontWeight: 500,
+              },
+            }}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formData?.firearms_registration ?? false}
+                color='primary'
+                name='firearms_registration'
+                size='small'
+                inputProps={{ 'aria-label': 'controlled' }}
+                onChange={(e) =>
+                  handleInputChange(
+                    'firearms_registration',
+                    e.target.checked
+                  )
+                }
+              />
+            }
+            label='CSG Caravan on Firearms Registration Template'
+            labelPlacement='end'
+            sx={{
+              mb: 1,
+              '&>span': {
+                fontSize: '0.9rem',
+                fontWeight: 500,
+              },
+            }}
+          />
+        </Stack>
+      </Stack>
+        
     </>
   )
 }

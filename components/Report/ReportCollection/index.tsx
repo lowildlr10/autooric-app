@@ -3,6 +3,7 @@ import {
   ICategories,
   IPaperSize,
   IReportCollectionProps,
+  IRocTemplate,
   ISignatory,
 } from '@/Interfaces'
 import { Button, Divider, SelectChangeEvent, Stack } from '@mui/material'
@@ -26,6 +27,22 @@ const ReportCollection = ({
   >([])
   const [formattedPaperSizes, setFormattedPaperSizes] = useState<IPaperSize[]>(
     []
+  )
+  const [formattedTemplates, setFormattedTemplates] = useState<IRocTemplate[]>(
+    [
+      {
+        id: 'coa_accounting',
+        label: 'COA/Accounting'
+      },
+      {
+        id: 'pnp_crame',
+        label: 'CRAME'
+      },
+      {
+        id: 'firearms_registration',
+        label: 'CSG Caravan on Firearms Registration'
+      }
+    ]
   )
 
   useEffect(() => {
@@ -145,8 +162,26 @@ const ReportCollection = ({
           required
         />
 
+        <SingleSelect
+          id='template'
+          label='Template'
+          data={formattedTemplates}
+          value={inputData.template}
+          handleChange={(
+            e: SelectChangeEvent<typeof inputData.template>
+          ) => {
+            handleInputChange &&
+              handleInputChange('template', e.target.value)
+          }}
+          required
+        />
+
         <Button variant='contained' size='large' onClick={handlePrint}>
-          Preview
+          {inputData.template === 'pnp_crame' ? (
+            <>Preview</>
+          ) : (
+            <>Print</>
+          )}
         </Button>
       </Stack>
     </Stack>

@@ -10,7 +10,6 @@ import {
   IOpenDialog,
   IPrintEReceipts,
   IReportCollection,
-  ISummaryFees,
   ITabContents,
   OpenDialogType,
 } from '@/Interfaces'
@@ -39,13 +38,7 @@ const defaultReportCollectionData: IReportCollection = {
   certified_correct_id: '',
   noted_by_id: '',
   paper_size_id: '',
-}
-
-const defaultSummaryFeesData: ISummaryFees = {
-  from: undefined,
-  to: undefined,
-  category_ids: [],
-  paper_size_id: '',
+  template: 'coa_accounting'
 }
 
 const defaultPrintEReceiptsData: IPrintEReceipts = {
@@ -80,9 +73,6 @@ const Report = () => {
   )
   const [reportCollectionData, setReportCollectionData] =
     useState<IReportCollection>(defaultReportCollectionData)
-  const [summaryFeesData, setSummaryFeesData] = useState<ISummaryFees>(
-    defaultSummaryFeesData
-  )
   const [printEReceiptsData, setPrintEReceiptsData] = useState<IPrintEReceipts>(
     defaultPrintEReceiptsData
   )
@@ -163,10 +153,8 @@ const Report = () => {
         }
         break
       case 2:
-        setCurrentPrintTitle('Print Summary Fees')
         if (accessToken) {
-          fetchCategories()
-          fetchPaperSizes()
+          handlePrint()
         }
         break
       case 3:
@@ -220,7 +208,6 @@ const Report = () => {
   const handleClearAll = () => {
     setCashReceiptData(defaultCashReceiptData)
     setReportCollectionData(defaultReportCollectionData)
-    setSummaryFeesData(defaultSummaryFeesData)
     setPrintEReceiptsData(defaultPrintEReceiptsData)
     setRocPrintPreviewData(null)
   }
@@ -251,10 +238,6 @@ const Report = () => {
         })
         break
       case 2:
-        setSummaryFeesData({
-          ...summaryFeesData,
-          [name]: value,
-        })
         break
       case 3:
         setPrintEReceiptsData({
@@ -273,6 +256,8 @@ const Report = () => {
     link.download = filename
     link.click()
   }
+
+  useEffect(() => console.log(reportCollectionData), [reportCollectionData])
 
   //Handle print report
   const handlePrint = () => {
@@ -308,59 +293,87 @@ const Report = () => {
             })
           break
         case 1:
-          if (!rocPrintPreviewData) {
-            API.getPrintableRocPreviewData(
-              accessToken,
-              reportCollectionData.from ?? '',
-              reportCollectionData.to ?? '',
-              JSON.stringify(reportCollectionData.category_ids),
-              reportCollectionData.certified_correct_id,
-              reportCollectionData.noted_by_id,
-              reportCollectionData.paper_size_id
-            )
-              .then((response) => {
-                const data = response.data.data
-                setRocPrintPreviewData(data.data)
-                handleDialogOpen('print_preview')
-                setPrintDownloadLoading(false)
-              })
-              .catch((error) => {
-                toast.error(error.data.message)
-                setPrintDownloadLoading(false)
-              })
+          if (reportCollectionData.template === 'pnp_crame') {
+            if (!rocPrintPreviewData) {
+              API.getPrintableRocPreviewData(
+                accessToken,
+                reportCollectionData.from ?? '',
+                reportCollectionData.to ?? '',
+                JSON.stringify(reportCollectionData.category_ids),
+                reportCollectionData.certified_correct_id,
+                reportCollectionData.noted_by_id,
+                reportCollectionData.paper_size_id
+              )
+                .then((response) => {
+                  const data = response.data.data
+                  setRocPrintPreviewData(data.data)
+                  handleDialogOpen('print_preview')
+                  setPrintDownloadLoading(false)
+                })
+                .catch((error) => {
+                  toast.error(error.message)
+                  setPrintDownloadLoading(false)
+                })
+            } else {
+              API.getPrintableRoc(
+                accessToken,
+                JSON.stringify(rocPrintPreviewData),
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                reportCollectionData.template
+              )
+                .then((response) => {
+                  const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+                  const filename = response.data.data.filename
+                  setPrintFilename(filename)
+                  setPrintUrl(pdfUrl)
+                  handleDialogOpen('print')
+                  setPrintDownloadLoading(false)
+                })
+                .catch((error) => {
+                  toast.error(error.message)
+                  setPrintDownloadLoading(false)
+                })
+            }
           } else {
             API.getPrintableRoc(
-              accessToken,
-              JSON.stringify(rocPrintPreviewData)
-            )
-              .then((response) => {
-                const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
-                const filename = response.data.data.filename
-                setPrintFilename(filename)
-                setPrintUrl(pdfUrl)
-                handleDialogOpen('print')
-                setPrintDownloadLoading(false)
-              })
-              .catch((error) => {
-                toast.error(error.data.message)
-                setPrintDownloadLoading(false)
-              })
+                accessToken,
+                '',
+                reportCollectionData.from ?? '',
+                reportCollectionData.to ?? '',
+                JSON.stringify(reportCollectionData.category_ids),
+                reportCollectionData.certified_correct_id,
+                reportCollectionData.noted_by_id,
+                reportCollectionData.paper_size_id,
+                reportCollectionData.template
+              )
+                .then((response) => {
+                  const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+                  const filename = response.data.data.filename
+                  setPrintFilename(filename)
+                  setPrintUrl(pdfUrl)
+                  handleDialogOpen('print')
+                  setPrintDownloadLoading(false)
+                })
+                .catch((error) => {
+                  toast.error(error.message)
+                  setPrintDownloadLoading(false)
+                })
           }
           break
         case 2:
           API.getPrintableSof(
-            accessToken,
-            summaryFeesData.from ?? '',
-            summaryFeesData.to ?? '',
-            JSON.stringify(summaryFeesData.category_ids),
-            summaryFeesData.paper_size_id
+            accessToken
           )
             .then((response) => {
               const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
               const filename = response.data.data.filename
               setPrintFilename(filename)
               setPrintUrl(pdfUrl)
-              handleDialogOpen('print')
               setPrintDownloadLoading(false)
             })
             .catch((error) => {
@@ -428,15 +441,6 @@ const Report = () => {
         }
         break
       case 2:
-        if (
-          !!summaryFeesData.from === false ||
-          !!summaryFeesData.to === false ||
-          summaryFeesData.category_ids.length === 0 ||
-          !!summaryFeesData.paper_size_id === false
-        ) {
-          toast.error('Input all required fields.')
-          return false
-        }
         break
       case 3:
         if (
@@ -482,11 +486,7 @@ const Report = () => {
     } else if (index === 2) {
       return (
         <SummaryFees
-          categories={categoryListData}
-          paperSizes={paperSizeListData}
-          inputData={summaryFeesData}
-          handleInputChange={handleReportDataChange}
-          handlePrint={handlePrint}
+          printUrl={printUrl}
         />
       )
     } else if (index === 3) {

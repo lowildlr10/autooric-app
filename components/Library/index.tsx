@@ -41,6 +41,9 @@ const defaultParticularFormData: IParticular = {
   default_amount: 0,
   default_amount_str: '',
   order_no: 0,
+  coa_accounting: false,
+  pnp_crame: false,
+  firearms_registration: false
 }
 
 const defaultDiscountFormData: IDiscount = {
@@ -546,6 +549,8 @@ const Library = () => {
     }
   }
 
+  useEffect(() => console.log(particularFormData), [particularFormData])
+
   const handleShowDetails = (details: any) => {
     switch (tabValue) {
       case 0:
@@ -565,6 +570,9 @@ const Library = () => {
           particular_name: details.particular_name,
           default_amount: details.default_amount,
           order_no: details.order_no,
+          coa_accounting: details.coa_accounting,
+          pnp_crame: details.pnp_crame,
+          firearms_registration: details.firearms_registration
         })
         handleDialogOpen('update_particulars')
         break
@@ -1113,6 +1121,9 @@ const Library = () => {
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 : 'N/a',
               order_no: particular.order_no,
+              coa_accounting: particular.coa_accounting,
+              pnp_crame: particular.pnp_crame,
+              firearms_registration: particular.firearms_registration,
             }
           }),
         })

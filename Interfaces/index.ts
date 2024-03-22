@@ -112,7 +112,7 @@ export interface ICategoriesSubContentProps {
 export interface IParticularsSubContentProps {
   dialogType: DialogType
   formData: IParticular
-  handleInputChange: (input_name: string, value: string | number | null) => void
+  handleInputChange: (input_name: string, value: string | number | boolean | null) => void
 }
 
 export interface IDiscountsSubContentProps {
@@ -211,6 +211,13 @@ export interface ICashReceiptsRecord {
   paper_size_id: string
 }
 
+export type RocTemplateTypes = 'coa_accounting' | 'pnp_crame' | 'firearms_registration'
+
+export interface IRocTemplate {
+  id: RocTemplateTypes
+  label: string
+}
+
 export interface IReportCollection {
   from: string | undefined
   to: string | undefined
@@ -218,13 +225,7 @@ export interface IReportCollection {
   certified_correct_id: string
   noted_by_id: string
   paper_size_id: string
-}
-
-export interface ISummaryFees {
-  from: string | undefined
-  to: string | undefined
-  category_ids: string[]
-  paper_size_id: string
+  template: RocTemplateTypes
 }
 
 export interface IPrintEReceipts {
@@ -280,6 +281,9 @@ export interface IParticular {
   default_amount_str?: string
   order_no?: number
   sub_rows?: any[]
+  coa_accounting?: boolean
+  pnp_crame?: boolean
+  firearms_registration?: boolean
 }
 
 export interface IOfficialReceipt {
@@ -423,14 +427,7 @@ export interface IReportCollectionProps {
 }
 
 export interface ISummaryFeesProps {
-  categories: ICategories[]
-  paperSizes: IPaperSize[]
-  inputData: ISummaryFees
-  handleInputChange?: (
-    input_name: string,
-    value: string | string[] | undefined | null
-  ) => void
-  handlePrint?: () => void
+  printUrl: string
 }
 
 export interface IPrintEReceiptsProps {

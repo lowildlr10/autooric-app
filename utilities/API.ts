@@ -1,3 +1,4 @@
+import { RocTemplateTypes } from '@/Interfaces'
 import axios from 'axios'
 
 export default class API {
@@ -274,9 +275,26 @@ export default class API {
   }
 
   // Fetch printable report of collection
-  static async getPrintableRoc(accessToken: string, printData: string) {
+  static async getPrintableRoc(
+    accessToken: string, 
+    printData?: string,
+    from?: string,
+    to?: string,
+    categories?: string,
+    certifiedCorrectedBy?: string,
+    notedBy?: string,
+    paperSizeId?: string,
+    template?: RocTemplateTypes
+  ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/report-collection?print_data=${printData}`,
+      `${API.API_BASE_URL}/api/v1/print/report-collection?print_data=${printData}` +
+        `&from=${from}` +
+        `&to=${to}` +
+        `&category_ids=${categories}` +
+        `&certified_correct_id=${certifiedCorrectedBy}` +
+        `&noted_by_id=${notedBy}` +
+        `&paper_size_id=${paperSizeId}` +
+        `&template=${template}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -289,16 +307,9 @@ export default class API {
   // Fetch printable summary of fees
   static async getPrintableSof(
     accessToken: string,
-    from: string,
-    to: string,
-    categories: string,
-    paperSizeId: string
   ) {
     return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/summary-fees?from=${from}` +
-        `&to=${to}` +
-        `&category_ids=${categories}` +
-        `&paper_size_id=${paperSizeId}`,
+      `${API.API_BASE_URL}/api/v1/print/summary-fees`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
