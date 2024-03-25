@@ -257,8 +257,6 @@ const Report = () => {
     link.click()
   }
 
-  useEffect(() => console.log(reportCollectionData), [reportCollectionData])
-
   //Handle print report
   const handlePrint = () => {
     setPrintDownloadLoading(true)

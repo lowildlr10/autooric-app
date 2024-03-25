@@ -549,8 +549,6 @@ const Library = () => {
     }
   }
 
-  useEffect(() => console.log(particularFormData), [particularFormData])
-
   const handleShowDetails = (details: any) => {
     switch (tabValue) {
       case 0:
