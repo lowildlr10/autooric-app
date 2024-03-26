@@ -71,6 +71,33 @@ export default class API {
     })
   }
 
+  // Fetch all accounts
+  static async getAccounts(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/accounts`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all accounts
+  static async getPaginatedAccounts(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/accounts-paginated`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Fetch all accounts with URL
+  static async getAccountsByUrl(accessToken: string, url: string) {
+    return axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // Fetch all payors
   static async getPayors(accessToken: string) {
     return axios.get(`${API.API_BASE_URL}/api/v1/payors`, {
@@ -408,6 +435,15 @@ export default class API {
     })
   }
 
+  // create accounts
+  static async createAccounts(accessToken: string, formData: any) {
+    return axios.post(`${API.API_BASE_URL}/api/v1/accounts`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // create particulars
   static async createParticulars(accessToken: string, formData: any) {
     return axios.post(`${API.API_BASE_URL}/api/v1/particulars`, formData, {
@@ -478,6 +514,23 @@ export default class API {
   ) {
     return axios.post(
       `${API.API_BASE_URL}/api/v1/categories/${categoryId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
+  // Update accounts
+  static async updateAccount(
+    accessToken: string,
+    accountId: string,
+    formData: any
+  ) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/accounts/${accountId}?_method=PATCH`,
       formData,
       {
         headers: {
@@ -570,6 +623,15 @@ export default class API {
   // Delete categories
   static async deleteCategory(accessToken: string, categoryId: string) {
     return axios.delete(`${API.API_BASE_URL}/api/v1/categories/${categoryId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
+  // Delete accounts
+  static async deleteAccount(accessToken: string, accountId: string) {
+    return axios.delete(`${API.API_BASE_URL}/api/v1/accounts/${accountId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

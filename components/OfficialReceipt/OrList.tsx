@@ -64,10 +64,7 @@ const OrList = ({
         readOnly={showDetails}
         handleClose={handleCloseDetails}
         handleDeposit={handleDeposit}
-        handleCancel={() => {
-          handleCancel()
-          handleSearchDateParticularsChange(search)
-        }}
+        handleCancel={handleCancel}
       />
     )
   }

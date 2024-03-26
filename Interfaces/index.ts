@@ -30,6 +30,7 @@ export interface IDrawerMenu {
 export type DialogContent =
   | 'users'
   | 'cateogories'
+  | 'accounts'
   | 'particulars'
   | 'discounts'
   | 'signatories'
@@ -109,6 +110,11 @@ export interface ICategoriesSubContentProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
+export interface IAccountsSubContentProps {
+  formData: IAccount
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
 export interface IParticularsSubContentProps {
   dialogType: DialogType
   formData: IParticular
@@ -152,18 +158,21 @@ export type OpenDialogType =
   | 'logout'
   | 'create_users'
   | 'create_categories'
+  | 'create_accounts'
   | 'create_particulars'
   | 'create_discounts'
   | 'create_signatories'
   | 'create_paper_sizes'
   | 'update_users'
   | 'update_categories'
+  | 'update_accounts'
   | 'update_particulars'
   | 'update_discounts'
   | 'update_signatories'
   | 'update_paper_sizes'
   | 'delete_users'
   | 'delete_categories'
+  | 'delete_accounts'
   | 'delete_particulars'
   | 'delete_discounts'
   | 'delete_signatories'
@@ -176,18 +185,21 @@ export interface IOpenDialog {
   logout?: boolean
   create_users?: boolean
   create_categories?: boolean
+  create_accounts?: boolean
   create_particulars?: boolean
   create_discounts?: boolean
   create_signatories?: boolean
   create_paper_sizes?: boolean
   update_users?: boolean
   update_categories?: boolean
+  update_accounts?: boolean
   update_particulars?: boolean
   update_discounts?: boolean
   update_signatories?: boolean
   update_paper_sizes?: boolean
   delete_users?: boolean
   delete_categories?: boolean
+  delete_accounts?: boolean
   delete_particulars?: boolean
   delete_discounts?: boolean
   delete_signatories?: boolean
@@ -272,11 +284,19 @@ export interface ICategories {
   order_no?: number
 }
 
+export interface IAccount {
+  id?: string
+  account_name?: string
+  account_number?: string
+}
+
 export interface IParticular {
   id?: string
   particular_name?: string
   category_id?: string
   category_str?: string
+  account_id?: string
+  account_str?: string
   default_amount?: number
   default_amount_str?: string
   order_no?: number
@@ -536,11 +556,19 @@ export interface ICateogryListColumn {
   align?: 'right' | 'center' | 'left'
 }
 
+export interface IAccountListColumn {
+  id: 'account_name' | 'account_number'
+  label: string
+  minWidth?: number
+  align?: 'right' | 'center' | 'left'
+}
+
 export interface IParticularListColumn {
   id:
     | 'dropdown'
     | 'category_name'
     | 'category_str'
+    | 'account_str'
     | 'particular_name'
     | 'default_amount_str'
     | 'order_no'
@@ -610,6 +638,20 @@ export interface IUserListProps {
 
 export interface ICategoryListProps {
   rows: ICategories[]
+  currentPage: number
+  nextPageUrl: string
+  prevPageUrl: string
+  from: number
+  to: number
+  total: number
+  links: ITableListLinks[]
+  handleShowDetails: (details: ICategories) => void
+  handleShowCreate: () => void
+  handlePageChange: (url: string) => void
+}
+
+export interface IAccountListProps {
+  rows: IAccount[]
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string

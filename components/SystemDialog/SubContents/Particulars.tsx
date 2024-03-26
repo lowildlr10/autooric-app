@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { ICategories, IParticularsSubContentProps } from '@/Interfaces'
+import { ICategories, IAccount, IParticularsSubContentProps } from '@/Interfaces'
 import {
   Divider,
-  FormControl,
   FormControlLabel,
   InputAdornment,
   Stack,
@@ -23,11 +22,17 @@ const Particulars = ({
 }: IParticularsSubContentProps) => {
   const { accessToken } = useAccessToken()
   const [categories, setCategories] = useState<ICategories[]>()
+  const [accounts, setAccounts] = useState<IAccount[]>()
   const [formattedCategories, setFormattedCategories] = useState<any>([])
+  const [formattedAccounts, setFormattedAccounts] = useState<any>([])
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     fetchCategories()
+  }, [accessToken])
+
+  useEffect(() => {
+    fetchAccounts()
   }, [accessToken])
 
   useEffect(() => {
@@ -42,6 +47,20 @@ const Particulars = ({
     }
     setLoading(false)
   }, [categories])
+
+  useEffect(() => {
+    setLoading(true)
+    if (accounts) {
+      setFormattedAccounts(
+        accounts.map((account) => ({
+          id: account.id,
+          label: 
+            `${account.account_name} ${account.account_number ? `(${account.account_number})` : ''}`,
+        }))
+      )
+    }
+    setLoading(false)
+  }, [accounts])
 
   const fetchCategories = () => {
     setLoading(true)
@@ -62,10 +81,46 @@ const Particulars = ({
     }
   }
 
+  const fetchAccounts = () => {
+    setLoading(true)
+    if (accessToken) {
+      API.getAccounts(accessToken)
+        .then((response) => {
+          const res = response?.data.data
+          setAccounts(res)
+          setLoading(false)
+        })
+        .catch((error) => {
+          toast.error(
+            error?.response?.data?.message ??
+              'An error occured while fetching accounts'
+          )
+          setLoading(false)
+        })
+    }
+  }
+
   if (loading) return <SectionLoader />
 
   return (
     <>
+      <TextField
+        variant='outlined'
+        margin='normal'
+        required
+        fullWidth
+        id='particular_name'
+        label='Particular Name'
+        name='particular_name'
+        autoComplete=''
+        size='small'
+        focused
+        autoFocus
+        value={formData?.particular_name ?? ''}
+        onChange={(e) => handleInputChange('particular_name', e.target.value)}
+        sx={{ m: 0 }}
+      />
+
       <DynamicAutocomplete
         id='category_id'
         name='category_id'
@@ -82,21 +137,20 @@ const Particulars = ({
         required
       />
 
-      <TextField
-        variant='outlined'
-        margin='normal'
+      <DynamicAutocomplete
+        id='account_id'
+        name='account_id'
+        label='Account'
+        data={formattedAccounts}
+        value={formData?.account_id}
+        handleChange={(e: any, newValue: any) => {
+          handleInputChange &&
+            handleInputChange(
+              'account_id',
+              newValue?.id ?? newValue?.inputValue ?? ''
+            )
+        }}
         required
-        fullWidth
-        id='particular_name'
-        label='Particular Name'
-        name='particular_name'
-        autoComplete=''
-        size='small'
-        focused
-        autoFocus
-        value={formData?.particular_name ?? ''}
-        onChange={(e) => handleInputChange('particular_name', e.target.value)}
-        sx={{ m: 0 }}
       />
 
       <TextField

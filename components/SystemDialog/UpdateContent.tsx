@@ -6,6 +6,7 @@ import User from './SubContents/User'
 import Category from './SubContents/Category'
 import PaperSize from './SubContents/PaperSize'
 import Signatory from './SubContents/Signatory'
+import Account from './SubContents/Account'
 
 const UpdateContent = ({
   content,
@@ -53,6 +54,10 @@ const UpdateContent = ({
 
       {content === 'paper_sizes' && (
         <PaperSize formData={formData} handleInputChange={handleInputChange} />
+      )}
+
+      {content === 'accounts' && (
+        <Account formData={formData} handleInputChange={handleInputChange} />
       )}
     </>
   )

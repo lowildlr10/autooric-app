@@ -41,7 +41,11 @@ const defaultCreateOrFormData: IOfficialReceipt = {
 const defaultParticularFormData: IParticular = {
   particular_name: '',
   category_id: '',
+  account_id: '',
   default_amount: 0,
+  coa_accounting: false,
+  pnp_crame: false,
+  firearms_registration: false
 }
 
 const defaultDiscountFormData: IDiscount = {

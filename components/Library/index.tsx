@@ -15,6 +15,7 @@ import {
   IPaperSize,
   DialogContent,
   ISignatory,
+  IAccount,
 } from '@/Interfaces'
 import CardContainer from '@/components/CardContainer'
 import TabContainer, { CustomTabPanel } from '@/components/TabContainer'
@@ -26,6 +27,7 @@ import ParticularList from './Particulars/ParticularList'
 import DiscountList from './Discounts/DiscountList'
 import PaperSizeList from './PaperSizes/PaperSizeList'
 import SignatoryList from './Signatories/SignatoryList'
+import AccountList from './Accounts/AccountList'
 
 const defaultCategoryFormData: ICategories = {
   id: '',
@@ -33,10 +35,18 @@ const defaultCategoryFormData: ICategories = {
   order_no: 0,
 }
 
+const defaultAccountFormData: IAccount = {
+  id: '',
+  account_name: '',
+  account_number: ''
+}
+
 const defaultParticularFormData: IParticular = {
   id: '',
   category_id: '',
   category_str: '',
+  account_id: '',
+  account_str: '',
   particular_name: '',
   default_amount: 0,
   default_amount_str: '',
@@ -105,6 +115,7 @@ const Library = () => {
   const [discountListLoading, setDiscountListLoading] = useState(false)
   const [signatoryListLoading, setSignatoryListLoading] = useState(false)
   const [paperSizeListLoading, setPaperSizeListLoading] = useState(false)
+  const [accountListLoading, setAccountListLoading] = useState(false)
   const [formSaveLoading, setFormSaveLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [categoryListData, setCategoryListData] = useState<any>()
@@ -112,6 +123,7 @@ const Library = () => {
   const [discountListData, setDiscountListData] = useState<any>()
   const [signatoryListData, setSignatoryListData] = useState<any>()
   const [paperSizeListData, setPaperSizeListData] = useState<any>()
+  const [accountListData, setAccountListData] = useState<any>()
   const [tabValue, setTabValue] = useState(0)
   const [dialogOpen, setDialogOpen] = useState<IOpenDialog>({})
   const [tabContents, setTabContents] = useState<ITabContents[]>([])
@@ -143,6 +155,9 @@ const Library = () => {
   const [paperSizeFormData, setPaperSizeFormData] = useState<IPaperSize>(
     defaultPaperSizeFormData
   )
+  const [accountFormData, setAccountFormData] = useState<IAccount>(
+    defaultAccountFormData
+  )
 
   // Handle global loading
   useEffect(() => {
@@ -154,6 +169,7 @@ const Library = () => {
       discountListLoading ||
       signatoryListLoading ||
       paperSizeListLoading ||
+      accountListLoading ||
       formSaveLoading ||
       deleteLoading
     ) {
@@ -169,6 +185,7 @@ const Library = () => {
     discountListLoading,
     signatoryListLoading,
     paperSizeListLoading,
+    accountListLoading,
     formSaveLoading,
     deleteLoading,
   ])
@@ -200,6 +217,10 @@ const Library = () => {
       {
         index: 4,
         label: 'PAPER SIZES',
+      },
+      {
+        index: 5,
+        label: 'ACCOUNTS',
       },
     ])
   }, [])
@@ -261,6 +282,17 @@ const Library = () => {
           fetchPaperSizes()
         }
         break
+      case 5:
+        setCurrentCreateTitle('Create Account')
+        setCurrentContent('accounts')
+        setCurrentCreateDialog('create_accounts')
+        setCurrentUpdateDialog('update_accounts')
+        setCurrentDeleteDialog('delete_accounts')
+
+        if (accessToken) {
+          fetchAccounts()
+        }
+        break
       default:
         break
     }
@@ -313,6 +345,15 @@ const Library = () => {
         )
         setCurrentFormData(paperSizeFormData)
         break
+      case 5:
+        setCurrentUpdateTitle(
+          `Account Details (${[accountFormData?.account_name]})`
+        )
+        setCurrentDeleteTitle(
+          `Delete Account (${[accountFormData?.account_name]})`
+        )
+        setCurrentFormData(accountFormData)
+        break
       default:
         break
     }
@@ -323,6 +364,7 @@ const Library = () => {
     discountFormData,
     signatoryFormData,
     paperSizeFormData,
+    accountFormData
   ])
 
   // Handle logout using API utilities
@@ -390,6 +432,39 @@ const Library = () => {
           .catch((error) => {
             toast.error(errorMessage)
             setCategoryListLoading(false)
+          })
+      }
+    }
+  }
+
+  // Fetch accounts
+  const fetchAccounts = (url?: string) => {
+    setAccountListLoading(true)
+    if (accessToken) {
+      const errorMessage =
+        'An error occurred while fetching lists. Please try again.'
+
+      if (url) {
+        API.getAccountsByUrl(accessToken, url)
+          .then((response) => {
+            const res = response?.data.data
+            setAccountListData(res)
+            setAccountListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setAccountListLoading(false)
+          })
+      } else {
+        API.getPaginatedAccounts(accessToken)
+          .then((response) => {
+            const res = response?.data.data
+            setAccountListData(res)
+            setAccountListLoading(false)
+          })
+          .catch((error) => {
+            toast.error(errorMessage)
+            setAccountListLoading(false)
           })
       }
     }
@@ -544,6 +619,9 @@ const Library = () => {
       case 4:
         fetchPaperSizes(url)
         break
+      case 5:
+        fetchAccounts(url)
+        break
       default:
         break
     }
@@ -565,6 +643,7 @@ const Library = () => {
           ...particularFormData,
           id: details.id,
           category_id: details.category_id,
+          account_id: details.account_id,
           particular_name: details.particular_name,
           default_amount: details.default_amount,
           order_no: details.order_no,
@@ -605,6 +684,15 @@ const Library = () => {
         })
         handleDialogOpen('update_paper_sizes')
         break
+      case 5:
+        setAccountFormData({
+          ...accountFormData,
+          id: details.id,
+          account_name: details.account_name,
+          account_number: details.account_number
+        })
+        handleDialogOpen('update_accounts')
+        break
       default:
         break
     }
@@ -615,6 +703,15 @@ const Library = () => {
   ) => {
     setCategoryFormData({
       ...categoryFormData,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleInputChangeAccounts = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setAccountFormData({
+      ...accountFormData,
       [e.target.name]: e.target.value,
     })
   }
@@ -671,7 +768,7 @@ const Library = () => {
 
   //Handle create records
   const handleCreateRecord = (
-    formData: ICategories | IParticular | IDiscount | ISignatory | IPaperSize
+    formData: ICategories | IParticular | IDiscount | ISignatory | IPaperSize | IAccount
   ) => {
     setFormSaveLoading(true)
 
@@ -775,6 +872,27 @@ const Library = () => {
               setFormSaveLoading(false)
               setPaperSizeFormData(defaultPaperSizeFormData)
               fetchPaperSizes()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 5:
+          API.createAccounts(accessToken, formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setAccountFormData(defaultAccountFormData)
+              fetchAccounts()
             })
             .catch((error) => {
               const res = error?.response?.data.data
@@ -903,6 +1021,27 @@ const Library = () => {
               setFormSaveLoading(false)
               setPaperSizeFormData(defaultPaperSizeFormData)
               fetchPaperSizes()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setFormSaveLoading(false)
+            })
+          break
+        case 5:
+          API.updateAccount(accessToken, formData?.id ?? '', formData)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setFormSaveLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setFormSaveLoading(false)
+              setAccountFormData(defaultAccountFormData)
+              fetchAccounts()
             })
             .catch((error) => {
               const res = error?.response?.data.data
@@ -1056,6 +1195,32 @@ const Library = () => {
               setDeleteLoading(false)
             })
           break
+        case 5:
+          API.deleteAccount(accessToken, id)
+            .then((response) => {
+              const res = response?.data.data
+              if (res?.error) {
+                toast.error(res?.message)
+                setDeleteLoading(false)
+                return
+              }
+
+              toast.success(res?.message)
+              setDeleteLoading(false)
+              setAccountFormData(defaultAccountFormData)
+              setDialogOpen({
+                create_accounts: false,
+                update_accounts: false,
+                delete_accounts: false,
+              })
+              fetchAccounts()
+            })
+            .catch((error) => {
+              const res = error?.response?.data.data
+              toast.error(res.message)
+              setDeleteLoading(false)
+            })
+          break
         default:
           break
       }
@@ -1111,6 +1276,10 @@ const Library = () => {
               particular_name: particular?.particular_name,
               category_id: particular?.category_id,
               category_str: category?.category_name,
+              account_id: particular?.account_id,
+              account_str: 
+                `${particular?.account?.account_name}  
+                ${particular?.account?.account_number ? `(${particular?.account?.account_number})` : ''}`,
               default_amount: particular?.default_amount ?? 0,
               default_amount_str: particular?.default_amount
                 ? particular.default_amount
@@ -1254,6 +1423,37 @@ const Library = () => {
           handleShowCreate={() => handleDialogOpen('create_paper_sizes')}
         />
       )
+    }  else if (index === 5) {
+      const rows = accountListData?.data?.map((account: any) => {
+        return {
+          id: account.id,
+          account_name: account?.account_name,
+          account_number: account?.account_number
+        }
+      })
+      const currentPage = accountListData?.current_page
+      const nextPageUrl = accountListData?.next_page_url
+      const prevPageUrl = accountListData?.prev_page_url
+      const from = accountListData?.from
+      const to = accountListData?.to
+      const total = accountListData?.total
+      const links = accountListData?.links
+
+      return (
+        <AccountList
+          rows={rows ?? []}
+          currentPage={currentPage}
+          nextPageUrl={nextPageUrl}
+          prevPageUrl={prevPageUrl}
+          from={from}
+          to={to}
+          total={total}
+          links={links}
+          handlePageChange={handlePageChange}
+          handleShowDetails={handleShowDetails}
+          handleShowCreate={() => handleDialogOpen('create_accounts')}
+        />
+      )
     }
   }
 
@@ -1273,6 +1473,9 @@ const Library = () => {
         break
       case 4:
         setPaperSizeFormData(defaultPaperSizeFormData)
+        break
+      case 5:
+        setAccountFormData(defaultAccountFormData)
         break
       default:
         break
@@ -1295,6 +1498,9 @@ const Library = () => {
         break
       case 4:
         handleInputChangePaperSizes(param1)
+        break
+      case 5:
+        handleInputChangeAccounts(param1)
         break
       default:
         break

@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import TableList from '@/components/TableList'
 import {
-  IParticular,
-  IParticularListProps,
-  IParticularListColumn,
+  IAccount,
+  IAccountListProps,
+  IAccountListColumn,
 } from '@/Interfaces'
 
-const columns: readonly IParticularListColumn[] = [
-  { id: 'category_name', label: '', minWidth: 200 },
-  { id: 'dropdown', label: '', align: 'right', minWidth: 10 },
+const columns: readonly IAccountListColumn[] = [
+  { id: 'account_name', label: 'Account Name', minWidth: 200 },
+  { id: 'account_number', label: 'Account Number', minWidth: 200 },
 ]
 
-const subColumns: readonly IParticularListColumn[] = [
-  { id: 'particular_name', label: 'Particular Name', minWidth: 200 },
-  { id: 'category_str', label: 'Category', minWidth: 200 },
-  { id: 'account_str', label: 'Account', minWidth: 200 },
-  { id: 'default_amount_str', label: 'Default Amount', minWidth: 150 },
-  { id: 'order_no', label: 'Order No', minWidth: 90 },
-]
-
-const ParticularList = ({
+const AccountList = ({
   rows,
   currentPage,
   nextPageUrl,
@@ -31,10 +23,9 @@ const ParticularList = ({
   handlePageChange,
   handleShowDetails,
   handleShowCreate,
-}: IParticularListProps) => {
+}: IAccountListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
-  const [subRows, setSubRows] = useState<IParticular[]>([])
 
   useEffect(() => {
     if (!searchLoading) return
@@ -42,7 +33,7 @@ const ParticularList = ({
     if (query) {
       const timer = setTimeout(() => {
         handlePageChange(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/particulars-paginated?search=${query}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/accounts-paginated?search=${query}`
         )
         setSearchLoading(false)
       }, 500)
@@ -59,25 +50,12 @@ const ParticularList = ({
     setSearch(e.target.value ?? '')
   }
 
-  useEffect(() => {
-    const _rows: IParticular[] = []
-
-    rows?.forEach((row: any) => {
-      row?.sub_rows?.forEach((sRow: IParticular) => {
-        _rows.push(sRow)
-      })
-    })
-
-    setSubRows(_rows)
-  }, [rows])
-
   return (
     <TableList
       search={search}
       searchType='search'
       displayType='users'
       columns={columns}
-      subColumns={subColumns}
       rows={rows ?? []}
       currentPage={currentPage ?? 1}
       nextPageUrl={nextPageUrl}
@@ -91,13 +69,11 @@ const ParticularList = ({
       handleSearchChange={handleSearchChange}
       handlePageChange={handlePageChange}
       handleShowDetails={(id: string) =>
-        handleShowDetails(
-          subRows?.find((row: IParticular) => row.id === id) ?? {}
-        )
+        handleShowDetails(rows?.find((row: IAccount) => row.id === id) ?? {})
       }
       handleShowCreate={handleShowCreate}
     />
   )
 }
 
-export default ParticularList
+export default AccountList
