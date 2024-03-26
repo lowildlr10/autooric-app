@@ -45,7 +45,7 @@ const defaultParticularFormData: IParticular = {
   default_amount: 0,
   coa_accounting: false,
   pnp_crame: false,
-  firearms_registration: false
+  firearms_registration: false,
 }
 
 const defaultDiscountFormData: IDiscount = {

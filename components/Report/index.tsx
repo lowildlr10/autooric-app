@@ -38,7 +38,7 @@ const defaultReportCollectionData: IReportCollection = {
   certified_correct_id: '',
   noted_by_id: '',
   paper_size_id: '',
-  template: 'coa_accounting'
+  template: 'coa_accounting',
 }
 
 const defaultPrintEReceiptsData: IPrintEReceipts = {
@@ -339,34 +339,32 @@ const Report = () => {
             }
           } else {
             API.getPrintableRoc(
-                accessToken,
-                '',
-                reportCollectionData.from ?? '',
-                reportCollectionData.to ?? '',
-                JSON.stringify(reportCollectionData.category_ids),
-                reportCollectionData.certified_correct_id,
-                reportCollectionData.noted_by_id,
-                reportCollectionData.paper_size_id,
-                reportCollectionData.template
-              )
-                .then((response) => {
-                  const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
-                  const filename = response.data.data.filename
-                  setPrintFilename(filename)
-                  setPrintUrl(pdfUrl)
-                  handleDialogOpen('print')
-                  setPrintDownloadLoading(false)
-                })
-                .catch((error) => {
-                  toast.error(error.message)
-                  setPrintDownloadLoading(false)
-                })
+              accessToken,
+              '',
+              reportCollectionData.from ?? '',
+              reportCollectionData.to ?? '',
+              JSON.stringify(reportCollectionData.category_ids),
+              reportCollectionData.certified_correct_id,
+              reportCollectionData.noted_by_id,
+              reportCollectionData.paper_size_id,
+              reportCollectionData.template
+            )
+              .then((response) => {
+                const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+                const filename = response.data.data.filename
+                setPrintFilename(filename)
+                setPrintUrl(pdfUrl)
+                handleDialogOpen('print')
+                setPrintDownloadLoading(false)
+              })
+              .catch((error) => {
+                toast.error(error.message)
+                setPrintDownloadLoading(false)
+              })
           }
           break
         case 2:
-          API.getPrintableSof(
-            accessToken
-          )
+          API.getPrintableSof(accessToken)
             .then((response) => {
               const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
               const filename = response.data.data.filename
@@ -482,11 +480,7 @@ const Report = () => {
         />
       )
     } else if (index === 2) {
-      return (
-        <SummaryFees
-          printUrl={printUrl}
-        />
-      )
+      return <SummaryFees printUrl={printUrl} />
     } else if (index === 3) {
       return (
         <PrintEReceipts

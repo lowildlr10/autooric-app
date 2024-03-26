@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { ICategories, IAccount, IParticularsSubContentProps } from '@/Interfaces'
+import {
+  ICategories,
+  IAccount,
+  IParticularsSubContentProps,
+} from '@/Interfaces'
 import {
   Divider,
   FormControlLabel,
@@ -54,8 +58,7 @@ const Particulars = ({
       setFormattedAccounts(
         accounts.map((account) => ({
           id: account.id,
-          label: 
-            `${account.account_name} ${account.account_number ? `(${account.account_number})` : ''}`,
+          label: `${account.account_name} ${account.account_number ? `(${account.account_number})` : ''}`,
         }))
       )
     }
@@ -194,12 +197,7 @@ const Particulars = ({
         />
       )}
 
-      <Stack
-        border={1}
-        borderRadius={3}
-        p={2}
-        borderColor='divider'
-      >
+      <Stack border={1} borderRadius={3} p={2} borderColor='divider'>
         <Typography variant='h6' fontWeight={500}>
           Report of Collection
         </Typography>
@@ -217,10 +215,7 @@ const Particulars = ({
                 size='small'
                 inputProps={{ 'aria-label': 'controlled' }}
                 onChange={(e) =>
-                  handleInputChange(
-                    'coa_accounting',
-                    e.target.checked
-                  )
+                  handleInputChange('coa_accounting', e.target.checked)
                 }
               />
             }
@@ -243,10 +238,7 @@ const Particulars = ({
                 size='small'
                 inputProps={{ 'aria-label': 'controlled' }}
                 onChange={(e) =>
-                  handleInputChange(
-                    'pnp_crame',
-                    e.target.checked
-                  )
+                  handleInputChange('pnp_crame', e.target.checked)
                 }
               />
             }
@@ -269,10 +261,7 @@ const Particulars = ({
                 size='small'
                 inputProps={{ 'aria-label': 'controlled' }}
                 onChange={(e) =>
-                  handleInputChange(
-                    'firearms_registration',
-                    e.target.checked
-                  )
+                  handleInputChange('firearms_registration', e.target.checked)
                 }
               />
             }
@@ -288,7 +277,6 @@ const Particulars = ({
           />
         </Stack>
       </Stack>
-        
     </>
   )
 }

@@ -303,7 +303,7 @@ export default class API {
 
   // Fetch printable report of collection
   static async getPrintableRoc(
-    accessToken: string, 
+    accessToken: string,
     printData?: string,
     from?: string,
     to?: string,
@@ -332,18 +332,13 @@ export default class API {
   }
 
   // Fetch printable summary of fees
-  static async getPrintableSof(
-    accessToken: string,
-  ) {
-    return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/summary-fees`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    )
+  static async getPrintableSof(accessToken: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/print/summary-fees`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
   }
 
   // Fetch printable e-receipts

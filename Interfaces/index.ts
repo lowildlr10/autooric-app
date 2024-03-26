@@ -118,7 +118,10 @@ export interface IAccountsSubContentProps {
 export interface IParticularsSubContentProps {
   dialogType: DialogType
   formData: IParticular
-  handleInputChange: (input_name: string, value: string | number | boolean | null) => void
+  handleInputChange: (
+    input_name: string,
+    value: string | number | boolean | null
+  ) => void
 }
 
 export interface IDiscountsSubContentProps {
@@ -223,7 +226,10 @@ export interface ICashReceiptsRecord {
   paper_size_id: string
 }
 
-export type RocTemplateTypes = 'coa_accounting' | 'pnp_crame' | 'firearms_registration'
+export type RocTemplateTypes =
+  | 'coa_accounting'
+  | 'pnp_crame'
+  | 'firearms_registration'
 
 export interface IRocTemplate {
   id: RocTemplateTypes
