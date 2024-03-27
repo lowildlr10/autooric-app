@@ -347,12 +347,12 @@ const UserManagement = () => {
       name={
         userInfo
           ? `${userInfo?.first_name} ${userInfo?.last_name}`
-          : 'Loading...'
+          : <CircularProgress size={20} color='inherit' />
       }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
     >
-      {loading && <Loader />}
+      {/* {loading && <Loader />} */}
       <Stack p={2}>
         <CardContainer title='User Management'>
           <TabContainer

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles'
@@ -25,6 +25,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import LogoutIcon from '@mui/icons-material/Logout'
 import Link from 'next/link'
 import { IDrawerMenu, IMiniVariantDrawerProps } from '@/Interfaces'
+import DrawerSideNavList from './DrawerSideNavList'
 
 const drawerWidth = 240
 const defaultDrawerTop: IDrawerMenu[] = [
@@ -45,13 +46,36 @@ const defaultDrawerTop: IDrawerMenu[] = [
   },
 ]
 
+const defaultDrawerTopAdmin: IDrawerMenu[] = [
+  {
+    text: 'Official Receipt',
+    href: '/official-receipt',
+    icon: ReceiptLongIcon,
+  },
+  {
+    text: 'Report',
+    href: '/report',
+    icon: AssessmentIcon,
+  },
+  {
+    text: 'Library',
+    href: '/library',
+    icon: LibraryBooksIcon,
+  },
+  {
+    text: 'User Management',
+    href: '/user-management',
+    icon: ManageAccountsIcon,
+  }
+]
+
 const defaultDrawerMenuBottom: IDrawerMenu[] = [
   {
     text: 'Logout',
     href: '#',
     icon: LogoutIcon,
     onClick: () => {
-      alert('logout')
+      console.log('logout')
     },
   },
 ]
@@ -131,12 +155,18 @@ const MiniVariantDrawer = ({
   role,
   handleLogoutDialogOpen,
 }: IMiniVariantDrawerProps) => {
-  const pathname = usePathname()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [open, setOpen] = useState(true)
-  const [drawerMenuTop, setDrawerMenuTop] = useState<IDrawerMenu[]>([])
-  const [drawerMenuBottom, setDrawerMenuBottom] = useState<IDrawerMenu[]>([])
+  ///const [drawerMenuTop, setDrawerMenuTop] = useState<IDrawerMenu[]>(defaultDrawerTop)
+  const [drawerMenuBottom, setDrawerMenuBottom] = useState<IDrawerMenu[]>(defaultDrawerMenuBottom)
+  const drawerMenuTop = useMemo<IDrawerMenu[]>(() => {
+    if (role === 'admin') {
+      return defaultDrawerTopAdmin
+    } else {
+      return defaultDrawerTop
+    }
+  }, [role])
 
   useEffect(() => {
     if (isMobile) {
@@ -147,33 +177,18 @@ const MiniVariantDrawer = ({
   }, [isMobile])
 
   useEffect(() => {
-    if (role) {
-      if (role === 'admin') {
-        setDrawerMenuTop([
-          ...defaultDrawerTop,
-          {
-            text: 'User Management',
-            href: '/user-management',
-            icon: ManageAccountsIcon,
-          },
-        ])
-      } else {
-        setDrawerMenuTop(defaultDrawerTop)
-      }
-
-      setDrawerMenuBottom(
-        defaultDrawerMenuBottom.map((menu) => {
-          if (menu.text === 'Logout') {
-            return {
-              ...menu,
-              onClick: handleLogoutDialogOpen,
-            }
+    setDrawerMenuBottom(
+      defaultDrawerMenuBottom.map((menu) => {
+        if (menu.text === 'Logout') {
+          return {
+            ...menu,
+            onClick: handleLogoutDialogOpen,
           }
-          return menu
-        })
-      )
-    }
-  }, [role, handleLogoutDialogOpen])
+        }
+        return menu
+      })
+    )
+  }, [])
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -233,92 +248,9 @@ const MiniVariantDrawer = ({
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
-          {drawerMenuTop.map((menu, index) => {
-            return (
-              <ListItem
-                key={menu.text}
-                disablePadding
-                sx={{ display: 'block' }}
-              >
-                <Link href={menu.href} style={{ textDecoration: 'none' }}>
-                  <ListItemButton
-                    sx={(theme) => ({
-                      minHeight: 48,
-                      justifyContent: open ? 'initial' : 'center',
-                      px: 2.5,
-                      background:
-                        pathname === menu.href
-                          ? theme.palette.secondary.main
-                          : 'unset',
-                      color:
-                        pathname === menu.href
-                          ? theme.palette.secondary.contrastText
-                          : theme.palette.text.primary,
-                      '&:hover': {
-                        background: theme.palette.secondary.light,
-                        color: 'white',
-                      },
-                    })}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {
-                        <menu.icon
-                          sx={{
-                            color: pathname === menu.href ? 'white' : 'unset',
-                          }}
-                        />
-                      }
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={menu.text}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            )
-          })}
-        </List>
+        <DrawerSideNavList menus={drawerMenuTop} open={open} />
         <Divider />
-        <List>
-          {drawerMenuBottom.map((menu, index) => (
-            <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={(theme) => ({
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                  '&:hover': {
-                    background: theme.palette.secondary.light,
-                    color: 'white',
-                  },
-                })}
-                onClick={menu.onClick ?? undefined}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {<menu.icon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={menu.text}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        <DrawerSideNavList menus={drawerMenuBottom} open={open} />
       </Drawer>
 
       <Box

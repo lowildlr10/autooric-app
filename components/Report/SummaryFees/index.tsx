@@ -1,14 +1,9 @@
 import React from 'react'
-import { Stack } from '@mui/material'
 import { ISummaryFeesProps } from '@/Interfaces'
-import SectionLoader from '@/components/Loader/SectionLoader'
 
 const SummaryFees = ({
   printUrl
 }: ISummaryFeesProps) => {
-  
-  if (!printUrl) return <SectionLoader />
-
   return (
     <iframe
       src={printUrl}

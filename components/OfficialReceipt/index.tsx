@@ -818,7 +818,7 @@ const OfficialReceipt = () => {
       name={
         userInfo
           ? `${userInfo?.first_name} ${userInfo?.last_name}`
-          : 'Loading...'
+          : <CircularProgress size={20} color='inherit' />
       }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
