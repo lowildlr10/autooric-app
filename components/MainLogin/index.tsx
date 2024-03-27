@@ -74,7 +74,7 @@ const MainLogin = () => {
 
   return (
     <Stack direction='row' justifyContent='center' alignItems='center'>
-      {loading && <Loader />}
+      {/* {loading && <Loader />} */}
 
       <Stack
         alignItems='center'

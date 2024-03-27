@@ -401,7 +401,7 @@ export interface IOfficialReceiptProps {
 }
 
 export interface ITabContents {
-  label: string
+  label: string | JSX.Element
   index: number
 }
 

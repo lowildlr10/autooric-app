@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import useAccessToken from '@/hooks/useAccessToken'
 import useUserInfo from '@/hooks/useUserInfo'
-import { Stack } from '@mui/material'
+import { CircularProgress, Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
 import {
@@ -115,22 +115,34 @@ const Report = () => {
     setTabContents([
       {
         index: 0,
-        label: 'CASH RECEIPTS RECORD',
+        label:
+          <Stack direction='row'>
+            CASH RECEIPTS RECORD&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 1,
-        label: 'REPORT OF COLLECTION',
+        label: 
+          <Stack direction='row'>
+            REPORT OF COLLECTION&nbsp;{(loading && tabValue === 1) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 2,
-        label: 'SUMMARY OF FEES',
+        label:
+          <Stack direction='row'>
+            SUMMARY OF FEES&nbsp;{(loading && tabValue === 2) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 3,
-        label: 'PRINT E-RECEIPTS',
+        label:
+          <Stack direction='row'>
+            PRINT E-RECEIPTS&nbsp;{(loading && tabValue === 3) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
     ])
-  }, [])
+  }, [loading, tabValue])
 
   useEffect(() => {
     handleClearAll()
@@ -584,7 +596,7 @@ const Report = () => {
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
     >
-      {loading && <Loader />}
+      {printDownloadLoading && <Loader />}
       <Stack p={2}>
         <CardContainer title='Report'>
           <TabContainer

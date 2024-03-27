@@ -6,7 +6,7 @@ import Loader from '../Loader'
 import MiniVariantDrawer from '../Drawer/MiniVariantDrawer'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
-import { Stack } from '@mui/material'
+import { CircularProgress, Stack } from '@mui/material'
 import SystemDialog from '../SystemDialog'
 import CardContainer from '../CardContainer'
 import {
@@ -141,14 +141,20 @@ const OfficialReceipt = () => {
     setTabContents([
       {
         index: 0,
-        label: 'CREATE/ISSUE OR',
+        label: 
+          <Stack direction='row'>
+            CREATE/ISSUE OR&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 1,
-        label: 'OR LIST',
+        label: 
+          <Stack direction='row'>
+            OR LIST&nbsp;{(loading && tabValue === 1) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
     ])
-  }, [])
+  }, [loading, tabValue])
 
   // Set default paper size
   useEffect(() => {
@@ -817,7 +823,7 @@ const OfficialReceipt = () => {
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
     >
-      {loading && <Loader />}
+      {(formSaveLoading || printDownloadLoading) && <Loader />}
       <Stack p={2}>
         <CardContainer title='Official Receipt'>
           <TabContainer

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import useAccessToken from '@/hooks/useAccessToken'
 import useUserInfo from '@/hooks/useUserInfo'
-import { Stack } from '@mui/material'
+import { CircularProgress, Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
 import { IOpenDialog, ITabContents, IUser, OpenDialogType } from '@/Interfaces'
@@ -76,10 +76,13 @@ const UserManagement = () => {
     setTabContents([
       {
         index: 0,
-        label: 'USERS',
+        label:
+          <Stack direction='row'>
+            USERS&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
     ])
-  }, [])
+  }, [loading, tabValue])
 
   useEffect(() => {
     if (!accessToken) return
