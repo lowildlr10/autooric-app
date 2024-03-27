@@ -2,10 +2,7 @@ import React from 'react'
 import { IAccountsSubContentProps } from '@/Interfaces'
 import { TextField } from '@mui/material'
 
-const Account = ({
-  formData,
-  handleInputChange,
-}: IAccountsSubContentProps) => {
+const Account = ({ formData, handleInputChange }: IAccountsSubContentProps) => {
   return (
     <>
       <TextField

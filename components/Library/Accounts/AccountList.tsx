@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import TableList from '@/components/TableList'
-import {
-  IAccount,
-  IAccountListProps,
-  IAccountListColumn,
-} from '@/Interfaces'
+import { IAccount, IAccountListProps, IAccountListColumn } from '@/Interfaces'
 
 const columns: readonly IAccountListColumn[] = [
   { id: 'account_name', label: 'Account Name', minWidth: 200 },

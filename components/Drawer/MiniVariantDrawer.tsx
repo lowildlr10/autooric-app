@@ -66,7 +66,7 @@ const defaultDrawerTopAdmin: IDrawerMenu[] = [
     text: 'User Management',
     href: '/user-management',
     icon: ManageAccountsIcon,
-  }
+  },
 ]
 
 const defaultDrawerMenuBottom: IDrawerMenu[] = [
@@ -159,7 +159,9 @@ const MiniVariantDrawer = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [open, setOpen] = useState(true)
   ///const [drawerMenuTop, setDrawerMenuTop] = useState<IDrawerMenu[]>(defaultDrawerTop)
-  const [drawerMenuBottom, setDrawerMenuBottom] = useState<IDrawerMenu[]>(defaultDrawerMenuBottom)
+  const [drawerMenuBottom, setDrawerMenuBottom] = useState<IDrawerMenu[]>(
+    defaultDrawerMenuBottom
+  )
   const drawerMenuTop = useMemo<IDrawerMenu[]>(() => {
     if (role === 'admin') {
       return defaultDrawerTopAdmin

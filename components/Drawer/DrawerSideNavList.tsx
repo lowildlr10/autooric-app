@@ -1,15 +1,21 @@
 'use client'
 import React from 'react'
 import { IDrawerMenu } from '@/Interfaces'
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const DrawerSideNavList = ({
   menus,
-  open
+  open,
 }: {
-  menus: IDrawerMenu[],
+  menus: IDrawerMenu[]
   open: boolean
 }) => {
   const pathname = usePathname()
@@ -18,11 +24,7 @@ const DrawerSideNavList = ({
     <List>
       {menus.map((menu, index) => {
         return (
-          <ListItem
-            key={menu.text}
-            disablePadding
-            sx={{ display: 'block' }}
-          >
+          <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
             <Link href={menu.href} style={{ textDecoration: 'none' }}>
               <ListItemButton
                 onClick={menu.onClick ?? undefined}

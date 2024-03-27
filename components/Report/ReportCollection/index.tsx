@@ -28,22 +28,20 @@ const ReportCollection = ({
   const [formattedPaperSizes, setFormattedPaperSizes] = useState<IPaperSize[]>(
     []
   )
-  const [formattedTemplates, setFormattedTemplates] = useState<IRocTemplate[]>(
-    [
-      {
-        id: 'coa_accounting',
-        label: 'COA/Accounting'
-      },
-      {
-        id: 'pnp_crame',
-        label: 'CRAME'
-      },
-      {
-        id: 'firearms_registration',
-        label: 'CSG Caravan on Firearms Registration'
-      }
-    ]
-  )
+  const [formattedTemplates, setFormattedTemplates] = useState<IRocTemplate[]>([
+    {
+      id: 'coa_accounting',
+      label: 'COA/Accounting',
+    },
+    {
+      id: 'pnp_crame',
+      label: 'CRAME',
+    },
+    {
+      id: 'firearms_registration',
+      label: 'CSG Caravan on Firearms Registration',
+    },
+  ])
 
   useEffect(() => {
     if (categories) {
@@ -167,21 +165,14 @@ const ReportCollection = ({
           label='Template'
           data={formattedTemplates}
           value={inputData.template}
-          handleChange={(
-            e: SelectChangeEvent<typeof inputData.template>
-          ) => {
-            handleInputChange &&
-              handleInputChange('template', e.target.value)
+          handleChange={(e: SelectChangeEvent<typeof inputData.template>) => {
+            handleInputChange && handleInputChange('template', e.target.value)
           }}
           required
         />
 
         <Button variant='contained' size='large' onClick={handlePrint}>
-          {inputData.template === 'pnp_crame' ? (
-            <>Preview</>
-          ) : (
-            <>Print</>
-          )}
+          {inputData.template === 'pnp_crame' ? <>Preview</> : <>Print</>}
         </Button>
       </Stack>
     </Stack>

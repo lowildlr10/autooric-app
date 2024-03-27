@@ -38,7 +38,7 @@ const defaultCategoryFormData: ICategories = {
 const defaultAccountFormData: IAccount = {
   id: '',
   account_name: '',
-  account_number: ''
+  account_number: '',
 }
 
 const defaultParticularFormData: IParticular = {
@@ -53,7 +53,7 @@ const defaultParticularFormData: IParticular = {
   order_no: 0,
   coa_accounting: false,
   pnp_crame: false,
-  firearms_registration: false
+  firearms_registration: false,
 }
 
 const defaultDiscountFormData: IDiscount = {
@@ -200,45 +200,69 @@ const Library = () => {
     setTabContents([
       {
         index: 0,
-        label: 
+        label: (
           <Stack direction='row'>
-            CATEGORIES&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
-          </Stack>,
+            CATEGORIES&nbsp;
+            {loading && tabValue === 0 && (
+              <CircularProgress size={16} color='primary' />
+            )}
+          </Stack>
+        ),
       },
       {
         index: 1,
-        label: 
+        label: (
           <Stack direction='row'>
-            PARTICULARS&nbsp;{(loading && tabValue === 1) && <CircularProgress size={16} color='primary' />}
+            PARTICULARS&nbsp;
+            {loading && tabValue === 1 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 2,
-        label: 
+        label: (
           <Stack direction='row'>
-            DISCOUNTS&nbsp;{(loading && tabValue === 2) && <CircularProgress size={16} color='primary' />}
+            DISCOUNTS&nbsp;
+            {loading && tabValue === 2 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 3,
-        label: 
+        label: (
           <Stack direction='row'>
-            SIGNATORIES&nbsp;{(loading && tabValue === 3) && <CircularProgress size={16} color='primary' />}
+            SIGNATORIES&nbsp;
+            {loading && tabValue === 3 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 4,
-        label: 
+        label: (
           <Stack direction='row'>
-            PAPER SIZES&nbsp;{(loading && tabValue === 4) && <CircularProgress size={16} color='primary' />}
+            PAPER SIZES&nbsp;
+            {loading && tabValue === 4 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 5,
-        label: 
+        label: (
           <Stack direction='row'>
-            ACCOUNTS&nbsp;{(loading && tabValue === 5) && <CircularProgress size={16} color='primary' />}
+            ACCOUNTS&nbsp;
+            {loading && tabValue === 5 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
     ])
   }, [loading, tabValue])
@@ -382,7 +406,7 @@ const Library = () => {
     discountFormData,
     signatoryFormData,
     paperSizeFormData,
-    accountFormData
+    accountFormData,
   ])
 
   // Handle logout using API utilities
@@ -667,7 +691,7 @@ const Library = () => {
           order_no: details.order_no,
           coa_accounting: details.coa_accounting,
           pnp_crame: details.pnp_crame,
-          firearms_registration: details.firearms_registration
+          firearms_registration: details.firearms_registration,
         })
         handleDialogOpen('update_particulars')
         break
@@ -707,7 +731,7 @@ const Library = () => {
           ...accountFormData,
           id: details.id,
           account_name: details.account_name,
-          account_number: details.account_number
+          account_number: details.account_number,
         })
         handleDialogOpen('update_accounts')
         break
@@ -786,7 +810,13 @@ const Library = () => {
 
   //Handle create records
   const handleCreateRecord = (
-    formData: ICategories | IParticular | IDiscount | ISignatory | IPaperSize | IAccount
+    formData:
+      | ICategories
+      | IParticular
+      | IDiscount
+      | ISignatory
+      | IPaperSize
+      | IAccount
   ) => {
     setFormSaveLoading(true)
 
@@ -1295,8 +1325,7 @@ const Library = () => {
               category_id: particular?.category_id,
               category_str: category?.category_name,
               account_id: particular?.account_id,
-              account_str: 
-                `${particular?.account?.account_name}  
+              account_str: `${particular?.account?.account_name}  
                 ${particular?.account?.account_number ? `(${particular?.account?.account_number})` : ''}`,
               default_amount: particular?.default_amount ?? 0,
               default_amount_str: particular?.default_amount
@@ -1441,12 +1470,12 @@ const Library = () => {
           handleShowCreate={() => handleDialogOpen('create_paper_sizes')}
         />
       )
-    }  else if (index === 5) {
+    } else if (index === 5) {
       const rows = accountListData?.data?.map((account: any) => {
         return {
           id: account.id,
           account_name: account?.account_name,
-          account_number: account?.account_number
+          account_number: account?.account_number,
         }
       })
       const currentPage = accountListData?.current_page
@@ -1528,9 +1557,11 @@ const Library = () => {
   return (
     <MiniVariantDrawer
       name={
-        userInfo
-          ? `${userInfo?.first_name} ${userInfo?.last_name}`
-          : <CircularProgress size={20} color='inherit' />
+        userInfo ? (
+          `${userInfo?.first_name} ${userInfo?.last_name}`
+        ) : (
+          <CircularProgress size={20} color='inherit' />
+        )
       }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
