@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TableList from '../TableList'
 import { IOfficialReceipt, IOrColumn, IOrListProps } from '@/Interfaces'
 import CreateOr from './CreateOr'

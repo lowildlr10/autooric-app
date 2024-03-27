@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import useAccessToken from '@/hooks/useAccessToken'
 import useUserInfo from '@/hooks/useUserInfo'
-import { Stack } from '@mui/material'
+import { CircularProgress, Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
 import {
@@ -200,30 +200,48 @@ const Library = () => {
     setTabContents([
       {
         index: 0,
-        label: 'CATEGORIES',
+        label: 
+          <Stack direction='row'>
+            CATEGORIES&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
+          </Stack>,
       },
       {
         index: 1,
-        label: 'PARTICULARS',
+        label: 
+          <Stack direction='row'>
+            PARTICULARS&nbsp;{(loading && tabValue === 1) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 2,
-        label: 'DISCOUNTS',
+        label: 
+          <Stack direction='row'>
+            DISCOUNTS&nbsp;{(loading && tabValue === 2) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 3,
-        label: 'SIGNATORIES',
+        label: 
+          <Stack direction='row'>
+            SIGNATORIES&nbsp;{(loading && tabValue === 3) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 4,
-        label: 'PAPER SIZES',
+        label: 
+          <Stack direction='row'>
+            PAPER SIZES&nbsp;{(loading && tabValue === 4) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
       {
         index: 5,
-        label: 'ACCOUNTS',
+        label: 
+          <Stack direction='row'>
+            ACCOUNTS&nbsp;{(loading && tabValue === 5) && <CircularProgress size={16} color='primary' />}
+          </Stack>
       },
     ])
-  }, [])
+  }, [loading, tabValue])
 
   useEffect(() => {
     switch (tabValue) {
@@ -1517,7 +1535,7 @@ const Library = () => {
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
     >
-      {loading && <Loader />}
+      {formSaveLoading && <Loader />}
       <Stack p={2}>
         <CardContainer title='Library'>
           <TabContainer
