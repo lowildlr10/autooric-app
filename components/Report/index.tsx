@@ -115,31 +115,47 @@ const Report = () => {
     setTabContents([
       {
         index: 0,
-        label:
+        label: (
           <Stack direction='row'>
-            CASH RECEIPTS RECORD&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
+            CASH RECEIPTS RECORD&nbsp;
+            {loading && tabValue === 0 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 1,
-        label: 
+        label: (
           <Stack direction='row'>
-            REPORT OF COLLECTION&nbsp;{(loading && tabValue === 1) && <CircularProgress size={16} color='primary' />}
+            REPORT OF COLLECTION&nbsp;
+            {loading && tabValue === 1 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 2,
-        label:
+        label: (
           <Stack direction='row'>
-            SUMMARY OF FEES&nbsp;{(loading && tabValue === 2) && <CircularProgress size={16} color='primary' />}
+            SUMMARY OF FEES&nbsp;
+            {loading && tabValue === 2 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 3,
-        label:
+        label: (
           <Stack direction='row'>
-            PRINT E-RECEIPTS&nbsp;{(loading && tabValue === 3) && <CircularProgress size={16} color='primary' />}
+            PRINT E-RECEIPTS&nbsp;
+            {loading && tabValue === 3 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
     ])
   }, [loading, tabValue])
@@ -589,9 +605,11 @@ const Report = () => {
   return (
     <MiniVariantDrawer
       name={
-        userInfo
-          ? `${userInfo?.first_name} ${userInfo?.last_name}`
-          : 'Loading...'
+        userInfo ? (
+          `${userInfo?.first_name} ${userInfo?.last_name}`
+        ) : (
+          <CircularProgress size={20} color='inherit' />
+        )
       }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}

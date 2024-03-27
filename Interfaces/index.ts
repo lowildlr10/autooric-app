@@ -15,7 +15,7 @@ export interface ILoginSectionProps {
 
 export interface IMiniVariantDrawerProps {
   children: React.ReactNode
-  name?: string
+  name?: string | JSX.Element
   role?: string
   handleLogoutDialogOpen: () => void
 }

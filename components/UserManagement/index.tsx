@@ -76,10 +76,14 @@ const UserManagement = () => {
     setTabContents([
       {
         index: 0,
-        label:
+        label: (
           <Stack direction='row'>
-            USERS&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
+            USERS&nbsp;
+            {loading && tabValue === 0 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
     ])
   }, [loading, tabValue])
@@ -345,14 +349,16 @@ const UserManagement = () => {
   return (
     <MiniVariantDrawer
       name={
-        userInfo
-          ? `${userInfo?.first_name} ${userInfo?.last_name}`
-          : 'Loading...'
+        userInfo ? (
+          `${userInfo?.first_name} ${userInfo?.last_name}`
+        ) : (
+          <CircularProgress size={20} color='inherit' />
+        )
       }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
     >
-      {loading && <Loader />}
+      {/* {loading && <Loader />} */}
       <Stack p={2}>
         <CardContainer title='User Management'>
           <TabContainer

@@ -200,45 +200,69 @@ const Library = () => {
     setTabContents([
       {
         index: 0,
-        label: 
+        label: (
           <Stack direction='row'>
-            CATEGORIES&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
-          </Stack>,
+            CATEGORIES&nbsp;
+            {loading && tabValue === 0 && (
+              <CircularProgress size={16} color='primary' />
+            )}
+          </Stack>
+        ),
       },
       {
         index: 1,
-        label: 
+        label: (
           <Stack direction='row'>
-            PARTICULARS&nbsp;{(loading && tabValue === 1) && <CircularProgress size={16} color='primary' />}
+            PARTICULARS&nbsp;
+            {loading && tabValue === 1 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 2,
-        label: 
+        label: (
           <Stack direction='row'>
-            DISCOUNTS&nbsp;{(loading && tabValue === 2) && <CircularProgress size={16} color='primary' />}
+            DISCOUNTS&nbsp;
+            {loading && tabValue === 2 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 3,
-        label: 
+        label: (
           <Stack direction='row'>
-            SIGNATORIES&nbsp;{(loading && tabValue === 3) && <CircularProgress size={16} color='primary' />}
+            SIGNATORIES&nbsp;
+            {loading && tabValue === 3 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 4,
-        label: 
+        label: (
           <Stack direction='row'>
-            PAPER SIZES&nbsp;{(loading && tabValue === 4) && <CircularProgress size={16} color='primary' />}
+            PAPER SIZES&nbsp;
+            {loading && tabValue === 4 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 5,
-        label: 
+        label: (
           <Stack direction='row'>
-            ACCOUNTS&nbsp;{(loading && tabValue === 5) && <CircularProgress size={16} color='primary' />}
+            ACCOUNTS&nbsp;
+            {loading && tabValue === 5 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
     ])
   }, [loading, tabValue])
@@ -1533,9 +1557,11 @@ const Library = () => {
   return (
     <MiniVariantDrawer
       name={
-        userInfo
-          ? `${userInfo?.first_name} ${userInfo?.last_name}`
-          : 'Loading...'
+        userInfo ? (
+          `${userInfo?.first_name} ${userInfo?.last_name}`
+        ) : (
+          <CircularProgress size={20} color='inherit' />
+        )
       }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}

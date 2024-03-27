@@ -141,17 +141,25 @@ const OfficialReceipt = () => {
     setTabContents([
       {
         index: 0,
-        label: 
+        label: (
           <Stack direction='row'>
-            CREATE/ISSUE OR&nbsp;{(loading && tabValue === 0) && <CircularProgress size={16} color='primary' />}
+            CREATE/ISSUE OR&nbsp;
+            {loading && tabValue === 0 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
       {
         index: 1,
-        label: 
+        label: (
           <Stack direction='row'>
-            OR LIST&nbsp;{(loading && tabValue === 1) && <CircularProgress size={16} color='primary' />}
+            OR LIST&nbsp;
+            {loading && tabValue === 1 && (
+              <CircularProgress size={16} color='primary' />
+            )}
           </Stack>
+        ),
       },
     ])
   }, [loading, tabValue])
@@ -816,9 +824,11 @@ const OfficialReceipt = () => {
   return (
     <MiniVariantDrawer
       name={
-        userInfo
-          ? `${userInfo?.first_name} ${userInfo?.last_name}`
-          : 'Loading...'
+        userInfo ? (
+          `${userInfo?.first_name} ${userInfo?.last_name}`
+        ) : (
+          <CircularProgress size={20} color='inherit' />
+        )
       }
       role={userInfo?.role}
       handleLogoutDialogOpen={() => handleDialogOpen('logout')}
