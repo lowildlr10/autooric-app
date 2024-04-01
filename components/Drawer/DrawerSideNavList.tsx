@@ -1,15 +1,51 @@
 'use client'
 import React from 'react'
-import { IDrawerMenu } from '@/Interfaces'
+import { IDrawerMenu, Role } from '@/Interfaces'
 import {
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Skeleton,
 } from '@mui/material'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+
+const ListItemSkeleton = ({
+  role = 'staff'
+}: {
+  role?: Role
+}) => {
+  return (
+    <>
+      <ListItem>
+        <ListItemButton>
+          <ListItemText>
+            <Skeleton />
+          </ListItemText>
+        </ListItemButton>
+      </ListItem>
+      <ListItem>
+        <ListItemButton>
+          <ListItemText>
+            <Skeleton />
+          </ListItemText>
+        </ListItemButton>
+      </ListItem>
+
+      {role === 'admin' && (
+        <ListItem>
+          <ListItemButton>
+            <ListItemText>
+              <Skeleton />
+            </ListItemText>
+          </ListItemButton>
+        </ListItem>
+      )}
+    </>
+  )
+}
 
 const DynamicLink = ({
   children,
@@ -41,14 +77,17 @@ const DynamicLink = ({
 const DrawerSideNavList = ({
   menus,
   open,
+  role = 'staff'
 }: {
   menus: IDrawerMenu[]
   open: boolean
+  role?: Role
 }) => {
   const pathname = usePathname()
 
   return (
     <List>
+      {menus.length === 0 && <ListItemSkeleton role={role} />}
       {menus.map((menu, index) => {
         return (
           <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
