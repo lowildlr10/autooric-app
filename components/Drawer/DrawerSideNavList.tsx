@@ -11,6 +11,33 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+const DynamicLink = ({
+  children,
+  nextLink = false,
+  onClick,
+  href
+}: {
+  children: React.ReactNode,
+  href: string,
+  nextLink?: boolean,
+  onClick?: () => void
+}) => {
+
+  return (
+    <>
+      {nextLink ? (
+        <Link href={href} style={{ textDecoration: 'none' }}>
+          {children}
+        </Link>
+      ) : (
+        <a href={href} onClick={onClick} style={{ textDecoration: 'none' }}>
+          {children}
+        </a>
+      )}
+    </>
+  )
+}
+
 const DrawerSideNavList = ({
   menus,
   open,
@@ -25,7 +52,7 @@ const DrawerSideNavList = ({
       {menus.map((menu, index) => {
         return (
           <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
-            <Link href={!menu.onClick ? menu.href : '#'} style={{ textDecoration: 'none' }}>
+            <DynamicLink href={menu.href} onClick={menu.onClick} nextLink={!!menu.onClick ? false : true}>
               <ListItemButton
                 onClick={menu.onClick ?? undefined}
                 sx={(theme) => ({
@@ -66,7 +93,7 @@ const DrawerSideNavList = ({
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
-            </Link>
+            </DynamicLink>
           </ListItem>
         )
       })}
