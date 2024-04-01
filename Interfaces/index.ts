@@ -1,6 +1,8 @@
 import { SvgIconComponent } from '@mui/icons-material'
 import { SelectChangeEvent } from '@mui/material'
 
+export type Role = 'admin' | 'staff'
+
 export interface ILoginProps {
   username: string
   password: string
@@ -16,7 +18,7 @@ export interface ILoginSectionProps {
 export interface IMiniVariantDrawerProps {
   children: React.ReactNode
   name?: string | JSX.Element
-  role?: string
+  role?: Role
   handleLogoutDialogOpen: () => void
 }
 

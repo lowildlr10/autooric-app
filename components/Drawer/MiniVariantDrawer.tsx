@@ -152,17 +152,10 @@ const MiniVariantDrawer = ({
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [open, setOpen] = useState(true)
-  ///const [drawerMenuTop, setDrawerMenuTop] = useState<IDrawerMenu[]>(defaultDrawerTop)
+  const [drawerMenuTop, setDrawerMenuTop] = useState<IDrawerMenu[]>([])
   const [drawerMenuBottom, setDrawerMenuBottom] = useState<IDrawerMenu[]>(
     defaultDrawerMenuBottom
   )
-  const drawerMenuTop = useMemo<IDrawerMenu[]>(() => {
-    if (role === 'admin') {
-      return defaultDrawerTopAdmin
-    } else {
-      return defaultDrawerTop
-    }
-  }, [role])
 
   useEffect(() => {
     if (isMobile) {
@@ -171,6 +164,16 @@ const MiniVariantDrawer = ({
       handleDrawerOpen()
     }
   }, [isMobile])
+
+  useEffect(() => {
+    if (role === 'admin') {
+      setDrawerMenuTop(defaultDrawerTopAdmin)
+    } else if (role === 'staff') {
+      setDrawerMenuTop(defaultDrawerTop)
+    } else {
+      setDrawerMenuTop([])
+    }
+  }, [role])
 
   useEffect(() => {
     setDrawerMenuBottom(
@@ -244,9 +247,9 @@ const MiniVariantDrawer = ({
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <DrawerSideNavList menus={drawerMenuTop} open={open} />
+        <DrawerSideNavList menus={drawerMenuTop} open={open} role={role} />
         <Divider />
-        <DrawerSideNavList menus={drawerMenuBottom} open={open} />
+        <DrawerSideNavList menus={drawerMenuBottom} open={open} role={role} />
       </Drawer>
 
       <Box
