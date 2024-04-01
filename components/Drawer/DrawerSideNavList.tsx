@@ -25,7 +25,7 @@ const DrawerSideNavList = ({
       {menus.map((menu, index) => {
         return (
           <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
-            <Link href={menu.href} style={{ textDecoration: 'none' }}>
+            <Link href={!menu.onClick ? menu.href : '#'} style={{ textDecoration: 'none' }}>
               <ListItemButton
                 onClick={menu.onClick ?? undefined}
                 sx={(theme) => ({
