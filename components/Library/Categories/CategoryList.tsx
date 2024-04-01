@@ -25,7 +25,7 @@ const CategoryList = ({
   handleShowCreate,
 }: ICategoryListProps) => {
   const [search, setSearch] = useState('')
-  const [searchLoading, setSearchLoading] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(true)
 
   useEffect(() => {
     if (!searchLoading) return

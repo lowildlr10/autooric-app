@@ -12,6 +12,7 @@ import {
   Collapse,
   useMediaQuery,
   useTheme,
+  Skeleton,
 } from '@mui/material'
 import ActionSection from './ActionSection'
 import { ITableListProps } from '@/Interfaces'
@@ -92,6 +93,21 @@ const TableList = ({
             </TableRow>
           </TableHead>
           <TableBody>
+            {searchLoading && (
+              <>
+                {Array.from({length: 50}, (_, i) => (
+                  <TableRow key={`row-loading-${i}`} hover role='checkbox' tabIndex={-1}>
+                    <TableCell
+                      align='center'
+                      sx={{ cursor: 'pointer' }}
+                      colSpan={columns?.length}
+                    >
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            )}
             {total === 0 && (
               <TableRow hover role='checkbox' tabIndex={-1}>
                 <TableCell

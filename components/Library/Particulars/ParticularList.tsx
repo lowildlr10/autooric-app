@@ -33,7 +33,7 @@ const ParticularList = ({
   handleShowCreate,
 }: IParticularListProps) => {
   const [search, setSearch] = useState('')
-  const [searchLoading, setSearchLoading] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(true)
   const [subRows, setSubRows] = useState<IParticular[]>([])
 
   useEffect(() => {

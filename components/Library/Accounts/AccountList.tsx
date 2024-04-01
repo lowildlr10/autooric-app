@@ -21,7 +21,7 @@ const AccountList = ({
   handleShowCreate,
 }: IAccountListProps) => {
   const [search, setSearch] = useState('')
-  const [searchLoading, setSearchLoading] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(true)
 
   useEffect(() => {
     if (!searchLoading) return
