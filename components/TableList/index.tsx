@@ -95,8 +95,13 @@ const TableList = ({
           <TableBody>
             {searchLoading && (
               <>
-                {Array.from({length: 50}, (_, i) => (
-                  <TableRow key={`row-loading-${i}`} hover role='checkbox' tabIndex={-1}>
+                {Array.from({ length: 50 }, (_, i) => (
+                  <TableRow
+                    key={`row-loading-${i}`}
+                    hover
+                    role='checkbox'
+                    tabIndex={-1}
+                  >
                     <TableCell
                       align='center'
                       sx={{ cursor: 'pointer' }}
