@@ -12,11 +12,7 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const ListItemSkeleton = ({
-  role = 'staff'
-}: {
-  role?: Role
-}) => {
+const ListItemSkeleton = ({ role = 'staff' }: { role?: Role }) => {
   return (
     <>
       <ListItem>
@@ -51,14 +47,13 @@ const DynamicLink = ({
   children,
   nextLink = false,
   onClick,
-  href
+  href,
 }: {
-  children: React.ReactNode,
-  href: string,
-  nextLink?: boolean,
+  children: React.ReactNode
+  href: string
+  nextLink?: boolean
   onClick?: () => void
 }) => {
-
   return (
     <>
       {nextLink ? (
@@ -77,7 +72,7 @@ const DynamicLink = ({
 const DrawerSideNavList = ({
   menus,
   open,
-  role = 'staff'
+  role = 'staff',
 }: {
   menus: IDrawerMenu[]
   open: boolean
@@ -91,7 +86,11 @@ const DrawerSideNavList = ({
       {menus.map((menu, index) => {
         return (
           <ListItem key={menu.text} disablePadding sx={{ display: 'block' }}>
-            <DynamicLink href={menu.href} onClick={menu.onClick} nextLink={!!menu.onClick ? false : true}>
+            <DynamicLink
+              href={menu.href}
+              onClick={menu.onClick}
+              nextLink={!!menu.onClick ? false : true}
+            >
               <ListItemButton
                 onClick={menu.onClick ?? undefined}
                 sx={(theme) => ({
