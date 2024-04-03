@@ -319,7 +319,7 @@ const Report = () => {
             })
           break
         case 1:
-          if (reportCollectionData.template === 'pnp_crame') {
+          if (reportCollectionData.template === 'coa_accounting') {
             if (!rocPrintPreviewData) {
               API.getPrintableRocPreviewData(
                 accessToken,
