@@ -114,7 +114,7 @@ const TableList = ({
                 ))}
               </>
             )}
-            {total === 0 && (
+            {(!loading && total === 0) && (
               <TableRow hover role='checkbox' tabIndex={-1}>
                 <TableCell
                   align='center'
@@ -125,7 +125,7 @@ const TableList = ({
                 </TableCell>
               </TableRow>
             )}
-            {rows?.map((row: any) => {
+            {!loading && rows?.map((row: any) => {
               return (
                 <React.Fragment key={row.id}>
                   <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
