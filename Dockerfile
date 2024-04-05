@@ -63,4 +63,4 @@ EXPOSE 3000
 ENV PORT 3000
 
 # Use nodemon to automatically restart the server on file changes
-CMD HOSTNAME="0.0.0.0" npx nodemon server.js
+CMD HOSTNAME="0.0.0.0" npx nodemon -L --watch .env server.js
