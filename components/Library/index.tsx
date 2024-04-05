@@ -1300,6 +1300,7 @@ const Library = () => {
       return (
         <CategoryList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}
@@ -1353,6 +1354,7 @@ const Library = () => {
       return (
         <ParticularList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}
@@ -1391,6 +1393,7 @@ const Library = () => {
       return (
         <DiscountList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}
@@ -1424,6 +1427,7 @@ const Library = () => {
       return (
         <SignatoryList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}
@@ -1458,6 +1462,7 @@ const Library = () => {
       return (
         <PaperSizeList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}
@@ -1489,6 +1494,7 @@ const Library = () => {
       return (
         <AccountList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}

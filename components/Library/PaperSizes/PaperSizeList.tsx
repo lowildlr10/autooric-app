@@ -14,6 +14,7 @@ const columns: readonly IPaperSizeListColumn[] = [
 
 const PapeSizeList = ({
   rows,
+  loading,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -54,6 +55,7 @@ const PapeSizeList = ({
   return (
     <TableList
       search={search}
+      loading={loading}
       searchType='search'
       displayType='users'
       columns={columns}

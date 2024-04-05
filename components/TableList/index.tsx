@@ -35,6 +35,7 @@ const TableList = ({
   to,
   total,
   links,
+  loading,
   searchLoading,
   searchType,
   handleSearchChange,
@@ -93,7 +94,7 @@ const TableList = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {searchLoading && (
+            {(loading || searchLoading) && (
               <>
                 {Array.from({ length: 50 }, (_, i) => (
                   <TableRow
