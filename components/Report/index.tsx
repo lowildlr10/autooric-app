@@ -7,7 +7,9 @@ import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
 import Loader from '@/components/Loader'
 import {
   ICashReceiptsRecord,
+  ICategories,
   IOpenDialog,
+  IParticular,
   IPrintEReceipts,
   IReportCollection,
   ITabContents,
@@ -252,17 +254,43 @@ const Report = () => {
     name: string,
     value: string | string[] | null | undefined
   ) => {
+    let finalValue = value
+
+    if (typeof value === 'object') {
+      finalValue = value as string[]
+    }
+
+    if (name === 'particulars_ids' && typeof value === 'object') {
+      if (value?.includes('all')) {
+        finalValue = particularListData.map((particular: IParticular) => particular.id)
+        if (typeof finalValue === 'object') {
+          finalValue = finalValue?.filter((val: string) => val !== 'all' && val !== 'clear')
+        }
+      } else if (value?.includes('clear')) {
+        finalValue = []
+      }
+    } else if (name === 'category_ids' && typeof value === 'object') {
+      if (value?.includes('all')) {
+        finalValue = categoryListData.map((category: ICategories) => category.id)
+        if (typeof finalValue === 'object') {
+          finalValue = finalValue?.filter((val: string) => val !== 'all' && val !== 'clear')
+        }
+      } else if (value?.includes('clear')) {
+        finalValue = []
+      }
+    }
+
     switch (tabValue) {
       case 0:
         setCashReceiptData({
           ...cashReceiptData,
-          [name]: value,
+          [name]: finalValue,
         })
         break
       case 1:
         setReportCollectionData({
           ...reportCollectionData,
-          [name]: value,
+          [name]: finalValue,
         })
         break
       case 2:
@@ -270,7 +298,7 @@ const Report = () => {
       case 3:
         setPrintEReceiptsData({
           ...printEReceiptsData,
-          [name]: value,
+          [name]: finalValue,
         })
         break
       default:
@@ -392,18 +420,20 @@ const Report = () => {
           }
           break
         case 2:
-          API.getPrintableSof(accessToken)
-            .then((response) => {
-              const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
-              const filename = response.data.data.filename
-              setPrintFilename(filename)
-              setPrintUrl(pdfUrl)
-              setPrintDownloadLoading(false)
-            })
-            .catch((error) => {
-              toast.error(error.message)
-              setPrintDownloadLoading(false)
-            })
+          // API.getPrintableSof(accessToken)
+          //   .then((response) => {
+          //     const pdfUrl = `data:application/pdf;base64,${response.data.data.pdf}`
+          //     const filename = response.data.data.filename
+          //     setPrintFilename(filename)
+          //     setPrintUrl(pdfUrl)
+          //     setPrintDownloadLoading(false)
+          //   })
+          //   .catch((error) => {
+          //     toast.error(error.message)
+          //     setPrintDownloadLoading(false)
+          //   })
+          setPrintUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}/docs/complete_kinds_fees.pdf`)
+          setPrintDownloadLoading(false)
           break
         case 3:
           API.getPrintableEReceipts(

@@ -13,6 +13,7 @@ const columns: readonly ICateogryListColumn[] = [
 
 const CategoryList = ({
   rows,
+  loading,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -53,6 +54,7 @@ const CategoryList = ({
   return (
     <TableList
       search={search}
+      loading={loading}
       searchType='search'
       displayType='users'
       columns={columns}

@@ -317,6 +317,7 @@ const OfficialReceipt = () => {
       return (
         <OrList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}

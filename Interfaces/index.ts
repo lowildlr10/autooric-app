@@ -614,6 +614,7 @@ export interface ITableListLinks {
 
 export interface IOrListProps {
   rows: IOfficialReceipt[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -632,6 +633,7 @@ export interface IOrListProps {
 
 export interface IUserListProps {
   rows: IUser[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -646,6 +648,7 @@ export interface IUserListProps {
 
 export interface ICategoryListProps {
   rows: ICategories[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -660,6 +663,7 @@ export interface ICategoryListProps {
 
 export interface IAccountListProps {
   rows: IAccount[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -674,6 +678,7 @@ export interface IAccountListProps {
 
 export interface IParticularListProps {
   rows: IParticular[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -688,6 +693,7 @@ export interface IParticularListProps {
 
 export interface IDiscountListProps {
   rows: IDiscount[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -702,6 +708,7 @@ export interface IDiscountListProps {
 
 export interface ISignatoryListProps {
   rows: ISignatory[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -716,6 +723,7 @@ export interface ISignatoryListProps {
 
 export interface IPaperSizeListProps {
   rows: IPaperSize[]
+  loading?: boolean
   currentPage: number
   nextPageUrl: string
   prevPageUrl: string
@@ -751,6 +759,7 @@ export interface ITableListProps {
   links: ITableListLinks[]
   search: string
   searchLoading: boolean
+  loading?: boolean
   searchType: SearchType
   hasCreateButton?: boolean
   handleSearchChange: any

@@ -46,10 +46,16 @@ const ReportCollection = ({
   useEffect(() => {
     if (categories) {
       setFormattedCategories(
-        categories.map((category) => ({
-          id: category.id,
-          label: category.category_name,
-        }))
+        () => {
+          const deselectAllCategory = { id: 'clear', label: 'Deselect All' };
+          const selectAllCategory = { id: 'all', label: 'Select All' };
+
+          return [
+            deselectAllCategory,
+            selectAllCategory,
+            ...categories.map(({ id, category_name }) => ({ id, label: category_name }))
+          ];
+        }
       )
     }
   }, [categories])

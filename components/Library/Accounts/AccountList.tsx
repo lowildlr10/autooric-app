@@ -9,6 +9,7 @@ const columns: readonly IAccountListColumn[] = [
 
 const AccountList = ({
   rows,
+  loading,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -49,6 +50,7 @@ const AccountList = ({
   return (
     <TableList
       search={search}
+      loading={loading}
       searchType='search'
       displayType='users'
       columns={columns}

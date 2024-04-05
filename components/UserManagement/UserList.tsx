@@ -15,6 +15,7 @@ const columns: readonly IUserListColumn[] = [
 
 const UserList = ({
   rows,
+  loading,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -55,6 +56,7 @@ const UserList = ({
   return (
     <TableList
       search={search}
+      loading={loading}
       searchType='search'
       displayType='users'
       columns={columns}

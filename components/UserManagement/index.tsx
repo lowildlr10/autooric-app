@@ -4,7 +4,6 @@ import useAccessToken from '@/hooks/useAccessToken'
 import useUserInfo from '@/hooks/useUserInfo'
 import { CircularProgress, Stack } from '@mui/material'
 import MiniVariantDrawer from '@/components/Drawer/MiniVariantDrawer'
-import Loader from '@/components/Loader'
 import { IOpenDialog, ITabContents, IUser, OpenDialogType } from '@/Interfaces'
 import CardContainer from '@/components/CardContainer'
 import TabContainer, { CustomTabPanel } from '@/components/TabContainer'
@@ -331,6 +330,7 @@ const UserManagement = () => {
       return (
         <UserList
           rows={rows ?? []}
+          loading={loading}
           currentPage={currentPage}
           nextPageUrl={nextPageUrl}
           prevPageUrl={prevPageUrl}

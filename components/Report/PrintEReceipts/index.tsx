@@ -22,10 +22,16 @@ const PrintEReceipts = ({
   useEffect(() => {
     if (particulars) {
       setFormattedParticulars(
-        particulars.map((particular) => ({
-          id: particular.id,
-          label: particular.particular_name,
-        }))
+        () => {
+          const deselectAllParticular = { id: 'clear', label: 'Deselect All' };
+          const selectAllParticular = { id: 'all', label: 'Select All' };
+
+          return [
+            deselectAllParticular,
+            selectAllParticular,
+            ...particulars.map(({ id, particular_name }) => ({ id, label: particular_name }))
+          ];
+        }
       )
     }
   }, [particulars])

@@ -13,6 +13,7 @@ const columns: readonly ISignatoryListColumn[] = [
 
 const SignatoryList = ({
   rows,
+  loading,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -53,6 +54,7 @@ const SignatoryList = ({
   return (
     <TableList
       search={search}
+      loading={loading}
       searchType='search'
       displayType='users'
       columns={columns}

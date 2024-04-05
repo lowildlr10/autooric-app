@@ -21,6 +21,7 @@ const subColumns: readonly IParticularListColumn[] = [
 
 const ParticularList = ({
   rows,
+  loading,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -74,6 +75,7 @@ const ParticularList = ({
   return (
     <TableList
       search={search}
+      loading={loading}
       searchType='search'
       displayType='users'
       columns={columns}

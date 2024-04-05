@@ -15,6 +15,7 @@ const columns: readonly IOrColumn[] = [
 
 const OrList = ({
   rows,
+  loading,
   currentPage,
   nextPageUrl,
   prevPageUrl,
@@ -72,6 +73,7 @@ const OrList = ({
   return (
     <TableList
       search={search}
+      loading={loading}
       searchType='date_particulars'
       displayType='official_receipt'
       columns={columns}
