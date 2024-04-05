@@ -135,6 +135,9 @@ const OfficialReceipt = () => {
   useEffect(() => {
     if (!accessToken) return
     fetchPaperSizes()
+    fetchPayors()
+    fetchParticulars()
+    fetchDiscounts()
   }, [accessToken])
 
   useEffect(() => {
