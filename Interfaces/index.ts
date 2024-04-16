@@ -3,6 +3,8 @@ import { SelectChangeEvent } from '@mui/material'
 
 export type Role = 'admin' | 'staff'
 
+export type OrDuplicateStatus = '' | 'success' | 'error' | 'duplicate'
+
 export interface ILoginProps {
   username: string
   password: string
@@ -480,6 +482,8 @@ export interface ICreateOrProps {
   payorLoading?: boolean
   particularLoading?: boolean
   discountLoading?: boolean
+  checkOrDuplicateLoading?: boolean
+  checkOrDuplicateStatus?: OrDuplicateStatus
   handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
   handleInputChange?: (
     input_name: string,
@@ -499,6 +503,7 @@ export interface ICreateOrProps {
 export interface ICreateOrActionButtonsProps {
   formData: IOfficialReceipt
   readOnly?: boolean
+  checkOrDuplicateStatus?: OrDuplicateStatus
   handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
   handlePrint?: (orId: string, paperSizeId: string) => void
   handleClear?: () => void
@@ -518,6 +523,8 @@ export interface ICreateOrFieldsProps {
   payorLoading?: boolean
   particularLoading?: boolean
   discountLoading?: boolean
+  checkOrDuplicateStatus?: OrDuplicateStatus
+  checkOrDuplicateLoading?: boolean
   handleInputChange?: (
     input_name: string,
     value: string | number | null

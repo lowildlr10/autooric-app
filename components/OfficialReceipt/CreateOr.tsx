@@ -12,6 +12,7 @@ import {
   RadioGroup,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
@@ -25,6 +26,7 @@ import {
 import dayjs from 'dayjs'
 import StaticAutocomplete from '../Common/StaticAutocomplete'
 import DynamicAutocomplete from '../Common/DynamicAutocomplete'
+import { Check, Error } from '@mui/icons-material'
 
 const CreateOrFields = ({
   handleInputChange,
@@ -41,6 +43,8 @@ const CreateOrFields = ({
   fetchDiscount,
   payorLoading,
   particularLoading,
+  checkOrDuplicateStatus,
+  checkOrDuplicateLoading,
   discountLoading,
 }: ICreateOrFieldsProps) => {
   const [formattedPayors, setFormattedPayors] = useState<any>([])
@@ -48,7 +52,7 @@ const CreateOrFields = ({
   const [formattedDiscounts, setFormattedDiscounts] = useState<any>([])
   const [defaultAmount, setDefaultAmount] = useState(0)
   const [cardNoRequired, setCardNoRequired] = useState(false)
-
+ 
   useEffect(() => {
     if (payors) {
       setFormattedPayors(
@@ -112,7 +116,7 @@ const CreateOrFields = ({
                     focused: true,
                   },
                 }}
-                onChange={(newValue) =>
+                onChange={(newValue: any) =>
                   handleInputChange &&
                   handleInputChange(
                     'receipt_date',
@@ -150,6 +154,10 @@ const CreateOrFields = ({
               size='small'
               focused
               autoFocus
+              error={
+                (checkOrDuplicateStatus === 'duplicate' || checkOrDuplicateStatus === 'error') ? 
+                true : false
+              }
               value={formData?.or_no ?? ''}
               onChange={(e) =>
                 handleInputChange &&
@@ -157,6 +165,26 @@ const CreateOrFields = ({
               }
               inputProps={{
                 maxLength: 10,
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='start'>
+                    {checkOrDuplicateLoading ? (
+                      <CircularProgress size={16} color='primary' />
+                    ) : (
+                      <>
+                        {(checkOrDuplicateStatus === 'duplicate' || checkOrDuplicateStatus === 'error') && (
+                          <Tooltip title="Duplicate" followCursor sx={{ cursor: 'pointer' }}>
+                            <Error fontSize='small' color='error' />
+                          </Tooltip>
+                        )}
+                        {checkOrDuplicateStatus === 'success' && (
+                          <Check fontSize='small' color='secondary' />
+                        )}
+                      </>
+                    )}
+                  </InputAdornment>
+                ),
               }}
               sx={{ m: 0 }}
             />
@@ -294,6 +322,14 @@ const CreateOrFields = ({
                   <InputAdornment position='start'>₱</InputAdornment>
                 ),
               }}
+              onClick={
+                (e: any) => {
+                  if (parseFloat(e.target.value) === 0) {
+                    handleInputChange &&
+                    handleInputChange('amount', '')
+                  }
+                }
+              }
               onChange={(e) =>
                 handleInputChange &&
                 handleInputChange(e.target.name, e.target.value)
@@ -577,7 +613,7 @@ const CreateOrFields = ({
                                 focused: true,
                               },
                             }}
-                            onChange={(newValue) =>
+                            onChange={(newValue : any) =>
                               handleInputChange &&
                               handleInputChange(
                                 'check_date',
@@ -683,6 +719,7 @@ const CreateOrFields = ({
 const ActionButtons = ({
   formData,
   readOnly,
+  checkOrDuplicateStatus,
   handleCreate,
   handlePrint,
   handleClear,
@@ -768,10 +805,13 @@ const ActionButtons = ({
     return (
       <>
         <Button
-          onClick={() => handleCreate && handleCreate(formData, true)}
+          onClick={
+            () => (checkOrDuplicateStatus === 'success' && handleCreate) && handleCreate(formData, true)
+          }
           variant='contained'
           color='primary'
           fullWidth
+          disabled={checkOrDuplicateStatus === 'success' ? false : true}
           sx={{
             py: '0.8em',
           }}
@@ -780,10 +820,13 @@ const ActionButtons = ({
         </Button>
         <Divider />
         <Button
-          onClick={() => handleCreate && handleCreate(formData, false)}
+          onClick={
+            () => (checkOrDuplicateStatus === 'success' && handleCreate) && handleCreate(formData, false)
+          }
           variant='contained'
           color='primary'
           fullWidth
+          disabled={checkOrDuplicateStatus === 'success' ? false : true}
           sx={{
             py: '0.8em',
             bgcolor: 'secondary.main',
@@ -841,10 +884,12 @@ const CreateOr = ({
   fetchDiscount,
   fetchParticular,
   fetchPayor,
+  checkOrDuplicateStatus,
+  checkOrDuplicateLoading,
   handleDialogOpen,
   handleDeposit,
   handleCancel,
-  handleClose,
+  handleClose
 }: ICreateOrProps) => {
   useEffect(() => {
     if (handleClear) handleClear()
@@ -871,6 +916,8 @@ const CreateOr = ({
             payorLoading={payorLoading}
             particularLoading={particularLoading}
             discountLoading={discountLoading}
+            checkOrDuplicateStatus={checkOrDuplicateStatus}
+            checkOrDuplicateLoading={checkOrDuplicateLoading}
             handleDialogOpen={handleDialogOpen}
             fetchDiscount={fetchDiscount}
             fetchParticular={fetchParticular}
@@ -885,6 +932,7 @@ const CreateOr = ({
           <ActionButtons
             formData={formData}
             readOnly={readOnly}
+            checkOrDuplicateStatus={checkOrDuplicateStatus}
             handleCreate={handleCreate}
             handlePrint={handlePrint}
             handleClear={handleClear}
