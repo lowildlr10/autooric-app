@@ -202,17 +202,20 @@ const SystemDialog = ({
 
         {dialogType === 'update' && (
           <>
-            <Button
-              onClick={() => {
-                handleShowDelete && handleShowDelete()
-              }}
-              autoFocus
-              sx={{
-                color: 'error.main',
-              }}
-            >
-              Delete
-            </Button>
+            {content !== 'signatories' && (
+              <Button
+                onClick={() => {
+                  handleShowDelete && handleShowDelete()
+                }}
+                autoFocus
+                sx={{
+                  color: 'error.main',
+                }}
+              >
+                Delete
+              </Button>
+            )}
+              
             <Button
               onClick={() => {
                 handleUpdate && handleUpdate(formData)

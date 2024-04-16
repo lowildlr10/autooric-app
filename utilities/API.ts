@@ -152,6 +152,15 @@ export default class API {
     })
   }
 
+  // Check if official receipts has duplicates 
+  static async checkOfficialReceiptsDuplicate(accessToken: string, orNo: string) {
+    return axios.get(`${API.API_BASE_URL}/api/v1/official-receipts/check-duplicate/${orNo}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+  }
+
   // Fetch all discounts
   static async getDiscounts(accessToken: string) {
     return axios.get(`${API.API_BASE_URL}/api/v1/discounts`, {
@@ -240,8 +249,13 @@ export default class API {
     paperSizeId: string,
     hasTemplate: '1' | '0'
   ) {
-    return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/official-receipt?or_id=${orId}&paper_size_id=${paperSizeId}&has_template=${hasTemplate}`,
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/print/official-receipt`,
+      {
+        or_id: orId,
+        paper_size_id: paperSizeId,
+        has_template: hasTemplate
+      },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -260,12 +274,14 @@ export default class API {
     certifiedCorrectedBy: string,
     paperSizeId: string
   ) {
-    return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/cash-receipts-record?from=${from}` +
-        `&to=${to}` +
-        `&particulars_ids=${particulars}` +
-        `&certified_correct_id=${certifiedCorrectedBy}` +
-        `&paper_size_id=${paperSizeId}`,
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/print/cash-receipts-record`,
+      {
+        from, to, 
+        particulars_ids: particulars,
+        certified_correct_id: certifiedCorrectedBy,
+        paper_size_id: paperSizeId
+      },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -285,13 +301,15 @@ export default class API {
     notedBy: string,
     paperSizeId: string
   ) {
-    return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/preview-report-collection?from=${from}` +
-        `&to=${to}` +
-        `&category_ids=${categories}` +
-        `&certified_correct_id=${certifiedCorrectedBy}` +
-        `&noted_by_id=${notedBy}` +
-        `&paper_size_id=${paperSizeId}`,
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/print/preview-report-collection`,
+      {
+        from, to,
+        category_ids: categories,
+        certified_correct_id: certifiedCorrectedBy,
+        noted_by_id: notedBy,
+        paper_size_id: paperSizeId
+      },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -313,15 +331,24 @@ export default class API {
     paperSizeId?: string,
     template?: RocTemplateTypes
   ) {
-    return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/report-collection?print_data=${printData}` +
-        `&from=${from}` +
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/print/report-collection?from=${from}` +
         `&to=${to}` +
         `&category_ids=${categories}` +
         `&certified_correct_id=${certifiedCorrectedBy}` +
         `&noted_by_id=${notedBy}` +
         `&paper_size_id=${paperSizeId}` +
-        `&template=${template}`,
+        `&template=${template}` +
+        `&print_data=${printData}`,
+      {
+        from, to,
+        category_ids: categories,
+        certified_correct_id: certifiedCorrectedBy,
+        noted_by_id: notedBy,
+        paper_size_id: paperSizeId,
+        template,
+        print_data: printData
+      },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -333,7 +360,7 @@ export default class API {
 
   // Fetch printable summary of fees
   static async getPrintableSof(accessToken: string) {
-    return axios.get(`${API.API_BASE_URL}/api/v1/print/summary-fees`, {
+    return axios.post(`${API.API_BASE_URL}/api/v1/print/summary-fees`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Access-Control-Allow-Origin': '*',
@@ -349,11 +376,13 @@ export default class API {
     particulars: string,
     paperSizeId: string
   ) {
-    return axios.get(
-      `${API.API_BASE_URL}/api/v1/print/e-receipts?from=${from}` +
-        `&to=${to}` +
-        `&particulars_ids=${particulars}` +
-        `&paper_size_id=${paperSizeId}`,
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/print/e-receipts`,
+      {
+        from, to,
+        particulars_ids: particulars,
+        paper_size_id: paperSizeId
+      },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

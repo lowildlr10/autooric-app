@@ -19,6 +19,7 @@ import {
   IPayor,
   ITabContents,
   OpenDialogType,
+  OrDuplicateStatus,
 } from '@/Interfaces'
 import TabContainer, { CustomTabPanel } from '../TabContainer'
 import CreateOr from './CreateOr'
@@ -75,6 +76,7 @@ const OfficialReceipt = () => {
   const [discountLoading, setDiscountLoading] = useState(false)
   const [orListLoading, setOrListLoading] = useState(false)
   const [paperSizeLoading, setPaperSizeLoading] = useState(false)
+  const [checkOrDuplicateLoading, setCheckOrDuplicateLoading] = useState(false)
   const [formSaveLoading, setFormSaveLoading] = useState(false)
   const [printDownloadLoading, setPrintDownloadLoading] = useState(false)
   const [tabValue, setTabValue] = useState(0)
@@ -103,6 +105,7 @@ const OfficialReceipt = () => {
   const [details, setDetails] = useState<IOfficialReceipt | undefined>({})
   const [showDetails, setShowDetails] = useState(false)
   const [tempPrintId, setTempPrintId] = useState('')
+  const [checkOrDuplicateStatus, setCheckOrDuplicateStatus] = useState<OrDuplicateStatus>('')
 
   // Discount computation with timeOut
   useEffect(() => {
@@ -206,6 +209,36 @@ const OfficialReceipt = () => {
     if (!userLoading && !isAuthenticated) forceRelogin()
   }, [isAuthenticated, loading, userLoading])
 
+  const checkOrIfHasDuplicate = (orNo: string) => {
+    setCheckOrDuplicateLoading(true)
+    setCheckOrDuplicateStatus('')
+
+    if (accessToken && orNo !== '') {
+      API.checkOfficialReceiptsDuplicate(accessToken, orNo)
+        .then((response) => {
+          const res = response?.data.data
+          setCheckOrDuplicateStatus(
+            res?.has_duplicate === '1' ? 'duplicate' : 'success'
+          )
+          setCheckOrDuplicateLoading(false)
+
+          if (res?.has_duplicate === '1') {
+            toast.error(res?.message)
+          }
+        })
+        .catch((error) => {
+          toast.error(
+            'An error occurred while checking duplicate. Please try again.'
+          )
+          setCheckOrDuplicateStatus('error')
+          setCheckOrDuplicateLoading(false)
+        })
+    } else {
+      setCheckOrDuplicateLoading(false)
+      setCheckOrDuplicateStatus('')
+    }
+  }
+
   const fetchPayors = () => {
     setPayorLoading(true)
     if (accessToken) {
@@ -242,6 +275,7 @@ const OfficialReceipt = () => {
           discounts={discounts ?? []}
           formData={createOrFormData}
           computingDiscount={changedAmountDiscount}
+          checkOrDuplicateLoading={checkOrDuplicateLoading}
           handleInputChange={(input_name, value) =>
             handleInputChange(input_name, value)
           }
@@ -257,6 +291,7 @@ const OfficialReceipt = () => {
           payorLoading={payorLoading}
           particularLoading={particularLoading}
           discountLoading={discountLoading}
+          checkOrDuplicateStatus={checkOrDuplicateStatus}
         />
       )
 
@@ -474,8 +509,9 @@ const OfficialReceipt = () => {
   ) => {
     let amountWords = ''
 
-    if (input_name === 'discount_id') setChangedAmountDiscount(true)
-    if (input_name === 'amount') {
+    if (input_name === 'discount_id') {
+      setChangedAmountDiscount(true)
+    } else if (input_name === 'amount') {
       setChangedAmountDiscount(true)
       try {
         amountWords = convertToWords((value as number) ?? 0)
@@ -489,6 +525,13 @@ const OfficialReceipt = () => {
         ...createOrFormData,
         amount: value as number,
         amount_words: amountWords,
+      })
+    } else if (input_name === 'or_no') {
+      const orNo = value as string
+      checkOrIfHasDuplicate(orNo.trim() ?? '')
+      setCreateOrFormData({ 
+        ...createOrFormData, 
+        or_no: orNo.trim() 
       })
     } else {
       setCreateOrFormData({ ...createOrFormData, [input_name]: value })
@@ -533,6 +576,8 @@ const OfficialReceipt = () => {
     setCreateOrFormData(defaultCreateOrFormData)
     setParticularFormData(defaultParticularFormData)
     setDiscountFormData(defaultDiscountFormData)
+    setCheckOrDuplicateLoading(false)
+    setCheckOrDuplicateStatus('')
     handleCloseDetails()
   }
 
@@ -581,13 +626,15 @@ const OfficialReceipt = () => {
 
           if (print) {
             handlePrintDownloadOr(res?.data?.id, paperSize, print)
-            handlePrintDownloadOr(res?.data?.id, paperSize, false)
+            //handlePrintDownloadOr(res?.data?.id, paperSize, false)
           } else {
             handlePrintDownloadOr(res?.data?.id, paperSize, false)
           }
 
           setTempPrintId(res?.data?.id)
           setCreateOrFormData(defaultCreateOrFormData)
+          setCheckOrDuplicateLoading(false)
+          setCheckOrDuplicateStatus('')
         })
         .catch((error) => {
           const res = error?.response?.data.data
