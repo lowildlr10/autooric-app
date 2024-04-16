@@ -105,7 +105,8 @@ const OfficialReceipt = () => {
   const [details, setDetails] = useState<IOfficialReceipt | undefined>({})
   const [showDetails, setShowDetails] = useState(false)
   const [tempPrintId, setTempPrintId] = useState('')
-  const [checkOrDuplicateStatus, setCheckOrDuplicateStatus] = useState<OrDuplicateStatus>('')
+  const [checkOrDuplicateStatus, setCheckOrDuplicateStatus] =
+    useState<OrDuplicateStatus>('')
 
   // Discount computation with timeOut
   useEffect(() => {
@@ -529,9 +530,9 @@ const OfficialReceipt = () => {
     } else if (input_name === 'or_no') {
       const orNo = value as string
       checkOrIfHasDuplicate(orNo.trim() ?? '')
-      setCreateOrFormData({ 
-        ...createOrFormData, 
-        or_no: orNo.trim() 
+      setCreateOrFormData({
+        ...createOrFormData,
+        or_no: orNo.trim(),
       })
     } else {
       setCreateOrFormData({ ...createOrFormData, [input_name]: value })

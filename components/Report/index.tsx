@@ -262,18 +262,26 @@ const Report = () => {
 
     if (name === 'particulars_ids' && typeof value === 'object') {
       if (value?.includes('all')) {
-        finalValue = particularListData.map((particular: IParticular) => particular.id)
+        finalValue = particularListData.map(
+          (particular: IParticular) => particular.id
+        )
         if (typeof finalValue === 'object') {
-          finalValue = finalValue?.filter((val: string) => val !== 'all' && val !== 'clear')
+          finalValue = finalValue?.filter(
+            (val: string) => val !== 'all' && val !== 'clear'
+          )
         }
       } else if (value?.includes('clear')) {
         finalValue = []
       }
     } else if (name === 'category_ids' && typeof value === 'object') {
       if (value?.includes('all')) {
-        finalValue = categoryListData.map((category: ICategories) => category.id)
+        finalValue = categoryListData.map(
+          (category: ICategories) => category.id
+        )
         if (typeof finalValue === 'object') {
-          finalValue = finalValue?.filter((val: string) => val !== 'all' && val !== 'clear')
+          finalValue = finalValue?.filter(
+            (val: string) => val !== 'all' && val !== 'clear'
+          )
         }
       } else if (value?.includes('clear')) {
         finalValue = []
@@ -432,7 +440,9 @@ const Report = () => {
           //     toast.error(error.message)
           //     setPrintDownloadLoading(false)
           //   })
-          setPrintUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}/docs/complete_kinds_fees.pdf`)
+          setPrintUrl(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/docs/complete_kinds_fees.pdf`
+          )
           setPrintDownloadLoading(false)
           break
         case 3:

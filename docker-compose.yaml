@@ -2,11 +2,11 @@ version: '3.9'
 services:
   autooric-app:
     container_name: autooric-app
-    build:  
+    build:
       context: .
       target: runner
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=production
       # Uncomment the following line in case you want to disable telemetry during runtime.

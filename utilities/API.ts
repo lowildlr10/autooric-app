@@ -152,13 +152,19 @@ export default class API {
     })
   }
 
-  // Check if official receipts has duplicates 
-  static async checkOfficialReceiptsDuplicate(accessToken: string, orNo: string) {
-    return axios.get(`${API.API_BASE_URL}/api/v1/official-receipts/check-duplicate/${orNo}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+  // Check if official receipts has duplicates
+  static async checkOfficialReceiptsDuplicate(
+    accessToken: string,
+    orNo: string
+  ) {
+    return axios.get(
+      `${API.API_BASE_URL}/api/v1/official-receipts/check-duplicate/${orNo}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
   }
 
   // Fetch all discounts
@@ -254,7 +260,7 @@ export default class API {
       {
         or_id: orId,
         paper_size_id: paperSizeId,
-        has_template: hasTemplate
+        has_template: hasTemplate,
       },
       {
         headers: {
@@ -277,10 +283,11 @@ export default class API {
     return axios.post(
       `${API.API_BASE_URL}/api/v1/print/cash-receipts-record`,
       {
-        from, to, 
+        from,
+        to,
         particulars_ids: particulars,
         certified_correct_id: certifiedCorrectedBy,
-        paper_size_id: paperSizeId
+        paper_size_id: paperSizeId,
       },
       {
         headers: {
@@ -304,11 +311,12 @@ export default class API {
     return axios.post(
       `${API.API_BASE_URL}/api/v1/print/preview-report-collection`,
       {
-        from, to,
+        from,
+        to,
         category_ids: categories,
         certified_correct_id: certifiedCorrectedBy,
         noted_by_id: notedBy,
-        paper_size_id: paperSizeId
+        paper_size_id: paperSizeId,
       },
       {
         headers: {
@@ -341,13 +349,14 @@ export default class API {
         `&template=${template}` +
         `&print_data=${printData}`,
       {
-        from, to,
+        from,
+        to,
         category_ids: categories,
         certified_correct_id: certifiedCorrectedBy,
         noted_by_id: notedBy,
         paper_size_id: paperSizeId,
         template,
-        print_data: printData
+        print_data: printData,
       },
       {
         headers: {
@@ -379,9 +388,10 @@ export default class API {
     return axios.post(
       `${API.API_BASE_URL}/api/v1/print/e-receipts`,
       {
-        from, to,
+        from,
+        to,
         particulars_ids: particulars,
-        paper_size_id: paperSizeId
+        paper_size_id: paperSizeId,
       },
       {
         headers: {

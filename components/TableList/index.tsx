@@ -114,7 +114,7 @@ const TableList = ({
                 ))}
               </>
             )}
-            {(!loading && total === 0) && (
+            {!loading && total === 0 && (
               <TableRow hover role='checkbox' tabIndex={-1}>
                 <TableCell
                   align='center'
@@ -125,150 +125,156 @@ const TableList = ({
                 </TableCell>
               </TableRow>
             )}
-            {!loading && rows?.map((row: any) => {
-              return (
-                <React.Fragment key={row.id}>
-                  <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
-                    {columns.map((column: any, index: number) => {
-                      const value = row[column.id]
-                      let color = 'text.primary'
+            {!loading &&
+              rows?.map((row: any) => {
+                return (
+                  <React.Fragment key={row.id}>
+                    <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
+                      {columns.map((column: any, index: number) => {
+                        const value = row[column.id]
+                        let color = 'text.primary'
 
-                      if (column.id === 'status') {
-                        if (value === 'Pending') color = 'gray'
-                        if (value === 'Cancelled') color = 'error.main'
-                        if (value === 'Deposited') color = 'secondary.main'
-                        if (value === 'Active') color = 'secondary.main'
-                        if (value === 'Inactive') color = 'error.main'
-                      }
+                        if (column.id === 'status') {
+                          if (value === 'Pending') color = 'gray'
+                          if (value === 'Cancelled') color = 'error.main'
+                          if (value === 'Deposited') color = 'secondary.main'
+                          if (value === 'Active') color = 'secondary.main'
+                          if (value === 'Inactive') color = 'error.main'
+                        }
 
-                      return (
-                        <React.Fragment key={`${row.id}-${column.id}`}>
-                          {column.id === 'dropdown' ? (
-                            <TableCell
-                              key={`${row.id}-${column.id}`}
-                              align={column.align}
-                              sx={{
-                                cursor: 'pointer',
-                                color,
-                                fontWeight: 'bold',
-                              }}
-                            >
-                              <IconButton
-                                aria-label='expand row'
-                                size='small'
+                        return (
+                          <React.Fragment key={`${row.id}-${column.id}`}>
+                            {column.id === 'dropdown' ? (
+                              <TableCell
+                                key={`${row.id}-${column.id}`}
+                                align={column.align}
+                                sx={{
+                                  cursor: 'pointer',
+                                  color,
+                                  fontWeight: 'bold',
+                                }}
+                              >
+                                <IconButton
+                                  aria-label='expand row'
+                                  size='small'
+                                  onClick={() =>
+                                    handleToggleDropdown(`dd_${row.id}`)
+                                  }
+                                >
+                                  {open[`dd_${row.id}`] ? (
+                                    <KeyboardArrowUpIcon />
+                                  ) : (
+                                    <KeyboardArrowDownIcon />
+                                  )}
+                                </IconButton>
+                              </TableCell>
+                            ) : (
+                              <TableCell
+                                key={`${row.id}-${column.id}`}
+                                align={column.align}
+                                sx={{
+                                  cursor: 'pointer',
+                                  color,
+                                  fontWeight: !!subColumns ? 'bold' : 'normal',
+                                  fontSize: !!subColumns ? '1rem' : 'initial',
+                                }}
                                 onClick={() =>
-                                  handleToggleDropdown(`dd_${row.id}`)
+                                  !!subColumns === true
+                                    ? handleToggleDropdown(`dd_${row.id}`)
+                                    : handleShowDetails &&
+                                      handleShowDetails(row?.id ?? '')
                                 }
                               >
-                                {open[`dd_${row.id}`] ? (
-                                  <KeyboardArrowUpIcon />
-                                ) : (
-                                  <KeyboardArrowDownIcon />
+                                {!!subColumns === true && (
+                                  <ClassIcon fontSize='small' />
                                 )}
-                              </IconButton>
-                            </TableCell>
-                          ) : (
-                            <TableCell
-                              key={`${row.id}-${column.id}`}
-                              align={column.align}
-                              sx={{
-                                cursor: 'pointer',
-                                color,
-                                fontWeight: !!subColumns ? 'bold' : 'normal',
-                                fontSize: !!subColumns ? '1rem' : 'initial',
-                              }}
-                              onClick={() =>
-                                !!subColumns === true
-                                  ? handleToggleDropdown(`dd_${row.id}`)
-                                  : handleShowDetails &&
-                                    handleShowDetails(row?.id ?? '')
-                              }
-                            >
-                              {!!subColumns === true && (
-                                <ClassIcon fontSize='small' />
-                              )}
-                              &nbsp;{value}
-                            </TableCell>
-                          )}
-                        </React.Fragment>
-                      )
-                    })}
-                  </TableRow>
-
-                  {!!subColumns === true && (
-                    <TableRow key={`subrow_${row.id}`}>
-                      <TableCell
-                        style={{ paddingBottom: 0, paddingTop: 0 }}
-                        colSpan={6}
-                      >
-                        <Collapse
-                          in={open[`dd_${row.id}`]}
-                          timeout='auto'
-                          unmountOnExit
-                        >
-                          <Table size={isMobile ? 'small' : 'medium'}>
-                            <TableHead>
-                              <TableRow>
-                                {subColumns.map((subColumn: any) => (
-                                  <TableCell
-                                    key={subColumn.id}
-                                    align={subColumn.align}
-                                    style={{
-                                      minWidth: subColumn.minWidth,
-                                      width: subColumn.minWidth,
-                                      background: grey[100],
-                                    }}
-                                  >
-                                    {subColumn.label}
-                                  </TableCell>
-                                ))}
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {row?.sub_rows && row?.sub_rows?.length === 0 && (
-                                <TableRow hover role='checkbox' tabIndex={-1}>
-                                  <TableCell
-                                    align='center'
-                                    sx={{
-                                      cursor: 'pointer',
-                                      color: 'error.main',
-                                    }}
-                                    colSpan={subColumns?.length}
-                                  >
-                                    No data.
-                                  </TableCell>
-                                </TableRow>
-                              )}
-                              {row?.sub_rows?.map((subRow: any) => (
-                                <TableRow key={`${row.id}-${subRow.id}`}>
-                                  {subColumns.map((subColumn: any) => {
-                                    const value = subRow[subColumn.id]
-
-                                    return (
-                                      <TableCell
-                                        key={`${subRow.id}-${subColumn.id}`}
-                                        align={subColumn.align}
-                                        sx={{ cursor: 'pointer' }}
-                                        onClick={() =>
-                                          handleShowDetails &&
-                                          handleShowDetails(subRow?.id ?? '')
-                                        }
-                                      >
-                                        {value}
-                                      </TableCell>
-                                    )
-                                  })}
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </Collapse>
-                      </TableCell>
+                                &nbsp;{value}
+                              </TableCell>
+                            )}
+                          </React.Fragment>
+                        )
+                      })}
                     </TableRow>
-                  )}
-                </React.Fragment>
-              )
-            })}
+
+                    {!!subColumns === true && (
+                      <TableRow key={`subrow_${row.id}`}>
+                        <TableCell
+                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                          colSpan={6}
+                        >
+                          <Collapse
+                            in={open[`dd_${row.id}`]}
+                            timeout='auto'
+                            unmountOnExit
+                          >
+                            <Table size={isMobile ? 'small' : 'medium'}>
+                              <TableHead>
+                                <TableRow>
+                                  {subColumns.map((subColumn: any) => (
+                                    <TableCell
+                                      key={subColumn.id}
+                                      align={subColumn.align}
+                                      style={{
+                                        minWidth: subColumn.minWidth,
+                                        width: subColumn.minWidth,
+                                        background: grey[100],
+                                      }}
+                                    >
+                                      {subColumn.label}
+                                    </TableCell>
+                                  ))}
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {row?.sub_rows &&
+                                  row?.sub_rows?.length === 0 && (
+                                    <TableRow
+                                      hover
+                                      role='checkbox'
+                                      tabIndex={-1}
+                                    >
+                                      <TableCell
+                                        align='center'
+                                        sx={{
+                                          cursor: 'pointer',
+                                          color: 'error.main',
+                                        }}
+                                        colSpan={subColumns?.length}
+                                      >
+                                        No data.
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                {row?.sub_rows?.map((subRow: any) => (
+                                  <TableRow key={`${row.id}-${subRow.id}`}>
+                                    {subColumns.map((subColumn: any) => {
+                                      const value = subRow[subColumn.id]
+
+                                      return (
+                                        <TableCell
+                                          key={`${subRow.id}-${subColumn.id}`}
+                                          align={subColumn.align}
+                                          sx={{ cursor: 'pointer' }}
+                                          onClick={() =>
+                                            handleShowDetails &&
+                                            handleShowDetails(subRow?.id ?? '')
+                                          }
+                                        >
+                                          {value}
+                                        </TableCell>
+                                      )
+                                    })}
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
+                )
+              })}
           </TableBody>
         </Table>
       </TableContainer>
