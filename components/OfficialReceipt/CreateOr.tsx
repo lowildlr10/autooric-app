@@ -52,7 +52,7 @@ const CreateOrFields = ({
   const [formattedDiscounts, setFormattedDiscounts] = useState<any>([])
   const [defaultAmount, setDefaultAmount] = useState(0)
   const [cardNoRequired, setCardNoRequired] = useState(false)
- 
+
   useEffect(() => {
     if (payors) {
       setFormattedPayors(
@@ -155,8 +155,10 @@ const CreateOrFields = ({
               focused
               autoFocus
               error={
-                (checkOrDuplicateStatus === 'duplicate' || checkOrDuplicateStatus === 'error') ? 
-                true : false
+                checkOrDuplicateStatus === 'duplicate' ||
+                checkOrDuplicateStatus === 'error'
+                  ? true
+                  : false
               }
               value={formData?.or_no ?? ''}
               onChange={(e) =>
@@ -173,8 +175,13 @@ const CreateOrFields = ({
                       <CircularProgress size={16} color='primary' />
                     ) : (
                       <>
-                        {(checkOrDuplicateStatus === 'duplicate' || checkOrDuplicateStatus === 'error') && (
-                          <Tooltip title="Duplicate" followCursor sx={{ cursor: 'pointer' }}>
+                        {(checkOrDuplicateStatus === 'duplicate' ||
+                          checkOrDuplicateStatus === 'error') && (
+                          <Tooltip
+                            title='Duplicate'
+                            followCursor
+                            sx={{ cursor: 'pointer' }}
+                          >
                             <Error fontSize='small' color='error' />
                           </Tooltip>
                         )}
@@ -322,14 +329,11 @@ const CreateOrFields = ({
                   <InputAdornment position='start'>₱</InputAdornment>
                 ),
               }}
-              onClick={
-                (e: any) => {
-                  if (parseFloat(e.target.value) === 0) {
-                    handleInputChange &&
-                    handleInputChange('amount', '')
-                  }
+              onClick={(e: any) => {
+                if (parseFloat(e.target.value) === 0) {
+                  handleInputChange && handleInputChange('amount', '')
                 }
-              }
+              }}
               onChange={(e) =>
                 handleInputChange &&
                 handleInputChange(e.target.name, e.target.value)
@@ -613,7 +617,7 @@ const CreateOrFields = ({
                                 focused: true,
                               },
                             }}
-                            onChange={(newValue : any) =>
+                            onChange={(newValue: any) =>
                               handleInputChange &&
                               handleInputChange(
                                 'check_date',
@@ -805,8 +809,10 @@ const ActionButtons = ({
     return (
       <>
         <Button
-          onClick={
-            () => (checkOrDuplicateStatus === 'success' && handleCreate) && handleCreate(formData, true)
+          onClick={() =>
+            checkOrDuplicateStatus === 'success' &&
+            handleCreate &&
+            handleCreate(formData, true)
           }
           variant='contained'
           color='primary'
@@ -820,8 +826,10 @@ const ActionButtons = ({
         </Button>
         <Divider />
         <Button
-          onClick={
-            () => (checkOrDuplicateStatus === 'success' && handleCreate) && handleCreate(formData, false)
+          onClick={() =>
+            checkOrDuplicateStatus === 'success' &&
+            handleCreate &&
+            handleCreate(formData, false)
           }
           variant='contained'
           color='primary'
@@ -889,7 +897,7 @@ const CreateOr = ({
   handleDialogOpen,
   handleDeposit,
   handleCancel,
-  handleClose
+  handleClose,
 }: ICreateOrProps) => {
   useEffect(() => {
     if (handleClear) handleClear()

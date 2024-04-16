@@ -30,18 +30,19 @@ const CashReceiptsRecord = ({
 
   useEffect(() => {
     if (particulars) {
-      setFormattedParticulars(
-        () => {
-          const deselectAllParticular = { id: 'clear', label: 'Deselect All' };
-          const selectAllParticular = { id: 'all', label: 'Select All' };
+      setFormattedParticulars(() => {
+        const deselectAllParticular = { id: 'clear', label: 'Deselect All' }
+        const selectAllParticular = { id: 'all', label: 'Select All' }
 
-          return [
-            deselectAllParticular,
-            selectAllParticular,
-            ...particulars.map(({ id, particular_name }) => ({ id, label: particular_name }))
-          ];
-        }
-      )
+        return [
+          deselectAllParticular,
+          selectAllParticular,
+          ...particulars.map(({ id, particular_name }) => ({
+            id,
+            label: particular_name,
+          })),
+        ]
+      })
     }
   }, [particulars])
 

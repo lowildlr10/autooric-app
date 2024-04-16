@@ -215,7 +215,7 @@ const SystemDialog = ({
                 Delete
               </Button>
             )}
-              
+
             <Button
               onClick={() => {
                 handleUpdate && handleUpdate(formData)
