@@ -503,6 +503,10 @@ const OfficialReceipt = () => {
     setTabValue(newValue)
   }
 
+  useEffect(() => {
+    console.log(createOrFormData)
+  }, [createOrFormData])
+
   // Handle input changes
   const handleInputChange = (
     input_name: string,
@@ -510,9 +514,8 @@ const OfficialReceipt = () => {
   ) => {
     let amountWords = ''
 
-    if (input_name === 'discount_id') {
-      setChangedAmountDiscount(true)
-    } else if (input_name === 'amount') {
+    if (input_name === 'discount_id') setChangedAmountDiscount(true)
+    if (input_name === 'amount') {
       setChangedAmountDiscount(true)
       try {
         amountWords = convertToWords((value as number) ?? 0)
@@ -528,12 +531,12 @@ const OfficialReceipt = () => {
         amount_words: amountWords,
       })
     } else if (input_name === 'or_no') {
-      const orNo = value as string
-      checkOrIfHasDuplicate(orNo.trim() ?? '')
-      setCreateOrFormData({
-        ...createOrFormData,
-        or_no: orNo.trim(),
-      })
+        const orNo = value as string
+        checkOrIfHasDuplicate(orNo.trim() ?? '')
+        setCreateOrFormData({
+          ...createOrFormData,
+          or_no: orNo.trim(),
+        })
     } else {
       setCreateOrFormData({ ...createOrFormData, [input_name]: value })
     }
