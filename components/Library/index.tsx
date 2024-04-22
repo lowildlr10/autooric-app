@@ -197,17 +197,22 @@ const Library = () => {
   }, [isAuthenticated, loading, userLoading])
 
   useEffect(() => {
+    setTabValue(1)
+  }, [])
+
+  useEffect(() => {
     setTabContents([
       {
         index: 0,
-        label: (
-          <Stack direction='row'>
-            CATEGORIES&nbsp;
-            {loading && tabValue === 0 && (
-              <CircularProgress size={16} color='primary' />
-            )}
-          </Stack>
-        ),
+        label: ''
+        // label: (
+        //   <Stack direction='row' width={0}>
+        //     CATEGORIES&nbsp;
+        //     {loading && tabValue === 0 && (
+        //       <CircularProgress size={16} color='primary' />
+        //     )}
+        //   </Stack>
+        // ),
       },
       {
         index: 1,
@@ -1297,22 +1302,24 @@ const Library = () => {
       const total = categoryListData?.total
       const links = categoryListData?.links
 
-      return (
-        <CategoryList
-          rows={rows ?? []}
-          loading={loading}
-          currentPage={currentPage}
-          nextPageUrl={nextPageUrl}
-          prevPageUrl={prevPageUrl}
-          from={from}
-          to={to}
-          total={total}
-          links={links}
-          handlePageChange={handlePageChange}
-          handleShowDetails={handleShowDetails}
-          handleShowCreate={() => handleDialogOpen('create_categories')}
-        />
-      )
+      return <></>;
+
+      // return (
+      //   <CategoryList
+      //     rows={rows ?? []}
+      //     loading={loading}
+      //     currentPage={currentPage}
+      //     nextPageUrl={nextPageUrl}
+      //     prevPageUrl={prevPageUrl}
+      //     from={from}
+      //     to={to}
+      //     total={total}
+      //     links={links}
+      //     handlePageChange={handlePageChange}
+      //     handleShowDetails={handleShowDetails}
+      //     handleShowCreate={() => handleDialogOpen('create_categories')}
+      //   />
+      // )
     } else if (index === 1) {
       const rows: any = []
       particularListData?.data?.forEach((category: any) => {

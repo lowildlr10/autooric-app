@@ -540,6 +540,19 @@ export default class API {
     )
   }
 
+  // Update official receipt
+  static async updateOfficialReceipt(accessToken: string, orId: string, formData: any) {
+    return axios.post(
+      `${API.API_BASE_URL}/api/v1/official-receipts/${orId}?_method=PATCH`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  }
+
   // Update categories
   static async updateCategory(
     accessToken: string,
