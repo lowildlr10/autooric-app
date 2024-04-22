@@ -479,10 +479,12 @@ export interface ICreateOrProps {
   computingDiscount?: boolean
   formData: IOfficialReceipt
   readOnly?: boolean
+  enableUpdate?: boolean
   payorLoading?: boolean
   particularLoading?: boolean
   discountLoading?: boolean
   checkOrDuplicateLoading?: boolean
+  paperSize?: string
   checkOrDuplicateStatus?: OrDuplicateStatus
   handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
   handleInputChange?: (
@@ -498,18 +500,26 @@ export interface ICreateOrProps {
   handleDeposit?: () => void
   handleCancel?: () => void
   handleClose?: () => void
+  handleEnableUpdate?: () => void
+  handleDisableUpdate?: () => void
+  handleUpdate?:(formData: any) => void
 }
 
 export interface ICreateOrActionButtonsProps {
   formData: IOfficialReceipt
   readOnly?: boolean
+  enableUpdate?: boolean
   checkOrDuplicateStatus?: OrDuplicateStatus
+  paperSize?: string
   handleCreate?: (formData: IOfficialReceipt, print: boolean) => void
   handlePrint?: (orId: string, paperSizeId: string) => void
   handleClear?: () => void
   handleDeposit?: () => void
   handleCancel?: () => void
   handleClose?: () => void
+  handleUpdate?: (formData: any) => void
+  handleEnableUpdate?: () => void
+  handleDisableUpdate?: () => void
 }
 
 export interface ICreateOrFieldsProps {
@@ -520,6 +530,7 @@ export interface ICreateOrFieldsProps {
   computingDiscount?: boolean
   formData: IOfficialReceipt
   readOnly?: boolean
+  enableUpdate?: boolean
   payorLoading?: boolean
   particularLoading?: boolean
   discountLoading?: boolean
@@ -631,11 +642,31 @@ export interface IOrListProps {
   links: ITableListLinks[]
   showDetails: boolean
   details: IOfficialReceipt
+  formData?: IOfficialReceipt
+  paperSize?: string
+  payors?: IPayor[]
+  particulars?: IParticular[]
+  discounts?: IDiscount[]
+  enableUpdate?: boolean
+  payorLoading?: boolean
+  particularLoading?: boolean
+  discountLoading?: boolean
+  computingDiscount?: boolean
+  checkOrDuplicateLoading?: boolean
+  checkOrDuplicateStatus?: OrDuplicateStatus
   handleShowDetails: (details: IOfficialReceipt) => void
   handleCloseDetails: () => void
   handlePageChange: (url: string) => void
   handleDeposit: () => void
   handleCancel: () => void
+  handlePrintDownloadOr?: (orId: string, paperSizeId: string, print: boolean) => void
+  handleInputChange?: (
+    input_name: string,
+    value: string | number | null
+  ) => void
+  handleEnableUpdate?: () => void
+  handleDisableUpdate?: () => void
+  handleUpdate?: (formData: any) => void
 }
 
 export interface IUserListProps {
@@ -810,6 +841,7 @@ export interface ITableListActionSectionDateRangeParticularsProps {
 
 export interface IDeposit {
   id: string
+  deposited_date: string
   deposit: number
   has_discount: boolean
   card_no?: string

@@ -1,11 +1,36 @@
 import React from 'react'
 import { IDepositSubContentProps } from '@/Interfaces'
 import { InputAdornment, Stack, TextField } from '@mui/material'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from 'dayjs'
 
 const Deposit = ({ formData, handleInputChange }: IDepositSubContentProps) => {
   return (
     <>
       <Stack>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            name='deposited_date'
+            label='Deposited Date *'
+            value={dayjs(formData?.deposited_date) ?? dayjs()}
+            autoFocus
+            slotProps={{
+              textField: {
+                size: 'small',
+                focused: true,
+              },
+            }}
+            onChange={(newValue: any) =>
+              handleInputChange &&
+              handleInputChange(
+                'deposited_date',
+                newValue ? newValue.format('YYYY-MM-DD') : ''
+              )
+            }
+            sx={{ m: 0 }}
+          />
+        </LocalizationProvider>
         <TextField
           variant='outlined'
           margin='normal'
@@ -25,31 +50,6 @@ const Deposit = ({ formData, handleInputChange }: IDepositSubContentProps) => {
           }}
           disabled
         />
-        {/* <Stack direction='row' gap={2}>
-          <Button
-            variant='outlined'
-            color='primary'
-            size='small'
-            onClick={() => handleInputChange('deposit', formData?.regular ?? 0)}
-          >
-            Regular
-          </Button>
-          {formData?.has_discount && (
-            <Button
-              variant='outlined'
-              size='small'
-              onClick={() =>
-                handleInputChange('deposit', formData?.discounted ?? 0)
-              }
-              sx={{
-                color: 'common.black',
-                borderColor: 'common.black',
-              }}
-            >
-              Discounted
-            </Button>
-          )}
-        </Stack> */}
       </Stack>
     </>
   )

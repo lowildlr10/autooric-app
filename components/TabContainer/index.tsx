@@ -40,7 +40,18 @@ const TabContainer = ({
           zIndex: 100,
         }}
       >
-        {tabs?.map((tab, index) => <Tab key={tab.index} label={tab.label} />)}
+        {tabs?.map((tab, index) => (
+          <Tab 
+            key={tab.index} 
+            label={tab.label}
+            sx={{ 
+              width: tab.label ? 'auto' : 0,
+              maxWidth: tab.label ? 'auto' : 0,
+              minWidth: tab.label ? 'auto' : 0,
+              padding: tab.label ? 'auto' : 0 
+            }} 
+          />
+        ))}
       </Tabs>
       {children}
     </Box>

@@ -24,12 +24,29 @@ const OrList = ({
   total,
   links,
   showDetails,
+  formData,
   details,
+  paperSize,
+  payors,
+  discounts,
+  particulars,
+  enableUpdate,
+  checkOrDuplicateLoading,
+  checkOrDuplicateStatus,
+  computingDiscount,
+  discountLoading,
+  particularLoading,
+  payorLoading,
   handlePageChange,
   handleDeposit,
   handleCancel,
   handleShowDetails,
   handleCloseDetails,
+  handlePrintDownloadOr,
+  handleInputChange,
+  handleEnableUpdate,
+  handleDisableUpdate,
+  handleUpdate
 }: IOrListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
@@ -61,11 +78,31 @@ const OrList = ({
     return (
       <CreateOr
         personnelName={details?.accountable_personnel ?? ''}
-        formData={details ?? {}}
+        formData={enableUpdate ? formData ?? {} : details ?? {}}
         readOnly={showDetails}
+        paperSize={paperSize}
+        payors={payors ?? []}
+        particulars={particulars ?? []}
+        discounts={discounts ?? []}
+        enableUpdate={enableUpdate}
         handleClose={handleCloseDetails}
         handleDeposit={handleDeposit}
         handleCancel={handleCancel}
+        handlePrint={(orId, paperSizeId) =>
+          handlePrintDownloadOr && handlePrintDownloadOr(orId, paperSizeId, true)
+        }
+        handleInputChange={(input_name, value) =>
+          handleInputChange && handleInputChange(input_name, value)
+        }
+        handleDisableUpdate={handleDisableUpdate}
+        handleEnableUpdate={handleEnableUpdate}
+        computingDiscount={computingDiscount}
+        checkOrDuplicateLoading={checkOrDuplicateLoading}
+        payorLoading={payorLoading}
+        particularLoading={particularLoading}
+        discountLoading={discountLoading}
+        checkOrDuplicateStatus={checkOrDuplicateStatus}
+        handleUpdate={handleUpdate}
       />
     )
   }

@@ -26,7 +26,7 @@ import {
 import dayjs from 'dayjs'
 import StaticAutocomplete from '../Common/StaticAutocomplete'
 import DynamicAutocomplete from '../Common/DynamicAutocomplete'
-import { Check, Error } from '@mui/icons-material'
+import { Check, DriveFileRenameOutline, Error, LocalPrintshop } from '@mui/icons-material'
 
 const CreateOrFields = ({
   handleInputChange,
@@ -37,6 +37,7 @@ const CreateOrFields = ({
   computingDiscount,
   formData,
   readOnly,
+  enableUpdate,
   handleDialogOpen,
   fetchPayor,
   fetchParticular,
@@ -101,9 +102,64 @@ const CreateOrFields = ({
       borderRadius={3}
       p={4}
     >
+      {enableUpdate && formData.cancelled_date && (
+        <Stack flex={1}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              name='cancelled_date'
+              label='Cancelled Date *'
+              value={dayjs(formData?.cancelled_date) ?? dayjs()}
+              autoFocus
+              slotProps={{
+                textField: {
+                  size: 'small',
+                  focused: true,
+                },
+              }}
+              onChange={(newValue: any) =>
+                handleInputChange &&
+                handleInputChange(
+                  'cancelled_date',
+                  newValue ? newValue.format('YYYY-MM-DD') : ''
+                )
+              }
+              sx={{ m: 0 }}
+            />
+          </LocalizationProvider>
+          <Divider sx={{ py: 1 }} />
+        </Stack>
+      )}
+      {enableUpdate && formData.deposited_date && (
+        <Stack flex={1}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              name='deposited_date'
+              label='Deposited Date *'
+              value={dayjs(formData?.deposited_date) ?? dayjs()}
+              autoFocus
+              slotProps={{
+                textField: {
+                  size: 'small',
+                  focused: true,
+                },
+              }}
+              onChange={(newValue: any) =>
+                handleInputChange &&
+                handleInputChange(
+                  'deposited_date',
+                  newValue ? newValue.format('YYYY-MM-DD') : ''
+                )
+              }
+              sx={{ m: 0 }}
+            />
+          </LocalizationProvider>
+          <Divider sx={{ py: 1 }} />
+        </Stack>
+      )}
+
       <Stack direction={{ xs: 'column', sm: 'row' }} gap={4}>
         <Stack flex={1}>
-          {!readOnly ? (
+          {(!readOnly || enableUpdate) ? (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 name='receipt_date'
@@ -141,7 +197,7 @@ const CreateOrFields = ({
           )}
         </Stack>
         <Stack flex={1}>
-          {!readOnly ? (
+          {(!readOnly || enableUpdate) ? (
             <TextField
               variant='outlined'
               margin='normal'
@@ -212,7 +268,7 @@ const CreateOrFields = ({
       </Stack>
 
       <Stack direction='row'>
-        {!readOnly ? (
+        {(!readOnly || enableUpdate) ? (
           <DynamicAutocomplete
             id='payor_id'
             name='payor_id'
@@ -245,8 +301,8 @@ const CreateOrFields = ({
         )}
       </Stack>
 
-      <Stack direction={!readOnly ? 'row' : 'column'} gap={2}>
-        {!readOnly ? (
+      <Stack direction={(!readOnly || enableUpdate) ? 'row' : 'column'} gap={2}>
+        {(!readOnly || enableUpdate) ? (
           <>
             <Stack flex={1}>
               <StaticAutocomplete
@@ -308,7 +364,7 @@ const CreateOrFields = ({
       </Stack>
 
       <Stack>
-        {!readOnly ? (
+        {(!readOnly || enableUpdate) ? (
           <>
             <TextField
               variant='outlined'
@@ -374,7 +430,7 @@ const CreateOrFields = ({
       </Stack>
 
       <Stack direction='row' gap={2}>
-        {!readOnly ? (
+        {(!readOnly || enableUpdate) ? (
           <>
             <Stack flex={1}>
               <StaticAutocomplete
@@ -436,7 +492,7 @@ const CreateOrFields = ({
 
       {(formData?.discount_id || formData?.discount) && (
         <>
-          {!readOnly ? (
+          {(!readOnly || enableUpdate) ? (
             <>
               {!!cardNoRequired && (
                 <Stack>
@@ -484,7 +540,7 @@ const CreateOrFields = ({
       )}
 
       <Stack direction='row'>
-        {!readOnly ? (
+        {(!readOnly || enableUpdate) ? (
           <TextField
             variant='outlined'
             margin='normal'
@@ -538,7 +594,7 @@ const CreateOrFields = ({
                 value='cash'
                 control={<Radio />}
                 label='Cash'
-                disabled={readOnly}
+                disabled={readOnly && !enableUpdate}
                 sx={{
                   '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
                   '& .MuiSvgIcon-root': { fontSize: '1rem' },
@@ -548,7 +604,7 @@ const CreateOrFields = ({
                 value='check'
                 control={<Radio size='small' />}
                 label='Check'
-                disabled={readOnly}
+                disabled={readOnly && !enableUpdate}
                 sx={{
                   '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
                   '& .MuiSvgIcon-root': { fontSize: '1rem' },
@@ -564,7 +620,7 @@ const CreateOrFields = ({
                   borderRadius={3}
                 >
                   <>
-                    {!readOnly ? (
+                    {(!readOnly || enableUpdate) ? (
                       <>
                         <TextField
                           variant='outlined'
@@ -672,7 +728,7 @@ const CreateOrFields = ({
                 value='money_order'
                 control={<Radio size='small' />}
                 label='Money Order'
-                disabled={readOnly}
+                disabled={readOnly && !enableUpdate}
                 sx={{
                   '& .MuiFormControlLabel-label': { fontSize: '0.9rem' },
                   '& .MuiSvgIcon-root': { fontSize: '1rem' },
@@ -724,12 +780,17 @@ const ActionButtons = ({
   formData,
   readOnly,
   checkOrDuplicateStatus,
+  paperSize,
+  enableUpdate,
   handleCreate,
   handlePrint,
   handleClear,
   handleDeposit,
   handleCancel,
   handleClose,
+  handleEnableUpdate,
+  handleDisableUpdate,
+  handleUpdate
 }: ICreateOrActionButtonsProps) => {
   const renderDynamicContents = (readOnly: boolean) => {
     if (readOnly)
@@ -738,7 +799,7 @@ const ActionButtons = ({
           {formData?.deposited_date !== '' && (
             <>
               <Typography variant='body2' fontWeight={500} color='secondary'>
-                Deposited on: {formData?.deposited_date}
+                Deposited on: {dayjs(formData?.deposited_date).format("MMMM DD, YYYY")}
               </Typography>
               <Typography variant='body2' fontWeight={500} color='secondary'>
                 Deposited by: {formData?.deposited_by}
@@ -749,7 +810,7 @@ const ActionButtons = ({
           {formData?.cancelled_date !== '' && (
             <>
               <Typography variant='body2' fontWeight={500} color='error'>
-                Cancelled on: {formData?.cancelled_date}
+                Cancelled on: {dayjs(formData?.cancelled_date).format("MMMM DD, YYYY")}
               </Typography>
               <Typography variant='body2' fontWeight={500} color='error'>
                 Cancelled by: {formData?.cancelled_by}
@@ -770,7 +831,6 @@ const ActionButtons = ({
               >
                 Deposit
               </Button>
-              <Divider />
             </>
           )}
 
@@ -782,27 +842,87 @@ const ActionButtons = ({
               fullWidth
               sx={{
                 py: '0.8em',
-                bgcolor: 'warning.main',
+                bgcolor: 'error.main',
                 '&:hover': {
-                  bgcolor: 'warning.darker',
+                  bgcolor: 'error.darker',
                 },
               }}
             >
               Cancel
             </Button>
           )}
+
+          <Divider />
+
+          {enableUpdate ? (
+            <Button
+              onClick={() => handleUpdate && handleUpdate(formData)}
+              variant='contained'
+              color='primary'
+              fullWidth
+              sx={{
+                py: '0.8em',
+                bgcolor: 'warning.main',
+                '&:hover': {
+                  bgcolor: 'warning.darker',
+                },
+              }}
+            >
+              <DriveFileRenameOutline fontSize='inherit' />&nbsp;Update
+            </Button>
+          ) : (
+            <Button
+              onClick={() => handleEnableUpdate && handleEnableUpdate()}
+              variant='outlined'
+              color='warning'
+              fullWidth
+              sx={{
+                py: '0.8em',
+              }}
+            >
+              <DriveFileRenameOutline fontSize='inherit' />&nbsp;Toggle Edit
+            </Button>
+          )}
+
           <Button
-            onClick={handleClose}
+            onClick={() => handlePrint && handlePrint(formData?.id ?? '', paperSize ?? '')}
             variant='outlined'
+            color='primary'
             fullWidth
             sx={{
-              py: '0.8em',
-              color: 'common.black',
-              borderColor: 'common.black',
+              py: '0.8em'
             }}
           >
-            Close
+            <LocalPrintshop fontSize='inherit' /> &nbsp;Re-print
           </Button>
+
+          {enableUpdate ? (
+            <Button
+              onClick={() => handleDisableUpdate && handleDisableUpdate()}
+              variant='outlined'
+              fullWidth
+              sx={{
+                py: '0.8em',
+                color: 'common.black',
+                borderColor: 'common.black',
+              }}
+            >
+              Cancel Edit
+            </Button>
+          ) : (
+            <Button
+              onClick={handleClose}
+              variant='outlined'
+              fullWidth
+              sx={{
+                py: '0.8em',
+                color: 'common.black',
+                borderColor: 'common.black',
+              }}
+            >
+              Close
+            </Button>
+          )}
         </>
       )
 
@@ -882,6 +1002,8 @@ const CreateOr = ({
   computingDiscount,
   formData,
   readOnly,
+  enableUpdate,
+  paperSize,
   payorLoading,
   particularLoading,
   discountLoading,
@@ -898,7 +1020,11 @@ const CreateOr = ({
   handleDeposit,
   handleCancel,
   handleClose,
+  handleEnableUpdate,
+  handleDisableUpdate,
+  handleUpdate
 }: ICreateOrProps) => {
+
   useEffect(() => {
     if (handleClear) handleClear()
   }, [])
@@ -921,6 +1047,7 @@ const CreateOr = ({
             computingDiscount={computingDiscount}
             formData={formData}
             readOnly={readOnly}
+            enableUpdate={enableUpdate}
             payorLoading={payorLoading}
             particularLoading={particularLoading}
             discountLoading={discountLoading}
@@ -940,6 +1067,8 @@ const CreateOr = ({
           <ActionButtons
             formData={formData}
             readOnly={readOnly}
+            paperSize={paperSize}
+            enableUpdate={enableUpdate}
             checkOrDuplicateStatus={checkOrDuplicateStatus}
             handleCreate={handleCreate}
             handlePrint={handlePrint}
@@ -947,6 +1076,9 @@ const CreateOr = ({
             handleDeposit={handleDeposit}
             handleCancel={handleCancel}
             handleClose={handleClose}
+            handleEnableUpdate={handleEnableUpdate}
+            handleDisableUpdate={handleDisableUpdate}
+            handleUpdate={handleUpdate}
           />
         </Stack>
       </Stack>

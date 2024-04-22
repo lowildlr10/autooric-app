@@ -57,6 +57,7 @@ const defaultDiscountFormData: IDiscount = {
 
 const defaultDepositFormData: IDeposit = {
   id: '',
+  deposited_date: dayjs().format('YYYY-MM-DD'),
   deposit: 0,
   has_discount: false,
   card_no: '',
@@ -88,6 +89,7 @@ const OfficialReceipt = () => {
   const [orListData, setOrListData] = useState<any>()
   const [paperSizes, setPaperSizes] = useState<IPaperSize[]>()
   const [paperSize, setPaperSize] = useState('')
+  const [enableUpdate, setEnableUpdate] = useState(false)
   const [createOrFormData, setCreateOrFormData] = useState<IOfficialReceipt>(
     defaultCreateOrFormData
   )
@@ -275,6 +277,7 @@ const OfficialReceipt = () => {
           particulars={particulars ?? []}
           discounts={discounts ?? []}
           formData={createOrFormData}
+          enableUpdate={enableUpdate}
           computingDiscount={changedAmountDiscount}
           checkOrDuplicateLoading={checkOrDuplicateLoading}
           handleInputChange={(input_name, value) =>
@@ -293,6 +296,8 @@ const OfficialReceipt = () => {
           particularLoading={particularLoading}
           discountLoading={discountLoading}
           checkOrDuplicateStatus={checkOrDuplicateStatus}
+          handleEnableUpdate={handleEnableUpdate}
+          handleDisableUpdate={handleDisableUpdate}
         />
       )
 
@@ -313,7 +318,9 @@ const OfficialReceipt = () => {
               ? dayjs(or.deposited_date).format('MM/DD/YYYY')
               : '',
           or_no: or.or_no,
+          payor_id: or.payor.id,
           payor: or.payor.payor_name,
+          nature_collection_id: or.nature_collection.id,
           nature_collection: or.nature_collection.particular_name,
           amount: or.amount,
           amount_str: or.amount
@@ -321,6 +328,7 @@ const OfficialReceipt = () => {
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
           amount_words: or.amount_words,
+          discount_id: or?.discount?.id,
           discount: or?.discount?.discount_name ?? 'N/a',
           discount_percent: or?.discount?.percent ?? 0,
           card_no: or?.card_no ?? '',
@@ -332,7 +340,7 @@ const OfficialReceipt = () => {
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
             : 0,
           payment_mode: or.payment_mode,
-          drawee_bank: or?.payment_mode,
+          drawee_bank: or?.drawee_bank,
           check_no: or?.check_no,
           check_date: or?.check_date
             ? dayjs(or.check_date).format('MM/DD/YYYY')
@@ -368,9 +376,26 @@ const OfficialReceipt = () => {
           handleDeposit={() => handleDialogOpen('deposit_or')}
           handleCancel={() => handleDialogOpen('cancel_or')}
           showDetails={showDetails}
+          formData={createOrFormData}
           details={details ?? {}}
+          enableUpdate={enableUpdate}
+          paperSize={paperSize}
+          payors={payors ?? []}
+          particulars={particulars ?? []}
+          discounts={discounts ?? []}
           handleShowDetails={handleShowDetails}
           handleCloseDetails={handleCloseDetails}
+          handlePrintDownloadOr={handlePrintDownloadOr}
+          handleInputChange={handleInputChange}
+          handleEnableUpdate={handleEnableUpdate}
+          handleDisableUpdate={handleDisableUpdate}
+          computingDiscount={changedAmountDiscount}
+          checkOrDuplicateLoading={checkOrDuplicateLoading}
+          payorLoading={payorLoading}
+          particularLoading={particularLoading}
+          discountLoading={discountLoading}
+          checkOrDuplicateStatus={checkOrDuplicateStatus}
+          handleUpdate={handleUpdateOr}
         />
       )
     }
@@ -502,10 +527,6 @@ const OfficialReceipt = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
-
-  useEffect(() => {
-    console.log(createOrFormData)
-  }, [createOrFormData])
 
   // Handle input changes
   const handleInputChange = (
@@ -639,6 +660,65 @@ const OfficialReceipt = () => {
           setCreateOrFormData(defaultCreateOrFormData)
           setCheckOrDuplicateLoading(false)
           setCheckOrDuplicateStatus('')
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res?.message ?? 'Unknown error occurred.')
+          setFormSaveLoading(false)
+        })
+    } else {
+      toast.error('Please wait for the discount computation to finish.')
+      setFormSaveLoading(false)
+    }
+  }
+
+  // Handle create official receipt
+  const handleUpdateOr = (formData: any) => {
+    setFormSaveLoading(true)
+
+    if (formData?.discount_id) {
+      const requiresCardNo =
+        discounts?.find(
+          (discount: IDiscount) => discount.id === formData?.discount_id
+        )?.requires_card_no ?? false
+
+      if (requiresCardNo && !formData?.card_no) {
+        toast.error('ID/Card Number field is required.')
+        setFormSaveLoading(false)
+        return
+      }
+    }
+
+    if (
+      formData?.payment_mode === 'check' &&
+      (!formData?.drawee_bank || !formData?.check_no || !formData?.check_date)
+    ) {
+      if (!formData?.drawee_bank) toast.error('Drawee Bank field is required.')
+      if (!formData?.check_no) toast.error('Check Number field is required.')
+      if (!formData?.check_date) toast.error('Check Date field is required.')
+
+      setFormSaveLoading(false)
+      return
+    }
+
+    if (accessToken && changedAmountDiscount === false) {
+      API.updateOfficialReceipt(accessToken, formData?.id, formData)
+        .then((response) => {
+          const res = response?.data.data
+
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          setCheckOrDuplicateLoading(false)
+          setCheckOrDuplicateStatus('')
+          setDetails(formData)
+          setEnableUpdate(false)
+          setTempPrintId(res?.data?.id)
         })
         .catch((error) => {
           const res = error?.response?.data.data
@@ -864,6 +944,15 @@ const OfficialReceipt = () => {
       )
       setPrintDownloadLoading(false)
     }
+  }
+
+  const handleEnableUpdate = () => {
+    setCreateOrFormData(details ?? {})
+    setEnableUpdate(true)
+  }
+
+  const handleDisableUpdate = () => {
+    setEnableUpdate(false)
   }
 
   // Convert to to words
