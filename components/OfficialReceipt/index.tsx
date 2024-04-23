@@ -905,6 +905,7 @@ const OfficialReceipt = () => {
     const deposit = details?.amount ?? 0
 
     setDetails(details)
+    setTempPrintId(details?.id ?? '')
     setDepositFormData({
       ...depositFormData,
       id: details?.id ?? '',
@@ -919,6 +920,7 @@ const OfficialReceipt = () => {
   const handleCloseDetails = () => {
     setShowDetails(false)
     setDetails({})
+    setTempPrintId('')
     setDepositFormData(defaultDepositFormData)
   }
 
