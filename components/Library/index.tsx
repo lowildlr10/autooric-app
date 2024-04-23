@@ -204,7 +204,7 @@ const Library = () => {
     setTabContents([
       {
         index: 0,
-        label: ''
+        label: '',
         // label: (
         //   <Stack direction='row' width={0}>
         //     CATEGORIES&nbsp;
@@ -1302,7 +1302,7 @@ const Library = () => {
       const total = categoryListData?.total
       const links = categoryListData?.links
 
-      return <></>;
+      return <></>
 
       // return (
       //   <CategoryList

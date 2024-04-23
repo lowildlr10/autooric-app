@@ -41,15 +41,15 @@ const TabContainer = ({
         }}
       >
         {tabs?.map((tab, index) => (
-          <Tab 
-            key={tab.index} 
+          <Tab
+            key={tab.index}
             label={tab.label}
-            sx={{ 
+            sx={{
               width: tab.label ? 'auto' : 0,
               maxWidth: tab.label ? 'auto' : 0,
               minWidth: tab.label ? 'auto' : 0,
-              padding: tab.label ? 'auto' : 0 
-            }} 
+              padding: tab.label ? 'auto' : 0,
+            }}
           />
         ))}
       </Tabs>
