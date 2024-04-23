@@ -347,6 +347,8 @@ export interface IOfficialReceipt {
   check_date?: string
   is_cancelled?: boolean
   status?: string
+  updated_at?: string
+  created_at?: string
 }
 
 export interface IUser {
@@ -502,7 +504,7 @@ export interface ICreateOrProps {
   handleClose?: () => void
   handleEnableUpdate?: () => void
   handleDisableUpdate?: () => void
-  handleUpdate?:(formData: any) => void
+  handleUpdate?: (formData: any) => void
 }
 
 export interface ICreateOrActionButtonsProps {
@@ -659,7 +661,11 @@ export interface IOrListProps {
   handlePageChange: (url: string) => void
   handleDeposit: () => void
   handleCancel: () => void
-  handlePrintDownloadOr?: (orId: string, paperSizeId: string, print: boolean) => void
+  handlePrintDownloadOr?: (
+    orId: string,
+    paperSizeId: string,
+    print: boolean
+  ) => void
   handleInputChange?: (
     input_name: string,
     value: string | number | null

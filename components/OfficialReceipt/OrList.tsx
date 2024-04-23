@@ -46,7 +46,7 @@ const OrList = ({
   handleInputChange,
   handleEnableUpdate,
   handleDisableUpdate,
-  handleUpdate
+  handleUpdate,
 }: IOrListProps) => {
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
@@ -89,7 +89,8 @@ const OrList = ({
         handleDeposit={handleDeposit}
         handleCancel={handleCancel}
         handlePrint={(orId, paperSizeId) =>
-          handlePrintDownloadOr && handlePrintDownloadOr(orId, paperSizeId, true)
+          handlePrintDownloadOr &&
+          handlePrintDownloadOr(orId, paperSizeId, true)
         }
         handleInputChange={(input_name, value) =>
           handleInputChange && handleInputChange(input_name, value)

@@ -344,7 +344,7 @@ const OfficialReceipt = () => {
           check_no: or?.check_no,
           check_date: or?.check_date
             ? dayjs(or.check_date).format('MM/DD/YYYY')
-            : '',
+            : undefined,
           is_cancelled: or.is_cancelled,
           status: or.is_cancelled
             ? 'Cancelled'
@@ -535,7 +535,10 @@ const OfficialReceipt = () => {
   ) => {
     let amountWords = ''
 
-    if (input_name === 'discount_id') setChangedAmountDiscount(true)
+    if (input_name === 'discount_id') {
+      setChangedAmountDiscount(true)
+    }
+
     if (input_name === 'amount') {
       setChangedAmountDiscount(true)
       try {
@@ -552,14 +555,28 @@ const OfficialReceipt = () => {
         amount_words: amountWords,
       })
     } else if (input_name === 'or_no') {
-        const orNo = value as string
-        checkOrIfHasDuplicate(orNo.trim() ?? '')
+      const orNo = value as string
+      checkOrIfHasDuplicate(orNo.trim() ?? '')
+      setCreateOrFormData({
+        ...createOrFormData,
+        or_no: orNo.trim(),
+      })
+    } else {
+      if (
+        input_name === 'payment_mode' &&
+        value !== 'check' &&
+        (value === 'cash' || value === 'money_order')
+      ) {
         setCreateOrFormData({
           ...createOrFormData,
-          or_no: orNo.trim(),
+          [input_name]: value,
+          drawee_bank: undefined,
+          check_no: undefined,
+          check_date: undefined,
         })
-    } else {
-      setCreateOrFormData({ ...createOrFormData, [input_name]: value })
+      } else {
+        setCreateOrFormData({ ...createOrFormData, [input_name]: value })
+      }
     }
   }
 
