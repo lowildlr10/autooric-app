@@ -735,7 +735,13 @@ const OfficialReceipt = () => {
           setFormSaveLoading(false)
           setCheckOrDuplicateLoading(false)
           setCheckOrDuplicateStatus('')
-          setDetails(formData)
+          setDetails({
+            ...formData,
+            payor: res?.data?.payor.payor_name,
+            nature_collection: res?.data?.nature_collection.particular_name,
+            discount: res?.data?.discount.discount_name
+          })
+
           setEnableUpdate(false)
           setTempPrintId(res?.data?.id)
         })
