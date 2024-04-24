@@ -37,6 +37,7 @@ const defaultCreateOrFormData: IOfficialReceipt = {
   card_no: '',
   amount_words: '',
   payment_mode: '',
+  updated_at: undefined
 }
 
 const defaultParticularFormData: IParticular = {
@@ -351,6 +352,7 @@ const OfficialReceipt = () => {
             : or.deposit
               ? 'Deposited'
               : 'Pending',
+          updated_at: or.updated_at ?? undefined
         }
       })
       const currentPage = orListData?.current_page

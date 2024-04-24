@@ -163,7 +163,7 @@ const SystemDialog = ({
             }}
             autoFocus
             sx={{
-              color: 'warning.main',
+              color: 'error.main',
             }}
           >
             Cancel
