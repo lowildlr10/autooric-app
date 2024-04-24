@@ -721,8 +721,8 @@ const OfficialReceipt = () => {
     }
 
     if (accessToken && changedAmountDiscount === false) {
-      API.updateOfficialReceipt(accessToken, formData?.id, formData)
-        .then((response) => {
+      API.updateOfficialReceipt(accessToken, formData?.id, formData).then(
+        (response) => {
           const res = response?.data.data
 
           if (res?.error) {
@@ -739,17 +739,20 @@ const OfficialReceipt = () => {
             ...formData,
             payor: res?.data?.payor.payor_name,
             nature_collection: res?.data?.nature_collection.particular_name,
-            discount: res?.data?.discount.discount_name,
+            discount: res?.data?.discount
+              ? res?.data?.discount.discount_name
+              : 'N/a',
           })
 
           setEnableUpdate(false)
           setTempPrintId(res?.data?.id)
-        })
-        .catch((error) => {
-          const res = error?.response?.data.data
-          toast.error(res?.message ?? 'Unknown error occurred.')
-          setFormSaveLoading(false)
-        })
+        }
+      )
+      // .catch((error) => {
+      //   const res = error?.response?.data.data
+      //   toast.error(res?.message ?? 'Unknown error occurred.')
+      //   setFormSaveLoading(false)
+      // })
     } else {
       toast.error('Please wait for the discount computation to finish.')
       setFormSaveLoading(false)
