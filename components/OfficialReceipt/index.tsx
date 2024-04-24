@@ -37,7 +37,7 @@ const defaultCreateOrFormData: IOfficialReceipt = {
   card_no: '',
   amount_words: '',
   payment_mode: '',
-  updated_at: undefined
+  updated_at: undefined,
 }
 
 const defaultParticularFormData: IParticular = {
@@ -352,7 +352,7 @@ const OfficialReceipt = () => {
             : or.deposit
               ? 'Deposited'
               : 'Pending',
-          updated_at: or.updated_at ?? undefined
+          updated_at: or.updated_at ?? undefined,
         }
       })
       const currentPage = orListData?.current_page
@@ -739,7 +739,7 @@ const OfficialReceipt = () => {
             ...formData,
             payor: res?.data?.payor.payor_name,
             nature_collection: res?.data?.nature_collection.particular_name,
-            discount: res?.data?.discount.discount_name
+            discount: res?.data?.discount.discount_name,
           })
 
           setEnableUpdate(false)
