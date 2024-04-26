@@ -377,6 +377,7 @@ const OfficialReceipt = () => {
           handlePageChange={handlePageChange}
           handleDeposit={() => handleDialogOpen('deposit_or')}
           handleCancel={() => handleDialogOpen('cancel_or')}
+          handleRevert={() => handleDialogOpen('revert_to_pending_or')}
           showDetails={showDetails}
           formData={createOrFormData}
           details={details ?? {}}
@@ -906,6 +907,36 @@ const OfficialReceipt = () => {
     }
   }
 
+  const handleRevertStatusOr = (orId: string) => {
+    setFormSaveLoading(true)
+    if (accessToken && orId) {
+      API.revertToPendingOfficialReceipt(accessToken, orId)
+        .then((response) => {
+          const res = response?.data.data
+          if (res?.error) {
+            toast.error(res?.message)
+            setFormSaveLoading(false)
+            return
+          }
+
+          toast.success(res?.message)
+          setFormSaveLoading(false)
+          fetchOfficialReceipts()
+          handleCloseDetails()
+        })
+        .catch((error) => {
+          const res = error?.response?.data.data
+          toast.error(res.message)
+          setFormSaveLoading(false)
+        })
+    } else {
+      toast.error(
+        'An error occurred while cancelling official receipt. Please try again.'
+      )
+      setFormSaveLoading(false)
+    }
+  }
+
   const handleShowDetails = (details: IOfficialReceipt) => {
     const hasDiscount = details?.discount === 'N/a' ? false : true
     const regular = hasDiscount
@@ -1086,6 +1117,14 @@ const OfficialReceipt = () => {
         id={details?.id}
         handleClose={() => handleDialogClose('cancel_or')}
         handleCancel={handleCancelOr}
+      />
+      <SystemDialog
+        open={dialogOpen.revert_to_pending_or ?? false}
+        title='Revert Status for Official Receipt'
+        dialogType='revert'
+        id={details?.id}
+        handleClose={() => handleDialogClose('revert_to_pending_or')}
+        handleRevert={handleRevertStatusOr}
       />
     </MiniVariantDrawer>
   )

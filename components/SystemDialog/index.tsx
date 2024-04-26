@@ -17,6 +17,7 @@ import CancelContent from './CancelContent'
 import DepositContent from './DepositContent'
 import UpdateContent from './UpdateContent'
 import PrintPreviewContent from './PrintPreviewContent'
+import RevertContent from './RevertContent'
 
 const SystemDialog = ({
   open,
@@ -35,6 +36,7 @@ const SystemDialog = ({
   handleDelete,
   handleDeposit,
   handleClear,
+  handleRevert,
   handleDownload,
   handlePrint,
   handleInputChange,
@@ -86,6 +88,7 @@ const SystemDialog = ({
               handleInputChange={handleInputChange}
             />
           )}
+          {dialogType === 'revert' && <RevertContent />}
           {dialogType === 'create' && content && handleInputChange && (
             <CreateContent
               dialogType={dialogType}
@@ -182,6 +185,21 @@ const SystemDialog = ({
             }}
           >
             Deposit
+          </Button>
+        )}
+
+        {dialogType === 'revert' && (
+          <Button
+            onClick={() => {
+              handleRevert && handleRevert(id ?? '')
+              handleClose()
+            }}
+            autoFocus
+            sx={{
+              color: 'info',
+            }}
+          >
+            Revert
           </Button>
         )}
 
