@@ -51,6 +51,7 @@ export type DialogType =
   | 'print_preview'
   | 'cancel'
   | 'deposit'
+  | 'revert'
 
 export interface ISystemDialogProps {
   open: boolean
@@ -69,6 +70,7 @@ export interface ISystemDialogProps {
   handleShowDelete?: () => void
   handleDelete?: (id: string) => void
   handleClear?: () => void
+  handleRevert?: (id: string) => void
   handleDownload?: () => void
   handlePrint?: () => void
   handleInputChange?: any
@@ -188,6 +190,7 @@ export type OpenDialogType =
   | 'print_preview'
   | 'deposit_or'
   | 'cancel_or'
+  | 'revert_to_pending_or'
 export interface IOpenDialog {
   logout?: boolean
   create_users?: boolean
@@ -213,6 +216,7 @@ export interface IOpenDialog {
   delete_paper_sizes?: boolean
   deposit_or?: boolean
   cancel_or?: boolean
+  revert_to_pending_or?: boolean
   print?: boolean
   print_preview?: boolean
 }
@@ -501,6 +505,7 @@ export interface ICreateOrProps {
   handleDialogOpen?: (dialogType: OpenDialogType) => void
   handleDeposit?: () => void
   handleCancel?: () => void
+  handleRevert?: () => void
   handleClose?: () => void
   handleEnableUpdate?: () => void
   handleDisableUpdate?: () => void
@@ -518,6 +523,7 @@ export interface ICreateOrActionButtonsProps {
   handleClear?: () => void
   handleDeposit?: () => void
   handleCancel?: () => void
+  handleRevert?: () => void
   handleClose?: () => void
   handleUpdate?: (formData: any) => void
   handleEnableUpdate?: () => void
@@ -661,6 +667,7 @@ export interface IOrListProps {
   handlePageChange: (url: string) => void
   handleDeposit: () => void
   handleCancel: () => void
+  handleRevert: () => void
   handlePrintDownloadOr?: (
     orId: string,
     paperSizeId: string,

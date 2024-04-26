@@ -795,6 +795,7 @@ const ActionButtons = ({
   handleClear,
   handleDeposit,
   handleCancel,
+  handleRevert,
   handleClose,
   handleEnableUpdate,
   handleDisableUpdate,
@@ -868,7 +869,7 @@ const ActionButtons = ({
             </CardContent>
           </Card>
 
-          {!formData?.deposit && !formData?.is_cancelled && (
+          {!formData?.deposit && !formData?.is_cancelled ? (
             <>
               <Button
                 onClick={() => handleDeposit && handleDeposit()}
@@ -881,27 +882,36 @@ const ActionButtons = ({
               >
                 Deposit
               </Button>
+              <Button
+                onClick={() => handleCancel && handleCancel()}
+                variant='contained'
+                color='primary'
+                fullWidth
+                sx={{
+                  py: '0.8em',
+                  bgcolor: 'error.main',
+                  '&:hover': {
+                    bgcolor: 'error.darker',
+                  },
+                }}
+              >
+                Cancel
+              </Button>
             </>
-          )}
-
-          {!formData?.deposit && !formData?.is_cancelled && (
+          ) : (
             <Button
-              onClick={() => handleCancel && handleCancel()}
+              onClick={() => handleRevert && handleRevert()}
               variant='contained'
-              color='primary'
+              color='info'
               fullWidth
               sx={{
                 py: '0.8em',
-                bgcolor: 'error.main',
-                '&:hover': {
-                  bgcolor: 'error.darker',
-                },
               }}
             >
-              Cancel
+              Revert to Pending
             </Button>
           )}
-
+          
           <Divider />
 
           {enableUpdate ? (
@@ -1073,6 +1083,7 @@ const CreateOr = ({
   handleDialogOpen,
   handleDeposit,
   handleCancel,
+  handleRevert,
   handleClose,
   handleEnableUpdate,
   handleDisableUpdate,
@@ -1128,6 +1139,7 @@ const CreateOr = ({
             handleClear={handleClear}
             handleDeposit={handleDeposit}
             handleCancel={handleCancel}
+            handleRevert={handleRevert}
             handleClose={handleClose}
             handleEnableUpdate={handleEnableUpdate}
             handleDisableUpdate={handleDisableUpdate}

@@ -40,6 +40,7 @@ const OrList = ({
   handlePageChange,
   handleDeposit,
   handleCancel,
+  handleRevert,
   handleShowDetails,
   handleCloseDetails,
   handlePrintDownloadOr,
@@ -88,6 +89,7 @@ const OrList = ({
         handleClose={handleCloseDetails}
         handleDeposit={handleDeposit}
         handleCancel={handleCancel}
+        handleRevert={handleRevert}
         handlePrint={(orId, paperSizeId) =>
           handlePrintDownloadOr &&
           handlePrintDownloadOr(orId, paperSizeId, true)
