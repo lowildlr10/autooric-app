@@ -21,6 +21,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import ClassIcon from '@mui/icons-material/Class'
 import { grey } from '@mui/material/colors'
+import getOrdinalNumber from '@/utilities/getOrdinalNumber'
 
 const TableList = ({
   search,
@@ -188,7 +189,9 @@ const TableList = ({
                                 {!!subColumns === true && (
                                   <ClassIcon fontSize='small' />
                                 )}
-                                &nbsp;{value}
+                                {column.id === 'order_no' ? (
+                                  getOrdinalNumber(value as number)
+                                ) : <>&nbsp;{value}</>}
                               </TableCell>
                             )}
                           </React.Fragment>
@@ -260,7 +263,9 @@ const TableList = ({
                                             handleShowDetails(subRow?.id ?? '')
                                           }
                                         >
-                                          {value}
+                                          {subColumn.id === 'order_no' ? (
+                                            getOrdinalNumber(value as number)
+                                          ) : <>&nbsp;{value}</>}
                                         </TableCell>
                                       )
                                     })}
