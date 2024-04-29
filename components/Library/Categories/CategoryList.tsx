@@ -8,7 +8,7 @@ import {
 
 const columns: readonly ICateogryListColumn[] = [
   { id: 'category_name', label: 'Category Name', minWidth: 200 },
-  { id: 'order_no', label: 'Ordering on Report', minWidth: 90 },
+  { id: 'order_no', label: 'Order of Report', minWidth: 90 },
 ]
 
 const CategoryList = ({
