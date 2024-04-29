@@ -765,7 +765,10 @@ export default class API {
   }
 
   // Revert status official receipt
-  static async revertToPendingOfficialReceipt(accessToken: string, orId: string) {
+  static async revertToPendingOfficialReceipt(
+    accessToken: string,
+    orId: string
+  ) {
     return axios.post(
       `${API.API_BASE_URL}/api/v1/official-receipts/${orId}/revert-status?_method=PATCH`,
       {},

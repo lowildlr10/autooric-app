@@ -191,7 +191,9 @@ const TableList = ({
                                 )}
                                 {column.id === 'order_no' ? (
                                   getOrdinalNumber(value as number)
-                                ) : <>&nbsp;{value}</>}
+                                ) : (
+                                  <>&nbsp;{value}</>
+                                )}
                               </TableCell>
                             )}
                           </React.Fragment>
@@ -265,7 +267,9 @@ const TableList = ({
                                         >
                                           {subColumn.id === 'order_no' ? (
                                             getOrdinalNumber(value as number)
-                                          ) : <>&nbsp;{value}</>}
+                                          ) : (
+                                            <>&nbsp;{value}</>
+                                          )}
                                         </TableCell>
                                       )
                                     })}

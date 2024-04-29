@@ -16,7 +16,7 @@ const subColumns: readonly IParticularListColumn[] = [
   { id: 'category_str', label: 'Category', minWidth: 200 },
   { id: 'account_str', label: 'Account', minWidth: 200 },
   { id: 'default_amount_str', label: 'Default Amount', minWidth: 150 },
-  { id: 'order_no', label: 'Ordering on Report', minWidth: 90 },
+  { id: 'order_no', label: 'Order of Report', minWidth: 90 },
 ]
 
 const ParticularList = ({
