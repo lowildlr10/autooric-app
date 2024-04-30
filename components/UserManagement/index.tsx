@@ -25,6 +25,7 @@ const defaultUserFormData: IUser = {
   username: '',
   password: '',
   role: 'staff',
+  esig: '',
   is_active: false,
 }
 
@@ -187,6 +188,7 @@ const UserManagement = () => {
       username: details.username,
       password: '',
       role: details.role,
+      esig: details.esig,
       is_active: details.is_active,
     })
     handleDialogOpen('update_users')
@@ -194,8 +196,37 @@ const UserManagement = () => {
 
   const handleInputChangeUsers = (
     input_name: string,
-    value: string | number | boolean | null
+    value: string | number | boolean | File | FileList | null
   ) => {
+    if (input_name === 'esig') {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string
+        setUserFormData({
+          ...userFormData,
+          esig: base64String,
+        })
+      }
+
+      if (value === null) {
+        setUserFormData({
+          ...userFormData,
+          esig: '',
+        })
+        return
+      }
+
+      try {
+        if (value instanceof File) {
+          reader.readAsDataURL(value)
+        } else if (value instanceof FileList) {
+          reader.readAsDataURL(value[0])
+        }
+      } catch (error) {}
+
+      return
+    }
+
     setUserFormData({ ...userFormData, [input_name]: value })
   }
 
@@ -316,6 +347,7 @@ const UserManagement = () => {
           is_active: user.is_active,
           username: user.username,
           role_str: user.role === 'admin' ? 'Admin' : 'Staff',
+          esig: user.esig,
           status: user.is_active ? 'Active' : 'Inactive',
         }
       })
