@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   IDesignations,
   IPositions,
@@ -6,24 +6,40 @@ import {
   IUserSubContentProps,
 } from '@/Interfaces'
 import {
-  Autocomplete,
+  Box,
+  Button,
   Divider,
   FormControl,
   FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   Switch,
   TextField,
-  createFilterOptions,
+  styled,
 } from '@mui/material'
 import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import toast from 'react-hot-toast'
 import SectionLoader from '@/components/Loader/SectionLoader'
 import DynamicAutocomplete from '@/components/Common/DynamicAutocomplete'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import Image from 'next/image'
+import { DrawOutlined, FormatClearRounded } from '@mui/icons-material'
+import isValidUrl from '@/utilities/checkIfValidUrl'
 
-const filter = createFilterOptions<any>()
+const FileInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+})
 
 const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
   const { accessToken } = useAccessToken()
@@ -34,27 +50,6 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
   const [formattedPosition, setFormattedPosition] = useState<any>([])
   const [formattedDesignation, setFormattedDesignation] = useState<any>([])
   const [formattedStation, setFormattedStation] = useState<any>([])
-  const positionValue = useMemo(
-    () =>
-      formattedPosition.find(
-        (position: any) => position.id === formData?.position_id
-      ) ?? formData?.position_id,
-    [formattedPosition, formData?.position_id]
-  )
-  const designationValue = useMemo(
-    () =>
-      formattedDesignation.find(
-        (position: any) => position.id === formData?.designation_id
-      ) ?? formData?.designation_id,
-    [formattedDesignation, formData?.designation_id]
-  )
-  const stationValue = useMemo(
-    () =>
-      formattedStation.find(
-        (position: any) => position.id === formData?.station_id
-      ) ?? formData?.station_id,
-    [formattedStation, formData?.station_id]
-  )
 
   useEffect(() => {
     fetchPositions()
@@ -361,6 +356,94 @@ const User = ({ formData, handleInputChange }: IUserSubContentProps) => {
           <MenuItem value='staff'>Staff</MenuItem>
         </Select>
       </FormControl>
+
+      <Divider />
+
+      <Button
+        component='label'
+        role={undefined}
+        variant='outlined'
+        size='small'
+        tabIndex={-1}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          border: '1px dashed',
+          borderRadius: 3,
+          pt: 3,
+          gap: 2,
+          '&:hover': {
+            border: '1px dashed',
+          },
+        }}
+      >
+        {formData?.esig && (
+          <Button
+            variant='contained'
+            color='error'
+            size='small'
+            href='#'
+            sx={{
+              position: 'absolute',
+              marginTop: '-16em',
+              marginLeft: '98%',
+              zIndex: 1,
+              borderRadius: 5,
+              minWidth: '1em',
+              padding: 1,
+            }}
+            onClick={() => {
+              handleInputChange && handleInputChange('esig', null)
+            }}
+          >
+            <FormatClearRounded fontSize='small' />
+          </Button>
+        )}
+
+        <Box
+          position='relative'
+          height='100px'
+          width='100%'
+          alignItems='center'
+          alignContent='center'
+          textAlign='center'
+        >
+          {formData?.esig ? (
+            <Image
+              src={
+                isValidUrl(formData?.esig)
+                  ? `${formData?.esig}?${new Date().getTime()}`
+                  : formData?.esig
+              }
+              fill
+              draggable={false}
+              style={{
+                objectFit: 'contain',
+              }}
+              alt='E-Signature'
+            />
+          ) : (
+            <DrawOutlined sx={{ fontSize: 80 }} />
+          )}
+        </Box>
+
+        <Stack direction='row' my={2}>
+          <CloudUploadIcon />
+          &nbsp;
+          {formData?.esig ? 'Upload New E-Signature' : 'Upload E-Signature'}
+        </Stack>
+        <FileInput
+          name='esig'
+          type='file'
+          accept='.png'
+          onChange={(e) =>
+            handleInputChange &&
+            handleInputChange(e.target.name, e.target.files)
+          }
+        />
+      </Button>
+
+      <Divider />
 
       <FormControl component='fieldset' variant='standard'>
         <FormControlLabel

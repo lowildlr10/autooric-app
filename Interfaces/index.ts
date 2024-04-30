@@ -159,7 +159,7 @@ export interface IUserSubContentProps {
   formData: IUser
   handleInputChange: (
     input_name: string,
-    value: string | number | boolean | null
+    value: string | number | boolean | File | null
   ) => void
 }
 
@@ -371,6 +371,7 @@ export interface IUser {
   username?: string
   password?: string
   role?: 'admin' | 'staff'
+  esig?: string
   is_active?: boolean
 }
 
