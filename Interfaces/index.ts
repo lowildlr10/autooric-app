@@ -159,7 +159,7 @@ export interface IUserSubContentProps {
   formData: IUser
   handleInputChange: (
     input_name: string,
-    value: string | number | boolean | File | null
+    value: string | number | boolean | File | FileList | null
   ) => void
 }
 
