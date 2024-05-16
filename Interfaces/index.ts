@@ -788,7 +788,7 @@ export interface IPaperSizeListProps {
   handlePageChange: (url: string) => void
 }
 
-export type SearchType = 'none' | 'search' | 'date_particulars'
+export type SearchType = 'none' | 'search' | 'date_particulars' | 'all'
 
 export interface ITableListProps {
   displayType:
@@ -850,6 +850,7 @@ export interface ITableListActionSectionSearchProps {
 export interface ITableListActionSectionDateRangeParticularsProps {
   search: string
   loading: boolean
+  hasSearchField?: boolean
   handleChange: (value: string | null) => void
 }
 
@@ -867,6 +868,7 @@ export interface ISearchData {
   from: string | undefined
   to: string | undefined
   particulars: string
+  search_tag: string
 }
 
 export interface IAutocomplete {

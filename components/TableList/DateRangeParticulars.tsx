@@ -12,16 +12,19 @@ import toast from 'react-hot-toast'
 import useAccessToken from '@/hooks/useAccessToken'
 import API from '@/utilities/API'
 import SingleSelect from '../Common/SingleSelect'
+import SearchField from './SearchField'
 
 const defaultSearchData: ISearchData = {
   from: undefined,
   to: undefined,
   particulars: '*',
+  search_tag: ''
 }
 
 const DateRangeParticulars = ({
   search,
   handleChange,
+  hasSearchField = false,
   loading,
 }: ITableListActionSectionDateRangeParticularsProps) => {
   const { accessToken } = useAccessToken()
@@ -55,7 +58,7 @@ const DateRangeParticulars = ({
       to = searchData.to
     }
 
-    handleChange(`${from}|${to}|${searchData.particulars}`)
+    handleChange(`${from}|${to}|${searchData.particulars}|${searchData.search_tag}`)
 
     setInit(false)
   }, [searchData, init, search])
@@ -67,6 +70,7 @@ const DateRangeParticulars = ({
         from: searchData[0] === '*' ? undefined : searchData[0],
         to: searchData[1] === '*' ? undefined : searchData[1],
         particulars: searchData[2],
+        search_tag: searchData[3]
       })
       setInit(false)
     }
@@ -182,6 +186,16 @@ const DateRangeParticulars = ({
         height='40.5px'
         required
       />
+
+      {hasSearchField && (
+        <SearchField 
+          search={searchData.search_tag}
+          handleChange={(e) => {
+            handleInputChange && handleInputChange('search_tag', e.target.value)
+          }}
+          loading={loading}
+        />
+      )}
     </Stack>
   )
 }

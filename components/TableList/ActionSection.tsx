@@ -34,10 +34,11 @@ const ActionSection = ({
         />
       )}
 
-      {searchType === 'date_particulars' && (
+      {(searchType === 'date_particulars' || searchType === 'all') && (
         <DateRangeParticulars
           search={search}
           loading={searchLoading}
+          hasSearchField={searchType === 'all' ?? false}
           handleChange={handleSearchChange}
         />
       )}

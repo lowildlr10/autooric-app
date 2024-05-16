@@ -114,7 +114,7 @@ const OrList = ({
     <TableList
       search={search}
       loading={loading}
-      searchType='date_particulars'
+      searchType='all'
       displayType='official_receipt'
       columns={columns}
       rows={rows ?? []}
