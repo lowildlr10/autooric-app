@@ -13,6 +13,7 @@ const SearchField = ({
       variant='outlined'
       label={loading ? 'Searching...' : 'Search'}
       size='small'
+      placeholder='Search...'
       focused
       sx={{
         width: 250,
