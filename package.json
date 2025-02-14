@@ -1,6 +1,8 @@
 {
   "name": "autooric-app",
-  "version": "0.1.0",
+  "description": "Automated system for issuing official receipts developed for PROCOR.",
+  "version": "1.0.0",
+  "author": "Lowil Ray Delos Reyes <lowilray.dlr@gmail.com> (https://github.com/lowildlr10)",
   "private": true,
   "scripts": {
     "dev": "next dev",
